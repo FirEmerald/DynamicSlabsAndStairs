@@ -1,4 +1,4 @@
-package com.firemerald.additionalplacements.network;
+package com.firemerald.additionalplacements.network.client;
 
 import java.util.List;
 
@@ -16,9 +16,11 @@ import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
-public class ConfigurationCheckFailedPacket extends ClientPacket
+public class ConfigurationCheckFailedPacket extends ClientPlayPacket
 {
 	private final List<Triple<ResourceLocation, List<MessageTree>, List<MessageTree>>> compiledErrors;
 	
@@ -47,6 +49,7 @@ public class ConfigurationCheckFailedPacket extends ClientPacket
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public void handleClient(CustomPayloadEvent.Context context)
 	{
 		MessageTree rootError = new MessageTree(Component.translatable("msg.additionalplacements.errors.type"));

@@ -1,4 +1,4 @@
-package com.firemerald.additionalplacements.network;
+package com.firemerald.additionalplacements.network.server;
 
 import com.firemerald.additionalplacements.client.APClientData;
 import com.firemerald.additionalplacements.common.IAPServerPlayer;
@@ -6,7 +6,7 @@ import com.firemerald.additionalplacements.common.IAPServerPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
-public class SetPlacementTogglePacket extends ServerPacket
+public class SetPlacementTogglePacket extends ServerPlayPacket
 {
 	private boolean state;
 
