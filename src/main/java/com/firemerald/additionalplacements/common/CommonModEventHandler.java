@@ -2,68 +2,45 @@ package com.firemerald.additionalplacements.common;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
-import com.firemerald.additionalplacements.block.*;
-import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
+import com.firemerald.additionalplacements.config.APConfigs;
 import com.firemerald.additionalplacements.datagen.ModelGenerator;
+import com.firemerald.additionalplacements.generation.Registration;
 
-import net.minecraft.block.*;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.block.Block;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.RegistryEvent.NewRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CommonModEventHandler
 {
+	public static boolean lockGenerationTypeRegistry = false;
+	
+	@SubscribeEvent
+	public static void onNewRegistry(NewRegistry event) { //best hook I could find for loading a config after all mods have been processed but before registries are built
+		if (!lockGenerationTypeRegistry) {
+			lockGenerationTypeRegistry = true;
+			APConfigs.init();
+			APConfigs.BOOTUP.loadConfig(FMLPaths.CONFIGDIR.get().resolve("additionalplacements-bootup.toml"), APConfigs.BOOTUP_SPEC);
+		}
+	}
+	
 	@SubscribeEvent
 	public static void onBlockRegistry(RegistryEvent.Register<Block> event)
 	{
 		IForgeRegistry<Block> registry = event.getRegistry();
-		boolean generateSlabs = AdditionalPlacementsMod.COMMON_CONFIG.generateSlabs.get();
-		boolean generateStairs = AdditionalPlacementsMod.COMMON_CONFIG.generateStairs.get();
-		boolean generateCarpets = AdditionalPlacementsMod.COMMON_CONFIG.generateCarpets.get();
-		boolean generatePressurePlates = AdditionalPlacementsMod.COMMON_CONFIG.generatePressurePlates.get();
-		boolean generateWeightedPressurePlates = AdditionalPlacementsMod.COMMON_CONFIG.generateWeightedPressurePlates.get();
 		List<Block> created = new ArrayList<>();
-		registry.getEntries().forEach(entry -> {
-			ResourceLocation name = entry.getKey().location();
-			Block block = entry.getValue();
-			if (block instanceof SlabBlock)
-			{
-				if (generateSlabs) tryAdd((SlabBlock) block, name, VerticalSlabBlock::of, created);
-			}
-			else if (block instanceof StairsBlock)
-			{
-				if (generateStairs) tryAdd((StairsBlock) block, name, VerticalStairBlock::of, created);
-			}
-			else if (block instanceof CarpetBlock)
-			{
-				if (generateCarpets) tryAdd((CarpetBlock) block, name, AdditionalCarpetBlock::of, created);
-			}
-			else if (block instanceof PressurePlateBlock)
-			{
-				if (generatePressurePlates) tryAdd((PressurePlateBlock) block, name, AdditionalPressurePlateBlock::of, created);
-			}
-			else if (block instanceof WeightedPressurePlateBlock)
-			{
-				if (generateWeightedPressurePlates) tryAdd((WeightedPressurePlateBlock) block, name, AdditionalWeightedPressurePlateBlock::of, created);
-			}
-		});
+		registry.getValues().forEach(block -> Registration.tryApply(block, block.getRegistryName(), (id, obj) -> created.add(obj)));
 		created.forEach(registry::register);
 		AdditionalPlacementsMod.dynamicRegistration = true;
-	}
-
-	private static <T extends Block, U extends AdditionalPlacementBlock<T>> void tryAdd(T block, ResourceLocation name, Function<T, U> construct, List<Block> list)
-	{
-		if (!((IPlacementBlock<?>) block).hasAdditionalStates() && AdditionalPlacementsMod.COMMON_CONFIG.isValidForGeneration(name))
-			list.add(construct.apply(block).setRegistryName(AdditionalPlacementsMod.MOD_ID, name.getNamespace() + "." + name.getPath()));
 	}
 
 	@SubscribeEvent

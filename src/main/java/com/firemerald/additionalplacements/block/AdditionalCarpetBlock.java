@@ -1,14 +1,14 @@
 package com.firemerald.additionalplacements.block;
 
+import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.interfaces.ICarpetBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CarpetBlock;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -16,9 +16,9 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 
-public class AdditionalCarpetBlock extends AdditionalPlacementBlock<CarpetBlock> implements ICarpetBlock<CarpetBlock>
+public class AdditionalCarpetBlock extends AdditionalFloorBlock<CarpetBlock> implements ICarpetBlock<CarpetBlock>
 {
-	public static final DirectionProperty PLACING = AdditionalBlockStateProperties.HORIZONTAL_OR_UP_FACING;
+	static final ResourceLocation CARPET_BLOCKSTATES = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "blockstate_templates/carpet.json");
 	public static final VoxelShape[] SHAPES = {
 			Block.box(0, 15, 0, 16, 16, 16),
 			Block.box(0, 0, 0, 16, 16, 1),
@@ -41,35 +41,9 @@ public class AdditionalCarpetBlock extends AdditionalPlacementBlock<CarpetBlock>
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
-	{
-		builder.add(PLACING);
-		super.createBlockStateDefinition(builder);
-	}
-
-	@Override
-	@Deprecated
-	public VoxelShape getShape(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context)
+	public VoxelShape getShapeInternal(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context)
 	{
 		return SHAPES[state.getValue(PLACING).ordinal() - 1];
-	}
-
-	@Override
-	public Direction getPlacing(BlockState blockState)
-	{
-		return blockState.getValue(PLACING);
-	}
-
-	@Override
-	public BlockState getDefaultVanillaState(BlockState currentState)
-	{
-		return currentState.is(parentBlock) ? currentState : copyProperties(currentState, parentBlock.defaultBlockState());
-	}
-
-	@Override
-	public BlockState getDefaultAdditionalState(BlockState currentState)
-	{
-		return currentState.is(this) ? currentState : copyProperties(currentState, this.defaultBlockState());
 	}
 
 	@Override
@@ -95,5 +69,10 @@ public class AdditionalCarpetBlock extends AdditionalPlacementBlock<CarpetBlock>
 	public boolean canSurvive(BlockState state, IWorldReader level, BlockPos pos)
 	{
 		return !level.isEmptyBlock(pos.relative(state.getValue(PLACING)));
+	}
+
+	@Override
+	public ResourceLocation getDynamicBlockstateJson() {
+		return CARPET_BLOCKSTATES;
 	}
 }

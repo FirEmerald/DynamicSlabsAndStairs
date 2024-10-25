@@ -39,11 +39,13 @@ public class ClientModEventHandler
 			IPackNameDecorator.BUILT_IN,
 			true
 			);
+	private static PlacementBlockModelLoader loader;
 
 	@SubscribeEvent
 	public static void onModelRegistryEvent(ModelRegistryEvent event)
 	{
-		ModelLoaderRegistry.registerLoader(PlacementBlockModelLoader.ID, new PlacementBlockModelLoader());
+		loader = new PlacementBlockModelLoader();
+		ModelLoaderRegistry.registerLoader(PlacementBlockModelLoader.ID, loader);
 	}
 
 	@SubscribeEvent
@@ -53,14 +55,12 @@ public class ClientModEventHandler
 		if (mc != null) mc.getResourcePackRepository().addPackFinder((addPack, buildPack) -> addPack.accept(GENERATED_RESOURCES_PACK));
 	}
 
-    @SuppressWarnings("deprecation")
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void init(FMLClientSetupEvent event)
-    {
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void init(FMLClientSetupEvent event) {
     	ForgeRegistries.BLOCKS.forEach(block -> {
     		if (block instanceof AdditionalPlacementBlock)
     		{
-    			//@SuppressWarnings("deprecation")
+    			@SuppressWarnings("deprecation")
 				BlockState modelState = ((AdditionalPlacementBlock<?>) block).getModelState();
     			RenderTypeLookup.setRenderLayer(block, (layer) -> RenderTypeLookup.canRenderInLayer(modelState, layer));
     		}

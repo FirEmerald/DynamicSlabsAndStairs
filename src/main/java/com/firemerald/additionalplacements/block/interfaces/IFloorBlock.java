@@ -53,7 +53,6 @@ public interface IFloorBlock<T extends Block> extends IPlacementBlock<T>
 	public default void renderPlacementHighlight(MatrixStack pose, IVertexBuilder vertexConsumer, PlayerEntity player, BlockRayTraceResult result, float partial) {}
 
     @Override
-	@OnlyIn(Dist.CLIENT)
 	public default void addPlacementTooltip(ItemStack stack, @Nullable IBlockReader level, List<ITextComponent> tooltip, ITooltipFlag flag)
 	{
 		tooltip.add(new TranslationTextComponent("tooltip.additionalplacements.vertical_placement"));
@@ -66,63 +65,68 @@ public interface IFloorBlock<T extends Block> extends IPlacementBlock<T>
 		return from;
 	}
 
-	@Override
 	@OnlyIn(Dist.CLIENT)
 	public default Function<Direction, Direction> getModelDirectionFunction(BlockState state, Random rand, IModelData extraData)
 	{
 		switch (getPlacing(state)) {
-		case UP: return side -> {
-			switch (side) {
-			case UP: return Direction.DOWN;
-			case DOWN: return Direction.UP;
-			case NORTH: return Direction.SOUTH;
-			case SOUTH: return Direction.NORTH;
-			default: return side;
-			}
-		};
-		case NORTH: return side -> {
-			switch (side) {
-			case UP: return Direction.NORTH;
-			case DOWN: return Direction.SOUTH;
-			case NORTH: return Direction.DOWN;
-			case SOUTH: return Direction.UP;
-			default: return side;
-			}
-		};
-		case SOUTH: return side -> {
-			switch (side) {
-			case UP: return Direction.NORTH;
-			case DOWN: return Direction.SOUTH;
-			case NORTH: return Direction.UP;
-			case SOUTH: return Direction.DOWN;
-			case EAST: return Direction.WEST;
-			case WEST: return Direction.EAST;
-			default: return side;
-			}
-		};
-		case EAST: return side -> {
-			switch (side) {
-			case UP: return Direction.NORTH;
-			case DOWN: return Direction.SOUTH;
-			case NORTH: return Direction.WEST;
-			case SOUTH: return Direction.EAST;
-			case EAST: return Direction.DOWN;
-			case WEST: return Direction.UP;
-			default: return side;
-			}
-		};
-		case WEST: return side -> {
-			switch (side) {
-			case UP: return Direction.NORTH;
-			case DOWN: return Direction.SOUTH;
-			case NORTH: return Direction.EAST;
-			case SOUTH: return Direction.WEST;
-			case EAST: return Direction.UP;
-			case WEST: return Direction.DOWN;
-			default: return side;
-			}
-		};
-		default: return Function.identity();
+		case UP:
+			return (side) -> {
+				switch (side) {
+				case UP: return Direction.DOWN;
+				case DOWN: return Direction.UP;
+				case NORTH: return Direction.SOUTH;
+				case SOUTH: return Direction.NORTH;
+				default: return side;
+				}
+			};
+		case NORTH:
+			return (side) -> {
+				switch (side) {
+				case UP: return Direction.NORTH;
+				case DOWN: return Direction.SOUTH;
+				case NORTH: return Direction.DOWN;
+				case SOUTH: return Direction.UP;
+				default: return side;
+				}
+			};
+		case SOUTH:
+			return (side) -> {
+				switch (side) {
+				case UP: return Direction.NORTH;
+				case DOWN: return Direction.SOUTH;
+				case NORTH: return Direction.UP;
+				case SOUTH: return Direction.DOWN;
+				case EAST: return Direction.WEST;
+				case WEST: return Direction.EAST;
+				default: return side;
+				}
+			};
+		case EAST:
+			return (side) -> {
+				switch (side) {
+				case UP: return Direction.NORTH;
+				case DOWN: return Direction.SOUTH;
+				case NORTH: return Direction.WEST;
+				case SOUTH: return Direction.EAST;
+				case EAST: return Direction.DOWN;
+				case WEST: return Direction.UP;
+				default: return side;
+				}
+			};
+		case WEST:
+			return (side) -> {
+				switch (side) {
+				case UP: return Direction.NORTH;
+				case DOWN: return Direction.SOUTH;
+				case NORTH: return Direction.EAST;
+				case SOUTH: return Direction.WEST;
+				case EAST: return Direction.UP;
+				case WEST: return Direction.DOWN;
+				default: return side;
+				}
+			};
+		default:
+			return Function.identity();
 		}
 	}
 }

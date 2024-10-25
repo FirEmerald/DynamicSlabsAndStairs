@@ -1,71 +1,49 @@
 package com.firemerald.additionalplacements.client.models;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.firemerald.additionalplacements.AdditionalPlacementsMod;
-import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
+import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.client.BlockModelUtils;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
+import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 
-public class BakedPlacementBlockModel implements IDynamicBakedModel
+public class BakedPlacementBlockModel extends BakedModelWrapper<IBakedModel>
 {
-	public final IBakedModel model;
-	private final Map<ModelKey, List<BakedQuad>> bakedQuadsCache = new HashMap<>();
-
 	public BakedPlacementBlockModel(IBakedModel model)
 	{
-		this.model = model;
+		super(model);
 	}
 
 	@Override
-	public boolean useAmbientOcclusion()
+	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData extraData)
 	{
-		return true;
+		BlockState modelState = extraData.getData(BlockModelUtils.MODEL_STATE);
+		if (modelState == null) modelState = BlockModelUtils.getModeledState(state);
+		if (state.getBlock() instanceof AdditionalPlacementBlock) {
+			AdditionalPlacementBlock<?> block = (AdditionalPlacementBlock<?>) state.getBlock();
+			if (block.rotatesModel(state)) return BlockModelUtils.rotatedQuads(modelState, BlockModelUtils::getBakedModel, block.getRotation(state), block.rotatesTexture(state), side, rand, extraData);
+		}
+		return BlockModelUtils.retexturedQuads(state, modelState, BlockModelUtils::getBakedModel, originalModel, side, rand, extraData);
 	}
 
-	@Override
-	public boolean isGui3d()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean usesBlockLight()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean isCustomRenderer()
-	{
-		return false;
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public TextureAtlasSprite getParticleIcon()
-	{
-		return Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(MissingTextureSprite.getLocation());
-	}
+    @Override
+    public boolean isAmbientOcclusion(BlockState state)
+    {
+    	BlockState modelState = BlockModelUtils.getModeledState(state);
+        return BlockModelUtils.getBakedModel(modelState).isAmbientOcclusion(modelState);
+    }
 
 	@Override
 	public TextureAtlasSprite getParticleTexture(IModelData extraData)
@@ -75,59 +53,13 @@ public class BakedPlacementBlockModel implements IDynamicBakedModel
 		else return getParticleIcon();
 	}
 
-
 	@Override
 	public @Nonnull IModelData getModelData(@Nonnull IBlockDisplayReader level, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData modelData)
     {
 		return new ModelDataMap.Builder().withInitial(BlockModelUtils.MODEL_STATE, BlockModelUtils.getModeledState(state)).build();
     }
-
-	@Override
-	public ItemOverrideList getOverrides()
-	{
-		return ItemOverrideList.EMPTY;
+	
+	public IBakedModel originalModel() {
+		return originalModel;
 	}
-
-	@Override
-	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData extraData)
-	{
-	    BlockState modelState = extraData.getData(BlockModelUtils.MODEL_STATE);
-	    if (modelState != null)
-	    {
-	    	ModelKey modelKey = new ModelKey(modelState, side);
-	    	if (!bakedQuadsCache.containsKey(modelKey))
-	    	{
-	    		Function<Direction, Direction> transformSide;
-	    		if (side != null && state.getBlock() instanceof IPlacementBlock) transformSide = ((IPlacementBlock<?>) state.getBlock()).getModelDirectionFunction(state, rand, extraData);
-	    		else transformSide = Function.identity();
-	    		IModelData modelData = BlockModelUtils.getModelData(modelState, extraData);
-    			List<BakedQuad> bakedQuads = new ArrayList<>();
-    			for (BakedQuad jsonBakedQuad : model.getQuads(state, side, rand, modelData)) //finds sprite-tint pair that occurs over the highest area in this direction and applies it to the quad
-    			{
-    				Direction orientation = jsonBakedQuad.getDirection();
-    	    		Direction modelSide = orientation == null ? null : transformSide.apply(orientation);
-    		    	ModelKey reorientedModelKey = new ModelKey(modelState, modelSide);
-    				Pair<TextureAtlasSprite, Integer> texture;
-    				if (PlacementBlockModelLoader.TEXTURE_CACHE.containsKey(reorientedModelKey)) texture = PlacementBlockModelLoader.TEXTURE_CACHE.get(reorientedModelKey);
-    				else
-    				{
-    					Map<Pair<TextureAtlasSprite, Integer>, Double> weights = new HashMap<>();
-        				for (BakedQuad referredBakedQuad : BlockModelUtils.getBakedQuads(modelState, modelSide, rand, modelData))
-        				{
-        					Pair<TextureAtlasSprite, Integer> tex = Pair.of(referredBakedQuad.getSprite(), referredBakedQuad.getTintIndex());
-        					weights.put(tex, (weights.containsKey(tex) ? weights.get(tex) : 0) + BlockModelUtils.getFaceSize(referredBakedQuad.getVertices()));
-        				}
-    					texture = weights.entrySet().stream().max((e1, e2) -> (int) Math.signum(e2.getValue() - e1.getValue())).map(Map.Entry::getKey).orElse(null);
-    					PlacementBlockModelLoader.TEXTURE_CACHE.put(reorientedModelKey, texture);
-    				}
-    				if (texture != null) bakedQuads.add(BlockModelUtils.getNewBakedQuad(jsonBakedQuad, texture.getLeft(), texture.getRight(), orientation));
-    				else AdditionalPlacementsMod.LOGGER.warn(modelState + " has no texture for " + modelSide + ". No faces will be generated for " + orientation + ".");
-    			}
-    			bakedQuadsCache.put(modelKey, bakedQuads);
-	    	}
-	    	return bakedQuadsCache.get(modelKey);
-	    }
-	    return model.getQuads(state, side, rand, extraData);
-	}
-
 }

@@ -10,10 +10,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.firemerald.additionalplacements.block.VerticalStairBlock;
 import com.firemerald.additionalplacements.block.interfaces.IStairBlock.IVanillaStairBlock;
+import com.firemerald.additionalplacements.util.stairs.CompressedStairShape;
+import com.firemerald.additionalplacements.util.stairs.StairConnections;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.EnumProperty;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
@@ -68,11 +71,10 @@ public abstract class MixinStairBlock implements IVanillaStairBlock
 		return currentState.is(stairs) ? currentState : stairs.copyProperties(currentState, stairs.defaultBlockState());
 	}
 
-	//@Override
 	@Inject(method = "getStateForPlacement", at = @At("RETURN"), cancellable = true)
 	private void getStateForPlacement(BlockItemUseContext context, CallbackInfoReturnable<BlockState> ci)
 	{
-		if (this.hasAdditionalStates() && !disablePlacement(context.getClickedPos(), context.getLevel(), context.getClickedFace(), context.getPlayer())) ci.setReturnValue(getStateForPlacementImpl(context, ci.getReturnValue()));
+		if (this.hasAdditionalStates() && enablePlacement(context.getClickedPos(), context.getLevel(), context.getClickedFace(), context.getPlayer())) ci.setReturnValue(getStateForPlacementImpl(context, ci.getReturnValue()));
 	}
 
 	@Inject(method = "rotate", at = @At("HEAD"), cancellable = true)
@@ -97,5 +99,15 @@ public abstract class MixinStairBlock implements IVanillaStairBlock
 	public BlockState getModelStateImpl()
 	{
 		return stateSupplier.get();
+	}
+
+	@Override
+	public StairConnections allowedConnections() {
+		return stairs.allowedConnections();
+	}
+
+	@Override
+	public EnumProperty<CompressedStairShape> shapeProperty() {
+		return stairs.shapeProperty();
 	}
 }

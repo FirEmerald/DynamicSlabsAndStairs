@@ -1,6 +1,6 @@
 package com.firemerald.additionalplacements.client;
 
-import com.firemerald.additionalplacements.network.PacketSetPlacementToggle;
+import com.firemerald.additionalplacements.network.server.SetPlacementTogglePacket;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -49,6 +49,6 @@ public class APClientData
 
 	public static void synchronizePlacementEnabled()
 	{
-		new PacketSetPlacementToggle(placementEnabled).sendToServer();
+		new SetPlacementTogglePacket(placementEnabled).sendToServer();
 	}
 }

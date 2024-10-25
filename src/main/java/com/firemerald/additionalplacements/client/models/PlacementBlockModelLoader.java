@@ -1,15 +1,9 @@
 package com.firemerald.additionalplacements.client.models;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModelLoader;
@@ -17,13 +11,9 @@ import net.minecraftforge.client.model.IModelLoader;
 public class PlacementBlockModelLoader implements IModelLoader<PlacementBlockModel>
 {
 	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "placement_block_loader");
-	public static final Map<ModelKey, Pair<TextureAtlasSprite, Integer>> TEXTURE_CACHE = new HashMap<>();
 
 	@Override
-	public void onResourceManagerReload(IResourceManager manager)
-	{
-		TEXTURE_CACHE.clear();
-	}
+	public void onResourceManagerReload(IResourceManager pResourceManager) {}
 
 	@Override
 	public PlacementBlockModel read(JsonDeserializationContext deserializationContext, JsonObject modelContents)

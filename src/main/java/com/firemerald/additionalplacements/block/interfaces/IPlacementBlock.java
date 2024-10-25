@@ -6,8 +6,9 @@ import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
-import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.common.IAPPlayer;
+import com.firemerald.additionalplacements.config.APConfigs;
+import com.firemerald.additionalplacements.generation.GenerationType;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
@@ -54,12 +55,11 @@ public interface IPlacementBlock<T extends Block> extends IItemProvider
 
 	public BlockState updateShapeImpl(BlockState state, Direction direction, BlockState otherState, IWorld level, BlockPos pos, BlockPos otherPos);
 
-	@OnlyIn(Dist.CLIENT)
 	public default void appendHoverTextImpl(ItemStack stack, @Nullable IBlockReader level, List<ITextComponent> tooltip, ITooltipFlag flag)
 	{
-		if (AdditionalPlacementsMod.COMMON_CONFIG.showTooltip.get() && !disablePlacementInternal()) addPlacementTooltip(stack, level, tooltip, flag);
+		if (APConfigs.COMMON.showTooltip.get() && getGenerationType().placementEnabled()) addPlacementTooltip(stack, level, tooltip, flag);
 	}
-
+	
 	@OnlyIn(Dist.CLIENT)
 	public void addPlacementTooltip(ItemStack stack, @Nullable IBlockReader level, List<ITextComponent> tooltip, ITooltipFlag flag);
 
@@ -70,7 +70,7 @@ public interface IPlacementBlock<T extends Block> extends IItemProvider
 	public BlockState getDefaultVanillaState(BlockState currentState);
 
 	public boolean isThis(BlockState blockState);
-
+	
 	public static final float SQRT_2_INV = 0.70710678118654752440084436210485f;
 
 	public static Quaternion[] DIRECTION_TRANSFORMS = new Quaternion[] {
@@ -86,53 +86,54 @@ public interface IPlacementBlock<T extends Block> extends IItemProvider
 	public default void renderHighlight(MatrixStack pose, IVertexBuilder vertexConsumer, PlayerEntity player, BlockRayTraceResult result, ActiveRenderInfo camera, float partial)
 	{
 		BlockPos hit = result.getBlockPos();
-		if (disablePlacement(hit, player.level, result.getDirection(), player)) return;
-		pose.pushPose();
-		double hitX = hit.getX();
-		double hitY = hit.getY();
-		double hitZ = hit.getZ();
-		switch (result.getDirection())
-		{
-		case WEST:
-			hitX = result.getLocation().x - 1.005;
-			break;
-		case EAST:
-			hitX = result.getLocation().x + .005;
-			break;
-		case DOWN:
-			hitY = result.getLocation().y - 1.005;
-			break;
-		case UP:
-			hitY = result.getLocation().y + .005;
-			break;
-		case NORTH:
-			hitZ = result.getLocation().z - 1.005;
-			break;
-		case SOUTH:
-			hitZ = result.getLocation().z + .005;
-			break;
-		default:
+		if (enablePlacement(hit, player.level, result.getDirection(), player)) {
+			pose.pushPose();
+			double hitX = hit.getX();
+			double hitY = hit.getY();
+			double hitZ = hit.getZ();
+			switch (result.getDirection())
+			{
+			case WEST:
+				hitX = result.getLocation().x - 1.005;
+				break;
+			case EAST:
+				hitX = result.getLocation().x + .005;
+				break;
+			case DOWN:
+				hitY = result.getLocation().y - 1.005;
+				break;
+			case UP:
+				hitY = result.getLocation().y + .005;
+				break;
+			case NORTH:
+				hitZ = result.getLocation().z - 1.005;
+				break;
+			case SOUTH:
+				hitZ = result.getLocation().z + .005;
+				break;
+			default:
+			}
+			Vector3d pos = camera.getPosition();
+			pose.translate(hitX - pos.x + .5, hitY - pos.y + .5, hitZ - pos.z + .5);
+			renderPlacementPreview(pose, vertexConsumer, player, result, partial);
+			pose.mulPose(DIRECTION_TRANSFORMS[result.getDirection().ordinal()]);
+			renderPlacementHighlight(pose, vertexConsumer, player, result, partial);
+			pose.popPose();
 		}
-		Vector3d pos = camera.getPosition();
-		pose.translate(hitX - pos.x + .5, hitY - pos.y + .5, hitZ - pos.z + .5);
-		pose.mulPose(DIRECTION_TRANSFORMS[result.getDirection().ordinal()]);
-		renderPlacementHighlight(pose, vertexConsumer, player, result, partial);
-		pose.popPose();
 	}
+
+	@OnlyIn(Dist.CLIENT)
+	public default void renderPlacementPreview(MatrixStack pose, IVertexBuilder vertexConsumer, PlayerEntity player, BlockRayTraceResult result, float partial) {}
 
 	@OnlyIn(Dist.CLIENT)
 	public void renderPlacementHighlight(MatrixStack pose, IVertexBuilder vertexConsumer, PlayerEntity player, BlockRayTraceResult result, float partial);
 
-	public abstract boolean disablePlacementInternal();
-
-	public default boolean disablePlacement(@Nullable PlayerEntity player)
-	{
-		return (player instanceof IAPPlayer && !((IAPPlayer) player).isPlacementEnabled()) || disablePlacementInternal();
+	public default boolean enablePlacement(@Nullable PlayerEntity player) {
+		return getGenerationType().placementEnabled() && (!(player instanceof IAPPlayer) || ((IAPPlayer) player).isPlacementEnabled());
 	}
 
-	public default boolean disablePlacement(BlockPos pos, World level, Direction direction, @Nullable PlayerEntity player)
-	{
-		return disablePlacement(player);
+	public default boolean enablePlacement(BlockPos hit, World level, Direction direction, @Nullable PlayerEntity player) {
+		return enablePlacement(player);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -140,4 +141,6 @@ public interface IPlacementBlock<T extends Block> extends IItemProvider
 	{
 		return Function.identity();
 	}
+	
+	public GenerationType<?, ?> getGenerationType();
 }

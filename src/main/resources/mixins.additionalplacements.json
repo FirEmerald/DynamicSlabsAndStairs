@@ -13,10 +13,12 @@
 		"MixinStairBlock",
 		"MixinWeightedPressurePlateBlock",
 		"MixinPlayerEntity",
-		"MixinServerPlayerEntity"
+		"MixinServerPlayerEntity",
+		"MixinChunkLoader"
 	],
 	"client": [
-		"MixinClientPlayerEntity"
+		"MixinClientPlayerEntity",
+		"MixinBlockModelShapes"
 	],
 	"minVersion": "0.8"
 }

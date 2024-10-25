@@ -1,7 +1,5 @@
 package com.firemerald.additionalplacements.client;
 
-import javax.annotation.Nullable;
-
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 
 import net.minecraft.block.Block;
@@ -17,7 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class AdditionalBlockColor implements IBlockColor
 {
 	@Override
-	public int getColor(BlockState state, @Nullable IBlockDisplayReader tintGetter, BlockPos pos, int i)
+	public int getColor(BlockState state, IBlockDisplayReader tintGetter, BlockPos pos, int i)
 	{
 		Block block = state.getBlock();
 		if (block instanceof AdditionalPlacementBlock) return Minecraft.getInstance().getBlockColors().getColor(((AdditionalPlacementBlock<?>) block).getModelState(state), tintGetter, pos, i);
