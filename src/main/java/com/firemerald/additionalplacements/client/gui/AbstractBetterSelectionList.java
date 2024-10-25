@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -207,7 +208,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		}
 
-		//enableScissor(); TODO
+		enableScissor();
 		if (this.renderHeader) {
 			int x = this.getRowLeft();
 			int y = this.getY() + 4 - (int) this.getScrollAmount();
@@ -215,7 +216,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 		}
 
 		this.renderList(poseStack, mouseX, mouseY, partialTick);
-		//disableScissor();
+		disableScissor();
 		if (this.renderBackground) {
 			int margin = 4;
 			fillGradient(poseStack, this.getX(), this.getY(), this.getRight(), this.getY() + margin, -16777216, 0);
@@ -241,11 +242,24 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 		RenderSystem.disableBlend();
 	}
 
-	/*
 	protected void enableScissor() {
 		enableScissor(this.getX(), this.getY(), this.getRight(), this.getBottom());
 	}
-	*/
+
+	public static void enableScissor(int x1, int y1, int x2, int y2) {
+		Window window = Minecraft.getInstance().getWindow();
+		int windowHeight = window.getHeight();
+		double scale = window.getGuiScale();
+		double scissorX = x1 * scale;
+		double scissorY = windowHeight - y2 * scale;
+		double scissorW = (x2 - x1) * scale;
+		double scissorH = (y2 - y1) * scale;
+		RenderSystem.enableScissor((int)scissorX, (int)scissorY, Math.max(0, (int)scissorW), Math.max(0, (int)scissorH));
+	}
+
+	public static void disableScissor() {
+		RenderSystem.disableScissor();
+	}
 
 	protected void centerScrollOn(E entry) {
 		int y = 0;
