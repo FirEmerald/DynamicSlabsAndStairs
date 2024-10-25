@@ -52,7 +52,7 @@ public class CheckDataServerPacket extends ServerLoginPacket
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void handle(NetworkEvent.Context context) {
+	public void handleServer(NetworkEvent.Context context) {
 		context.setPacketHandled(true);
 		List<Triple<ResourceLocation, List<MessageTree>, List<MessageTree>>> compiledErrors = new ArrayList<>();
 		Registration.forEach((id, type) -> {

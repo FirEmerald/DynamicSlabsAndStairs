@@ -27,7 +27,7 @@ public class SetPlacementTogglePacket extends ServerPlayPacket
 	}
 
 	@Override
-	public void handle(NetworkEvent.Context context)
+	public void handleServer(NetworkEvent.Context context)
 	{
 		((IAPServerPlayer) context.getSender()).setPlacementEnabled(state);
 	}
