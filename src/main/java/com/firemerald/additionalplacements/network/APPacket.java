@@ -1,15 +1,25 @@
 package com.firemerald.additionalplacements.network;
 
+import com.firemerald.additionalplacements.AdditionalPlacementsMod;
+
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.PacketDistributor.PacketTarget;
 
 public abstract class APPacket
 {
 	public abstract void write(FriendlyByteBuf buf);
 
-	public abstract void handle(CustomPayloadEvent.Context context);
+	public abstract NetworkDirection getDirection();
+
+	public abstract void handleInternal(CustomPayloadEvent.Context context);
+
+	public void handle(CustomPayloadEvent.Context context) {
+		if (context.getDirection() == getDirection()) handleInternal(context);
+		else AdditionalPlacementsMod.LOGGER.error("Tried to handle " + getClass() + " with invalid direction " + context.getDirection());
+	}
 
     public void sendTo(PacketTarget target)
     {
@@ -23,6 +33,6 @@ public abstract class APPacket
 
     public void reply(CustomPayloadEvent.Context context)
     {
-    	send(context.getConnection());
+    	APNetwork.reply(this, context);
     }
 }
