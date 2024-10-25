@@ -131,7 +131,7 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 				this.forEachCreated((id, block) -> {
 					StairConnections targetType = connectionTypes.getOrDefault(id, StairConnections.ALL);
 					StairConnections actualType = ((IStairBlock<?>) block).allowedConnections();
-					if (targetType != actualType || true) mismatched.computeIfAbsent(targetType, u -> new ArrayList<>()).add(id);
+					if (targetType != actualType) mismatched.computeIfAbsent(targetType, u -> new ArrayList<>()).add(id);
 				});
 				if (!mismatched.isEmpty()) {
 					MessageTree errorListRoot = new MessageTree(new TranslationTextComponent("msg.additionalplacements.stairs.mismatched.header"));
