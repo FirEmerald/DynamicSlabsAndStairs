@@ -8,6 +8,8 @@ import com.firemerald.additionalplacements.network.server.CheckDataServerPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkEvent.Context;
 
 public class CheckDataClientPacket extends ClientLoginPacket
@@ -34,7 +36,8 @@ public class CheckDataClientPacket extends ClientLoginPacket
 	}
 
 	@Override
-	public void handle(Context context) {
+	@OnlyIn(Dist.CLIENT)
+	public void handleClient(Context context) {
 		context.setPacketHandled(true);
 		new CheckDataServerPacket(data).reply(context);
 	}

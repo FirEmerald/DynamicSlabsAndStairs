@@ -17,6 +17,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkEvent;
 
 public class ConfigurationCheckFailedPacket extends ClientLoginPacket
@@ -48,7 +50,8 @@ public class ConfigurationCheckFailedPacket extends ClientLoginPacket
 	}
 
 	@Override
-	public void handle(NetworkEvent.Context context)
+	@OnlyIn(Dist.CLIENT)
+	public void handleClient(NetworkEvent.Context context)
 	{
 		context.setPacketHandled(true);
 		MessageTree rootError = new MessageTree(new TranslatableComponent("msg.additionalplacements.errors.type"));
