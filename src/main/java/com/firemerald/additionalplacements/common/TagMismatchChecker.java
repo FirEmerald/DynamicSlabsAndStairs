@@ -37,10 +37,10 @@ public class TagMismatchChecker extends Thread implements Consumer<ServerTickEve
 {
 	private static TagMismatchChecker thread = null;
 	public static final ITextComponent MESSAGE = new TranslationTextComponent("msg.additionalplacements.mismatchedtags.0").append(
-			new StringTextComponent("/ap_tags_export").setStyle(Style.EMPTY.withClickEvent(new ClickEvent(Action.RUN_COMMAND, "/ap_tags_export")).withColor(TextFormatting.BLUE).withUnderlined(true)).append(
-					new TranslationTextComponent("msg.additionalplacements.mismatchedtags.1").withStyle(Style.EMPTY.withUnderlined(false).withColor(TextFormatting.WHITE)).append(
-							new StringTextComponent("/reload").setStyle(Style.EMPTY.withClickEvent(new ClickEvent(Action.RUN_COMMAND, "/reload")).withColor(TextFormatting.BLUE).withUnderlined(true)).append(
-									new TranslationTextComponent("msg.additionalplacements.mismatchedtags.2").withStyle(Style.EMPTY.withUnderlined(false).withColor(TextFormatting.WHITE))
+			new StringTextComponent("/ap_tags_export").setStyle(Style.EMPTY.withClickEvent(new ClickEvent(Action.RUN_COMMAND, "/ap_tags_export")).withColor(TextFormatting.BLUE).setUnderlined(true)).append(
+					new TranslationTextComponent("msg.additionalplacements.mismatchedtags.1").withStyle(Style.EMPTY.setUnderlined(false).withColor(TextFormatting.WHITE)).append(
+							new StringTextComponent("/reload").setStyle(Style.EMPTY.withClickEvent(new ClickEvent(Action.RUN_COMMAND, "/reload")).withColor(TextFormatting.BLUE).setUnderlined(true)).append(
+									new TranslationTextComponent("msg.additionalplacements.mismatchedtags.2").withStyle(Style.EMPTY.setUnderlined(false).withColor(TextFormatting.WHITE))
 									)
 							)
 					)

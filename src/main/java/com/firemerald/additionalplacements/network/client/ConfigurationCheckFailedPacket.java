@@ -18,6 +18,8 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 public class ConfigurationCheckFailedPacket extends ClientLoginPacket
@@ -49,8 +51,8 @@ public class ConfigurationCheckFailedPacket extends ClientLoginPacket
 	}
 
 	@Override
-	public void handle(NetworkEvent.Context context)
-	{
+	@OnlyIn(Dist.CLIENT)
+	public void handleClient(NetworkEvent.Context context) {
 		context.setPacketHandled(true);
 		MessageTree rootError = new MessageTree(new TranslationTextComponent("msg.additionalplacements.errors.type"));
 		compiledErrors.forEach(data -> {

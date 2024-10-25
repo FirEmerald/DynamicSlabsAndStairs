@@ -18,6 +18,7 @@ import net.minecraftforge.client.event.DrawHighlightEvent.HighlightBlock;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -26,6 +27,20 @@ import net.minecraftforge.fml.common.Mod;
 @OnlyIn(Dist.CLIENT)
 public class ClientEventHandler
 {
+	@SubscribeEvent
+	public static void onItemTooltip(ItemTooltipEvent event)
+	{
+		if (event.getItemStack().getItem() instanceof BlockItem)
+		{
+			Block block = ((BlockItem) event.getItemStack().getItem()).getBlock();
+			if (block instanceof IPlacementBlock)
+			{
+				IPlacementBlock<?> verticalBlock = ((IPlacementBlock<?>) block);
+				if (verticalBlock.hasAdditionalStates()) verticalBlock.appendHoverTextImpl(event.getItemStack(), event.getEntity() == null ? null : event.getEntity().level, event.getToolTip(), event.getFlags());
+			}
+		}
+	}
+	
 	@SubscribeEvent
 	public static void onHighlightBlock(HighlightBlock event)
 	{
