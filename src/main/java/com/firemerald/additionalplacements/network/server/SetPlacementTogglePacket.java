@@ -1,4 +1,4 @@
-package com.firemerald.additionalplacements.network;
+package com.firemerald.additionalplacements.network.server;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.client.APClientData;

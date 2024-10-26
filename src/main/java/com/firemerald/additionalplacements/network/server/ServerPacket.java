@@ -1,19 +1,24 @@
-package com.firemerald.additionalplacements.network;
+package com.firemerald.additionalplacements.network.server;
 
-import com.firemerald.additionalplacements.AdditionalPlacementsMod;
+import com.firemerald.additionalplacements.network.APNetwork;
+import com.firemerald.additionalplacements.network.APPacket;
 
 import net.minecraft.network.protocol.PacketFlow;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public abstract class ServerPacket<T extends IPayloadContext> extends APPacket<T>
 {
+	@Override
+	public PacketFlow getDirection() {
+		return PacketFlow.SERVERBOUND;
+	}
+	
 	public abstract void handleServer(T context);
 	
 	@Override
-	public void handle(T context)
+	public void handleInternal(T context)
 	{
-		if (context.flow() == PacketFlow.SERVERBOUND) handleServer(context);
-		else AdditionalPlacementsMod.LOGGER.error("Tried to handle " + getClass() + " with invalid direction " + context.flow());
+		handleServer(context);
 	}
 	
     public void sendToServer()

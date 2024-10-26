@@ -1,6 +1,10 @@
 package com.firemerald.additionalplacements.network;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
+import com.firemerald.additionalplacements.network.client.CheckDataClientPacket;
+import com.firemerald.additionalplacements.network.client.ConfigurationCheckFailedPacket;
+import com.firemerald.additionalplacements.network.server.CheckDataServerPacket;
+import com.firemerald.additionalplacements.network.server.SetPlacementTogglePacket;
 
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;

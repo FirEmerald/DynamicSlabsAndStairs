@@ -1,4 +1,4 @@
-package com.firemerald.additionalplacements.network;
+package com.firemerald.additionalplacements.network.client;
 
 import java.util.List;
 
@@ -16,6 +16,8 @@ import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
 
 public class ConfigurationCheckFailedPacket extends ClientPacket<ConfigurationPayloadContext>
@@ -55,6 +57,7 @@ public class ConfigurationCheckFailedPacket extends ClientPacket<ConfigurationPa
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public void handleClient(ConfigurationPayloadContext context)
 	{
 		MessageTree rootError = new MessageTree(Component.translatable("msg.additionalplacements.errors.type"));

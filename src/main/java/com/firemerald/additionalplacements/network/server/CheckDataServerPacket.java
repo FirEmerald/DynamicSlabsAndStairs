@@ -1,4 +1,4 @@
-package com.firemerald.additionalplacements.network;
+package com.firemerald.additionalplacements.network.server;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -8,6 +8,8 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.generation.Registration;
+import com.firemerald.additionalplacements.network.CheckDataConfigurationTask;
+import com.firemerald.additionalplacements.network.client.ConfigurationCheckFailedPacket;
 import com.firemerald.additionalplacements.util.MessageTree;
 
 import net.minecraft.nbt.CompoundTag;

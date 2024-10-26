@@ -1,14 +1,17 @@
-package com.firemerald.additionalplacements.network;
+package com.firemerald.additionalplacements.network.client;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.generation.Registration;
+import com.firemerald.additionalplacements.network.server.CheckDataServerPacket;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
 
 public class CheckDataClientPacket extends ClientPacket<ConfigurationPayloadContext>
@@ -43,6 +46,7 @@ public class CheckDataClientPacket extends ClientPacket<ConfigurationPayloadCont
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public void handleClient(ConfigurationPayloadContext context)
 	{
 		new CheckDataServerPacket(data).reply(context);

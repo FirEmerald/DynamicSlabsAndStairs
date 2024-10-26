@@ -3,6 +3,7 @@ package com.firemerald.additionalplacements.network;
 import java.util.function.Consumer;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
+import com.firemerald.additionalplacements.network.client.CheckDataClientPacket;
 
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
