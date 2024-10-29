@@ -20,7 +20,6 @@ Pressure plates can be placed on walls and ceilings.",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.firemerald.additionalplacements.AdditionalPlacementsMod",
 			"com.firemerald.additionalplacements.common.CommonModEvents"
 		],
 		"client": [
