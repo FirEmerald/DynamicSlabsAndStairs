@@ -66,8 +66,8 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 		this.mixedConnectionsBlacklist = mixedConnectionsBlacklist;
 	}
 
-	public void buildBootupConfig(ModConfigSpec.Builder builder) {
-		super.buildBootupConfig(builder);
+	public void buildStartupConfig(ModConfigSpec.Builder builder) {
+		super.buildStartupConfig(builder);
 		builder
 		.comment("Options to control which blocks will allow for vertical stair connections.\nKeep in mind vertical is RELATIVE to the placement of the stair - \"vertical\" for a vertically placed stair will be one of the two horizontal directions.")
 		.push("allow_vertical_connections");

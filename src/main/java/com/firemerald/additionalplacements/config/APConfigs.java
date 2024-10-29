@@ -15,42 +15,42 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class APConfigs {
-    private static ConfigBootup bootup;
-    private static ModConfigSpec bootupSpec;
-    private static ConfigCommon common;
+    private static StartupConfig startup;
+    private static ModConfigSpec startupSpec;
+    private static CommonConfig common;
     private static ModConfigSpec commonSpec;
-    private static ConfigServer server;
+    private static ServerConfig server;
     private static ModConfigSpec serverSpec;
-    private static ConfigClient client;
+    private static ClientConfig client;
     private static ModConfigSpec clientSpec;
     
     public static void init() {
     	NeoForgeModConfigEvents.loading(AdditionalPlacementsMod.MOD_ID).register(APConfigs::onModConfigLoaded);
     	NeoForgeModConfigEvents.reloading(AdditionalPlacementsMod.MOD_ID).register(APConfigs::onModConfigReloaded);
-        final Pair<ConfigBootup, ModConfigSpec> bootupSpecPair = new ModConfigSpec.Builder().configure(ConfigBootup::new);
-        bootup = bootupSpecPair.getLeft();
-        bootupSpec = bootupSpecPair.getRight();
-		bootup.loadConfig(FabricLoader.getInstance().getConfigDir().resolve("additionalplacements-bootup.toml"), bootupSpec);
-        final Pair<ConfigCommon, ModConfigSpec> commonSpecPair = new ModConfigSpec.Builder().configure(ConfigCommon::new);
+        final Pair<StartupConfig, ModConfigSpec> startupSpecPair = new ModConfigSpec.Builder().configure(StartupConfig::new);
+        startup = startupSpecPair.getLeft();
+        startupSpec = startupSpecPair.getRight();
+		startup.loadConfig(FabricLoader.getInstance().getConfigDir().resolve("additionalplacements-startup.toml"), startupSpec);
+        final Pair<CommonConfig, ModConfigSpec> commonSpecPair = new ModConfigSpec.Builder().configure(CommonConfig::new);
         common = commonSpecPair.getLeft();
         NeoForgeConfigRegistry.INSTANCE.register(AdditionalPlacementsMod.MOD_ID, ModConfig.Type.COMMON, commonSpec = commonSpecPair.getRight());
-        final Pair<ConfigServer, ModConfigSpec> serverSpecPair = new ModConfigSpec.Builder().configure(ConfigServer::new);
+        final Pair<ServerConfig, ModConfigSpec> serverSpecPair = new ModConfigSpec.Builder().configure(ServerConfig::new);
         server = serverSpecPair.getLeft();
         NeoForgeConfigRegistry.INSTANCE.register(AdditionalPlacementsMod.MOD_ID, ModConfig.Type.SERVER, serverSpec = serverSpecPair.getRight());
-        final Pair<ConfigClient, ModConfigSpec> clientSpecPair = new ModConfigSpec.Builder().configure(ConfigClient::new);
+        final Pair<ClientConfig, ModConfigSpec> clientSpecPair = new ModConfigSpec.Builder().configure(ClientConfig::new);
         client = clientSpecPair.getLeft();
         NeoForgeConfigRegistry.INSTANCE.register(AdditionalPlacementsMod.MOD_ID, ModConfig.Type.CLIENT, clientSpec = clientSpecPair.getRight());
     }
     
-    public static ConfigBootup bootup() {
-    	return bootup;
+    public static StartupConfig bootup() {
+    	return startup;
     }
     
-    public static ConfigCommon common() {
+    public static CommonConfig common() {
     	return common;
     }
     
-    public static ConfigServer server() {
+    public static ServerConfig server() {
     	return server;
     }
     
@@ -58,7 +58,7 @@ public class APConfigs {
     	return serverSpec.isLoaded();
     }
     
-    public static ConfigClient client() {
+    public static ClientConfig client() {
     	return client;
     }
     
