@@ -1,6 +1,7 @@
 package com.firemerald.additionalplacements.block;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
+import com.firemerald.additionalplacements.block.interfaces.IAdditionalBeaconBeamBlock;
 import com.firemerald.additionalplacements.block.interfaces.ICarpetBlock;
 
 import net.minecraft.core.BlockPos;
@@ -9,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.BeaconBeamBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CarpetBlock;
@@ -29,7 +31,15 @@ public class AdditionalCarpetBlock extends AdditionalFloorBlock<CarpetBlock> imp
 
 	public static AdditionalCarpetBlock of(CarpetBlock carpet)
 	{
-		return new AdditionalCarpetBlock(carpet);
+		return carpet instanceof BeaconBeamBlock ? new AdditionalBeaconBeamCarpetBlock(carpet) : new AdditionalCarpetBlock(carpet);
+	}
+
+	private static class AdditionalBeaconBeamCarpetBlock extends AdditionalCarpetBlock implements IAdditionalBeaconBeamBlock<CarpetBlock>
+	{
+		AdditionalBeaconBeamCarpetBlock(CarpetBlock carpet)
+		{
+			super(carpet);
+		}
 	}
 
 	@SuppressWarnings("deprecation")
