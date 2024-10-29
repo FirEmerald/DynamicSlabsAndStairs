@@ -6,11 +6,11 @@ import com.firemerald.additionalplacements.generation.GenerationType;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 
-public class ConfigServer
+public class ServerConfig
 {
 	public final BooleanValue checkTags, autoRebuildTags, fakePlayerPlacement;
 
-	public ConfigServer(ForgeConfigSpec.Builder builder)
+	public ServerConfig(ForgeConfigSpec.Builder builder)
 	{
         builder.comment("World settings").push("server");
         checkTags = builder

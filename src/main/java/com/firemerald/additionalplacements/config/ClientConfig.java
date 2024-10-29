@@ -7,12 +7,12 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.LongValue;
 
-public class ConfigClient
+public class ClientConfig
 {
 	public final BooleanValue defaultPlacementLogicState;
 	public final LongValue toggleQuickpressTime;
 
-	public ConfigClient(ForgeConfigSpec.Builder builder)
+	public ClientConfig(ForgeConfigSpec.Builder builder)
 	{
         builder.comment("Client settings").push("client");
         defaultPlacementLogicState = builder
