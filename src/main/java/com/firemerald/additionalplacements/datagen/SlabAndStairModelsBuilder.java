@@ -109,7 +109,7 @@ public class SlabAndStairModelsBuilder
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.FLIPPED_INNER_FRONT_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.FLIPPED_INNER_TOP_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.FLIPPED_INNER_BOTH_RIGHT.ordinal()] = 
-		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_LEFT.ordinal()] = 
+		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.VERTICAL_INNER_TOP_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.VERTICAL_INNER_BOTH_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.NORMAL_INNER_TOP_RIGHT.ordinal()] = 
@@ -130,7 +130,7 @@ public class SlabAndStairModelsBuilder
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.FLIPPED_INNER_FRONT_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.FLIPPED_INNER_TOP_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.FLIPPED_INNER_BOTH_RIGHT.ordinal()] = 
-		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_LEFT.ordinal()] = 
+		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.VERTICAL_INNER_TOP_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.VERTICAL_INNER_BOTH_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_DOWN_WEST.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_LEFT.ordinal()] = 
@@ -146,7 +146,7 @@ public class SlabAndStairModelsBuilder
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.FLIPPED_INNER_FRONT_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.FLIPPED_INNER_TOP_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.FLIPPED_INNER_BOTH_RIGHT.ordinal()] = 
-		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_LEFT.ordinal()] = 
+		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.VERTICAL_INNER_TOP_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.VERTICAL_INNER_BOTH_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_DOWN_NORTH.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_LEFT.ordinal()] = 
@@ -162,7 +162,7 @@ public class SlabAndStairModelsBuilder
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.FLIPPED_INNER_FRONT_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.FLIPPED_INNER_TOP_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.FLIPPED_INNER_BOTH_RIGHT.ordinal()] = 
-		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_LEFT.ordinal()] = 
+		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.VERTICAL_INNER_TOP_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.VERTICAL_INNER_BOTH_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_DOWN_EAST.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_LEFT.ordinal()] = 
@@ -194,19 +194,19 @@ public class SlabAndStairModelsBuilder
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_DOWN_EAST.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_LEFT.ordinal()] = new StateModelDefinition("/top/outer_bottom_left", 270);
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.NORMAL_OUTER_BOTTOM_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.FLIPPED_OUTER_BACK_LEFT.ordinal()] = 
-		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_LEFT.ordinal()] = 
+		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_DOWN_WEST.ordinal()][CompressedStairShape.VERTICAL_OUTER_BOTTOM_LEFT.ordinal()] = new StateModelDefinition("/top/outer_bottom_right", 0);
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.NORMAL_OUTER_BOTTOM_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.FLIPPED_OUTER_BACK_LEFT.ordinal()] = 
-		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_LEFT.ordinal()] = 
+		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_DOWN_NORTH.ordinal()][CompressedStairShape.VERTICAL_OUTER_BOTTOM_LEFT.ordinal()] = new StateModelDefinition("/top/outer_bottom_right", 90);
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.NORMAL_OUTER_BOTTOM_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.FLIPPED_OUTER_BACK_LEFT.ordinal()] = 
-		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_LEFT.ordinal()] = 
+		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_DOWN_EAST.ordinal()][CompressedStairShape.VERTICAL_OUTER_BOTTOM_LEFT.ordinal()] = new StateModelDefinition("/top/outer_bottom_right", 180);
+		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.NORMAL_OUTER_BOTTOM_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.FLIPPED_OUTER_BACK_LEFT.ordinal()] = 
-		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_DOWN_SOUTH.ordinal()][CompressedStairShape.VERTICAL_OUTER_BOTTOM_LEFT.ordinal()] = new StateModelDefinition("/top/outer_bottom_right", 270);
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.NORMAL_OUTER_BOTH_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.FLIPPED_OUTER_BOTH_RIGHT.ordinal()] = 
@@ -252,7 +252,7 @@ public class SlabAndStairModelsBuilder
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_DOWN_NORTH.ordinal()][CompressedStairShape.FLIPPED_STRAIGHT.ordinal()] = new StateModelDefinition("/bottom/straight", 90);
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_DOWN_EAST.ordinal()][CompressedStairShape.FLIPPED_STRAIGHT.ordinal()] = new StateModelDefinition("/bottom/straight", 180);
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_DOWN_SOUTH.ordinal()][CompressedStairShape.FLIPPED_STRAIGHT.ordinal()] = new StateModelDefinition("/bottom/straight", 270);
-		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_RIGHT.ordinal()] = 
+		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.VERTICAL_INNER_TOP_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.VERTICAL_INNER_BOTH_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_DOWN_WEST.ordinal()][CompressedStairShape.NORMAL_INNER_TOP_RIGHT.ordinal()] = 
@@ -268,7 +268,7 @@ public class SlabAndStairModelsBuilder
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_DOWN_SOUTH.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_DOWN_SOUTH.ordinal()][CompressedStairShape.VERTICAL_INNER_TOP_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_DOWN_SOUTH.ordinal()][CompressedStairShape.VERTICAL_INNER_BOTH_RIGHT.ordinal()] = new StateModelDefinition("/bottom/inner", 0);
-		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_RIGHT.ordinal()] = 
+		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.VERTICAL_INNER_TOP_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.VERTICAL_INNER_BOTH_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_DOWN_WEST.ordinal()][CompressedStairShape.NORMAL_INNER_TOP_LEFT.ordinal()] = 
@@ -284,7 +284,7 @@ public class SlabAndStairModelsBuilder
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_DOWN_NORTH.ordinal()][CompressedStairShape.FLIPPED_INNER_FRONT_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_DOWN_NORTH.ordinal()][CompressedStairShape.FLIPPED_INNER_TOP_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_DOWN_NORTH.ordinal()][CompressedStairShape.FLIPPED_INNER_BOTH_LEFT.ordinal()] = new StateModelDefinition("/bottom/inner", 90);
-		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_RIGHT.ordinal()] = 
+		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.VERTICAL_INNER_TOP_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.VERTICAL_INNER_BOTH_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_DOWN_NORTH.ordinal()][CompressedStairShape.NORMAL_INNER_TOP_LEFT.ordinal()] = 
@@ -300,7 +300,7 @@ public class SlabAndStairModelsBuilder
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_DOWN_EAST.ordinal()][CompressedStairShape.FLIPPED_INNER_FRONT_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_DOWN_EAST.ordinal()][CompressedStairShape.FLIPPED_INNER_TOP_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_DOWN_EAST.ordinal()][CompressedStairShape.FLIPPED_INNER_BOTH_LEFT.ordinal()] = new StateModelDefinition("/bottom/inner", 180);
-		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_RIGHT.ordinal()] = 
+		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.VERTICAL_INNER_FRONT_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.VERTICAL_INNER_TOP_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.VERTICAL_INNER_BOTH_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_DOWN_EAST.ordinal()][CompressedStairShape.NORMAL_INNER_TOP_LEFT.ordinal()] = 
@@ -340,19 +340,19 @@ public class SlabAndStairModelsBuilder
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_DOWN_EAST.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_DOWN_SOUTH.ordinal()][CompressedStairShape.NORMAL_OUTER_BOTTOM_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_DOWN_SOUTH.ordinal()][CompressedStairShape.FLIPPED_OUTER_BACK_LEFT.ordinal()] = new StateModelDefinition("/bottom/outer_top_left", 270);
-		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_RIGHT.ordinal()] = 
+		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_DOWN_WEST.ordinal()][CompressedStairShape.NORMAL_OUTER_BOTTOM_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_DOWN_WEST.ordinal()][CompressedStairShape.FLIPPED_OUTER_BACK_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_DOWN_WEST.ordinal()][CompressedStairShape.VERTICAL_OUTER_BOTTOM_RIGHT.ordinal()] = new StateModelDefinition("/bottom/outer_top_right", 0);
-		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_UP_SOUTH.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_RIGHT.ordinal()] = 
+		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_DOWN_NORTH.ordinal()][CompressedStairShape.NORMAL_OUTER_BOTTOM_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_DOWN_NORTH.ordinal()][CompressedStairShape.FLIPPED_OUTER_BACK_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.WEST_DOWN_NORTH.ordinal()][CompressedStairShape.VERTICAL_OUTER_BOTTOM_RIGHT.ordinal()] = new StateModelDefinition("/bottom/outer_top_right", 90);
-		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_UP_WEST.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_RIGHT.ordinal()] = 
+		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_DOWN_EAST.ordinal()][CompressedStairShape.NORMAL_OUTER_BOTTOM_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_DOWN_EAST.ordinal()][CompressedStairShape.FLIPPED_OUTER_BACK_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_DOWN_EAST.ordinal()][CompressedStairShape.VERTICAL_OUTER_BOTTOM_RIGHT.ordinal()] = new StateModelDefinition("/bottom/outer_top_right", 180);
-		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_RIGHT.ordinal()] = 
+		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.SOUTH_UP_EAST.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_DOWN_SOUTH.ordinal()][CompressedStairShape.NORMAL_OUTER_BOTTOM_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_DOWN_SOUTH.ordinal()][CompressedStairShape.FLIPPED_OUTER_BACK_RIGHT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_DOWN_SOUTH.ordinal()][CompressedStairShape.VERTICAL_OUTER_BOTTOM_RIGHT.ordinal()] = new StateModelDefinition("/bottom/outer_top_right", 270);
@@ -421,6 +421,7 @@ public class SlabAndStairModelsBuilder
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.EAST_UP_NORTH.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_RIGHT_BOTTOM_LEFT.ordinal()] = 
 		STAIR_MODEL_DEFINITIONS[CompressedStairFacing.NORTH_DOWN_EAST.ordinal()][CompressedStairShape.VERTICAL_OUTER_BACK_RIGHT_BOTTOM_LEFT.ordinal()] = new StateModelDefinition("/side/twist_right", 270);
 	}
+	
 	/*
 	private static void setUpStairModelDefs(ComplexFacing normal, ComplexFacing flipped, int rotation) {
 		Pair<CompressedStairFacing, StairFacingType> normalPair = CompressedStairFacing.getCompressedFacing(normal);
@@ -488,15 +489,15 @@ public class SlabAndStairModelsBuilder
 		int rotation2 = (rotation + 270) % 360;
 		setStairModelDef(normal, normalType, flipped, flippedType, StairShape.STRAIGHT, new StateModelDefinition("/side/straight", rotation));
 
-		setStairModelDef(normal, normalType, flipped, flippedType, StairShape.INNER_FRONT_LEFT, new StateModelDefinition("/top/inner", rotation), new StateModelDefinition("/bottom/inner", rotation));
-		setStairModelDef(normal, normalType, flipped, flippedType, StairShape.INNER_FRONT_RIGHT, new StateModelDefinition("/bottom/inner", rotation), new StateModelDefinition("/top/inner", rotation));
+		setStairModelDef(normal, normalType, flipped, flippedType, StairShape.INNER_FRONT_LEFT, new StateModelDefinition("/bottom/inner", rotation));
+		setStairModelDef(normal, normalType, flipped, flippedType, StairShape.INNER_FRONT_RIGHT, new StateModelDefinition("/top/inner", rotation));
 		setStairModelDef(normal, normalType, flipped, flippedType, StairShape.INNER_TOP_LEFT, new StateModelDefinition("/bottom/inner", rotation));
 		setStairModelDef(normal, normalType, flipped, flippedType, StairShape.INNER_TOP_RIGHT, new StateModelDefinition("/top/inner", rotation));
 		setStairModelDef(normal, normalType, flipped, flippedType, StairShape.INNER_BOTH_LEFT, new StateModelDefinition("/bottom/inner", rotation));
 		setStairModelDef(normal, normalType, flipped, flippedType, StairShape.INNER_BOTH_RIGHT, new StateModelDefinition("/top/inner", rotation));
 
-		setStairModelDef(normal, normalType, flipped, flippedType, StairShape.OUTER_BACK_LEFT, new StateModelDefinition("/top/outer_bottom_right", rotation), new StateModelDefinition("/bottom/outer_top_right", rotation2));
-		setStairModelDef(normal, normalType, flipped, flippedType, StairShape.OUTER_BACK_RIGHT, new StateModelDefinition("/bottom/outer_top_right", rotation), new StateModelDefinition("/top/outer_bottom_right", rotation2));
+		setStairModelDef(normal, normalType, flipped, flippedType, StairShape.OUTER_BACK_LEFT, new StateModelDefinition("/bottom/outer_top_right", rotation2));
+		setStairModelDef(normal, normalType, flipped, flippedType, StairShape.OUTER_BACK_RIGHT, new StateModelDefinition("/top/outer_bottom_right", rotation2));
 		setStairModelDef(normal, normalType, flipped, flippedType, StairShape.OUTER_BOTTOM_LEFT, new StateModelDefinition("/bottom/outer_top_left", rotation));
 		setStairModelDef(normal, normalType, flipped, flippedType, StairShape.OUTER_BOTTOM_RIGHT, new StateModelDefinition("/top/outer_bottom_left", rotation));
 		setStairModelDef(normal, normalType, flipped, flippedType, StairShape.OUTER_BOTH_LEFT, new StateModelDefinition("/bottom/outer_both", rotation));
@@ -511,13 +512,6 @@ public class SlabAndStairModelsBuilder
 		if (normalShape != null) normal[normalShape.ordinal()] = model;
 		CompressedStairShape flippedShape = CompressedStairShape.getCompressedShape(flippedType, shape.flipped());
 		if (flippedShape != null) flipped[flippedShape.ordinal()] = model;
-	}
-	
-	private static void setStairModelDef(StateModelDefinition[] normal, StairFacingType normalType, StateModelDefinition[] flipped, StairFacingType flippedType, StairShape shape, StateModelDefinition normalModel, StateModelDefinition flippedModel) {
-		CompressedStairShape normalShape = CompressedStairShape.getCompressedShape(normalType, shape);
-		if (normalShape != null) normal[normalShape.ordinal()] = normalModel;
-		CompressedStairShape flippedShape = CompressedStairShape.getCompressedShape(flippedType, shape.flipped());
-		if (flippedShape != null) flipped[flippedShape.ordinal()] = flippedModel;
 	}
 	*/
 	
