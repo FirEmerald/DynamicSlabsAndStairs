@@ -3,6 +3,7 @@ package com.firemerald.additionalplacements.common;
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
 import com.firemerald.additionalplacements.commands.CommandExportTags;
+import com.firemerald.additionalplacements.commands.CommandGenerateStairsDebugger;
 import com.firemerald.additionalplacements.config.APConfigs;
 
 import net.minecraft.Util;
@@ -43,6 +44,7 @@ public class CommonEventHandler
 	public static void onRegisterCommands(RegisterCommandsEvent event)
 	{
 		CommandExportTags.register(event.getDispatcher());
+		CommandGenerateStairsDebugger.register(event.getDispatcher());
 	}
 
 	@SubscribeEvent

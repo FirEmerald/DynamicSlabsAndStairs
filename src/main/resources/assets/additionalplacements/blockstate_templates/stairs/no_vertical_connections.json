@@ -1,384 +1,384 @@
 {
   "variants": {
-    "facing=east_down_south,shape=flipped_inner_front_left": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=east_down_south,shape=flipped_inner_front_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
-      "uvlock": true
-    },
-    "facing=east_down_south,shape=flipped_outer_back_left": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_left",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=east_down_south,shape=flipped_outer_back_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_right",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=east_down_south,shape=flipped_straight": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/straight",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=east_down_south,shape=vertical_inner_front_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/inner",
-      "uvlock": true
-    },
-    "facing=east_down_south,shape=vertical_inner_front_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
-      "uvlock": true
-    },
-    "facing=east_down_south,shape=vertical_outer_back_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_left",
-      "uvlock": true
-    },
-    "facing=east_down_south,shape=vertical_outer_back_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_left",
-      "uvlock": true
-    },
-    "facing=east_down_south,shape=vertical_straight": {
-      "model": "additionalplacements:block/stairs/dynamic/side/straight",
-      "uvlock": true
-    },
-    "facing=east_up_north,shape=flipped_inner_front_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/inner",
-      "uvlock": true
-    },
-    "facing=east_up_north,shape=flipped_inner_front_right": {
-      "model": "additionalplacements:block/stairs/dynamic/top/inner",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=east_up_north,shape=flipped_outer_back_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_right",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=east_up_north,shape=flipped_outer_back_right": {
-      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_left",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=east_up_north,shape=flipped_straight": {
+    "facing=south_up_east,shape=flipped_straight": {
       "model": "additionalplacements:block/stairs/dynamic/top/straight",
-      "uvlock": true,
-      "y": 270
+      "uvlock": true
     },
-    "facing=east_up_north,shape=vertical_inner_front_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/inner",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=east_up_north,shape=vertical_inner_front_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=east_up_north,shape=vertical_outer_back_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_right",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=east_up_north,shape=vertical_outer_back_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_right",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=east_up_north,shape=vertical_straight": {
-      "model": "additionalplacements:block/stairs/dynamic/side/straight",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=north_down_east,shape=flipped_inner_front_left": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=north_down_east,shape=flipped_inner_front_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=north_down_east,shape=flipped_outer_back_left": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_left",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=north_down_east,shape=flipped_outer_back_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_right",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=north_down_east,shape=flipped_straight": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/straight",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=north_down_east,shape=vertical_inner_front_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/inner",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=north_down_east,shape=vertical_inner_front_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=north_down_east,shape=vertical_outer_back_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_left",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=north_down_east,shape=vertical_outer_back_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_left",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=north_down_east,shape=vertical_straight": {
-      "model": "additionalplacements:block/stairs/dynamic/side/straight",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=north_up_west,shape=flipped_inner_front_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/inner",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=north_up_west,shape=flipped_inner_front_right": {
-      "model": "additionalplacements:block/stairs/dynamic/top/inner",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=north_up_west,shape=flipped_outer_back_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_right",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=north_up_west,shape=flipped_outer_back_right": {
-      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_left",
-      "uvlock": true,
-      "y": 180
+    "facing=west_up_south,shape=flipped_straight": {
+      "model": "additionalplacements:block/stairs/dynamic/top/straight",
+      "y": 90,
+      "uvlock": true
     },
     "facing=north_up_west,shape=flipped_straight": {
       "model": "additionalplacements:block/stairs/dynamic/top/straight",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=north_up_west,shape=vertical_inner_front_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/inner",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=north_up_west,shape=vertical_inner_front_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=north_up_west,shape=vertical_outer_back_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_right",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=north_up_west,shape=vertical_outer_back_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_right",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=north_up_west,shape=vertical_straight": {
-      "model": "additionalplacements:block/stairs/dynamic/side/straight",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=south_down_west,shape=flipped_inner_front_left": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
+      "y": 180,
       "uvlock": true
     },
-    "facing=south_down_west,shape=flipped_inner_front_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
-      "uvlock": true,
-      "y": 90
-    },
-    "facing=south_down_west,shape=flipped_outer_back_left": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_left",
-      "uvlock": true
-    },
-    "facing=south_down_west,shape=flipped_outer_back_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_right",
+    "facing=east_up_north,shape=flipped_straight": {
+      "model": "additionalplacements:block/stairs/dynamic/top/straight",
+      "y": 270,
       "uvlock": true
     },
     "facing=south_down_west,shape=flipped_straight": {
       "model": "additionalplacements:block/stairs/dynamic/bottom/straight",
       "uvlock": true
     },
-    "facing=south_down_west,shape=vertical_inner_front_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/inner",
-      "uvlock": true,
-      "y": 90
+    "facing=west_down_north,shape=flipped_straight": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/straight",
+      "y": 90,
+      "uvlock": true
     },
-    "facing=south_down_west,shape=vertical_inner_front_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
-      "uvlock": true,
-      "y": 90
+    "facing=north_down_east,shape=flipped_straight": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/straight",
+      "y": 180,
+      "uvlock": true
     },
-    "facing=south_down_west,shape=vertical_outer_back_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_left",
-      "uvlock": true,
-      "y": 90
-    },
-    "facing=south_down_west,shape=vertical_outer_back_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_left",
-      "uvlock": true,
-      "y": 90
-    },
-    "facing=south_down_west,shape=vertical_straight": {
-      "model": "additionalplacements:block/stairs/dynamic/side/straight",
-      "uvlock": true,
-      "y": 90
+    "facing=east_down_south,shape=flipped_straight": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/straight",
+      "y": 270,
+      "uvlock": true
     },
     "facing=south_up_east,shape=flipped_inner_front_left": {
       "model": "additionalplacements:block/stairs/dynamic/top/inner",
-      "uvlock": true,
-      "y": 90
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=west_up_south,shape=flipped_inner_front_left": {
+      "model": "additionalplacements:block/stairs/dynamic/top/inner",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=north_up_west,shape=flipped_inner_front_left": {
+      "model": "additionalplacements:block/stairs/dynamic/top/inner",
+      "y": 270,
+      "uvlock": true
+    },
+    "facing=east_up_north,shape=flipped_inner_front_left": {
+      "model": "additionalplacements:block/stairs/dynamic/top/inner",
+      "uvlock": true
+    },
+    "facing=south_down_west,shape=flipped_inner_front_left": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
+      "uvlock": true
+    },
+    "facing=west_down_north,shape=flipped_inner_front_left": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=north_down_east,shape=flipped_inner_front_left": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=east_down_south,shape=flipped_inner_front_left": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
+      "y": 270,
+      "uvlock": true
     },
     "facing=south_up_east,shape=flipped_inner_front_right": {
       "model": "additionalplacements:block/stairs/dynamic/top/inner",
+      "uvlock": true
+    },
+    "facing=west_up_south,shape=flipped_inner_front_right": {
+      "model": "additionalplacements:block/stairs/dynamic/top/inner",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=north_up_west,shape=flipped_inner_front_right": {
+      "model": "additionalplacements:block/stairs/dynamic/top/inner",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=east_up_north,shape=flipped_inner_front_right": {
+      "model": "additionalplacements:block/stairs/dynamic/top/inner",
+      "y": 270,
+      "uvlock": true
+    },
+    "facing=south_down_west,shape=flipped_inner_front_right": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=west_down_north,shape=flipped_inner_front_right": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=north_down_east,shape=flipped_inner_front_right": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
+      "y": 270,
+      "uvlock": true
+    },
+    "facing=east_down_south,shape=flipped_inner_front_right": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
       "uvlock": true
     },
     "facing=south_up_east,shape=flipped_outer_back_left": {
       "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_right",
       "uvlock": true
     },
+    "facing=west_up_south,shape=flipped_outer_back_left": {
+      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_right",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=north_up_west,shape=flipped_outer_back_left": {
+      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_right",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=east_up_north,shape=flipped_outer_back_left": {
+      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_right",
+      "y": 270,
+      "uvlock": true
+    },
+    "facing=south_down_west,shape=flipped_outer_back_left": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_left",
+      "uvlock": true
+    },
+    "facing=west_down_north,shape=flipped_outer_back_left": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_left",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=north_down_east,shape=flipped_outer_back_left": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_left",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=east_down_south,shape=flipped_outer_back_left": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_left",
+      "y": 270,
+      "uvlock": true
+    },
     "facing=south_up_east,shape=flipped_outer_back_right": {
       "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_left",
       "uvlock": true
     },
-    "facing=south_up_east,shape=flipped_straight": {
-      "model": "additionalplacements:block/stairs/dynamic/top/straight",
+    "facing=west_up_south,shape=flipped_outer_back_right": {
+      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_left",
+      "y": 90,
       "uvlock": true
     },
-    "facing=south_up_east,shape=vertical_inner_front_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/inner",
+    "facing=north_up_west,shape=flipped_outer_back_right": {
+      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_left",
+      "y": 180,
       "uvlock": true
     },
-    "facing=south_up_east,shape=vertical_inner_front_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
+    "facing=east_up_north,shape=flipped_outer_back_right": {
+      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_left",
+      "y": 270,
       "uvlock": true
     },
-    "facing=south_up_east,shape=vertical_outer_back_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_right",
-      "uvlock": true
-    },
-    "facing=south_up_east,shape=vertical_outer_back_right": {
+    "facing=south_down_west,shape=flipped_outer_back_right": {
       "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_right",
+      "uvlock": true
+    },
+    "facing=west_down_north,shape=flipped_outer_back_right": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_right",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=north_down_east,shape=flipped_outer_back_right": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_right",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=east_down_south,shape=flipped_outer_back_right": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_right",
+      "y": 270,
       "uvlock": true
     },
     "facing=south_up_east,shape=vertical_straight": {
       "model": "additionalplacements:block/stairs/dynamic/side/straight",
       "uvlock": true
     },
-    "facing=west_down_north,shape=flipped_inner_front_left": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
-      "uvlock": true,
-      "y": 90
+    "facing=west_up_south,shape=vertical_straight": {
+      "model": "additionalplacements:block/stairs/dynamic/side/straight",
+      "y": 90,
+      "uvlock": true
     },
-    "facing=west_down_north,shape=flipped_inner_front_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
-      "uvlock": true,
-      "y": 180
+    "facing=north_up_west,shape=vertical_straight": {
+      "model": "additionalplacements:block/stairs/dynamic/side/straight",
+      "y": 180,
+      "uvlock": true
     },
-    "facing=west_down_north,shape=flipped_outer_back_left": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_left",
-      "uvlock": true,
-      "y": 90
+    "facing=east_up_north,shape=vertical_straight": {
+      "model": "additionalplacements:block/stairs/dynamic/side/straight",
+      "y": 270,
+      "uvlock": true
     },
-    "facing=west_down_north,shape=flipped_outer_back_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_right",
-      "uvlock": true,
-      "y": 90
-    },
-    "facing=west_down_north,shape=flipped_straight": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/straight",
-      "uvlock": true,
-      "y": 90
-    },
-    "facing=west_down_north,shape=vertical_inner_front_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/inner",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=west_down_north,shape=vertical_inner_front_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=west_down_north,shape=vertical_outer_back_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_left",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=west_down_north,shape=vertical_outer_back_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_left",
-      "uvlock": true,
-      "y": 180
+    "facing=south_down_west,shape=vertical_straight": {
+      "model": "additionalplacements:block/stairs/dynamic/side/straight",
+      "y": 90,
+      "uvlock": true
     },
     "facing=west_down_north,shape=vertical_straight": {
       "model": "additionalplacements:block/stairs/dynamic/side/straight",
-      "uvlock": true,
-      "y": 180
+      "y": 180,
+      "uvlock": true
     },
-    "facing=west_up_south,shape=flipped_inner_front_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/inner",
-      "uvlock": true,
-      "y": 180
+    "facing=north_down_east,shape=vertical_straight": {
+      "model": "additionalplacements:block/stairs/dynamic/side/straight",
+      "y": 270,
+      "uvlock": true
     },
-    "facing=west_up_south,shape=flipped_inner_front_right": {
-      "model": "additionalplacements:block/stairs/dynamic/top/inner",
-      "uvlock": true,
-      "y": 90
+    "facing=east_down_south,shape=vertical_straight": {
+      "model": "additionalplacements:block/stairs/dynamic/side/straight",
+      "uvlock": true
     },
-    "facing=west_up_south,shape=flipped_outer_back_left": {
-      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_right",
-      "uvlock": true,
-      "y": 90
-    },
-    "facing=west_up_south,shape=flipped_outer_back_right": {
-      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_left",
-      "uvlock": true,
-      "y": 90
-    },
-    "facing=west_up_south,shape=flipped_straight": {
-      "model": "additionalplacements:block/stairs/dynamic/top/straight",
-      "uvlock": true,
-      "y": 90
+    "facing=south_up_east,shape=vertical_inner_front_left": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
+      "uvlock": true
     },
     "facing=west_up_south,shape=vertical_inner_front_left": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=north_up_west,shape=vertical_inner_front_left": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=east_up_north,shape=vertical_inner_front_left": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
+      "y": 270,
+      "uvlock": true
+    },
+    "facing=south_down_west,shape=vertical_inner_front_left": {
       "model": "additionalplacements:block/stairs/dynamic/top/inner",
-      "uvlock": true,
-      "y": 90
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=west_down_north,shape=vertical_inner_front_left": {
+      "model": "additionalplacements:block/stairs/dynamic/top/inner",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=north_down_east,shape=vertical_inner_front_left": {
+      "model": "additionalplacements:block/stairs/dynamic/top/inner",
+      "y": 270,
+      "uvlock": true
+    },
+    "facing=east_down_south,shape=vertical_inner_front_left": {
+      "model": "additionalplacements:block/stairs/dynamic/top/inner",
+      "uvlock": true
+    },
+    "facing=south_up_east,shape=vertical_inner_front_right": {
+      "model": "additionalplacements:block/stairs/dynamic/top/inner",
+      "uvlock": true
     },
     "facing=west_up_south,shape=vertical_inner_front_right": {
+      "model": "additionalplacements:block/stairs/dynamic/top/inner",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=north_up_west,shape=vertical_inner_front_right": {
+      "model": "additionalplacements:block/stairs/dynamic/top/inner",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=east_up_north,shape=vertical_inner_front_right": {
+      "model": "additionalplacements:block/stairs/dynamic/top/inner",
+      "y": 270,
+      "uvlock": true
+    },
+    "facing=south_down_west,shape=vertical_inner_front_right": {
       "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
-      "uvlock": true,
-      "y": 90
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=west_down_north,shape=vertical_inner_front_right": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=north_down_east,shape=vertical_inner_front_right": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
+      "y": 270,
+      "uvlock": true
+    },
+    "facing=east_down_south,shape=vertical_inner_front_right": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/inner",
+      "uvlock": true
+    },
+    "facing=south_up_east,shape=vertical_outer_back_left": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_right",
+      "y": 270,
+      "uvlock": true
     },
     "facing=west_up_south,shape=vertical_outer_back_left": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_right",
+      "uvlock": true
+    },
+    "facing=north_up_west,shape=vertical_outer_back_left": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_right",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=east_up_north,shape=vertical_outer_back_left": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_right",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=south_down_west,shape=vertical_outer_back_left": {
+      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_left",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=west_down_north,shape=vertical_outer_back_left": {
+      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_left",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=north_down_east,shape=vertical_outer_back_left": {
+      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_left",
+      "y": 270,
+      "uvlock": true
+    },
+    "facing=east_down_south,shape=vertical_outer_back_left": {
+      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_left",
+      "uvlock": true
+    },
+    "facing=south_up_east,shape=vertical_outer_back_right": {
       "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_right",
-      "uvlock": true,
-      "y": 90
+      "y": 270,
+      "uvlock": true
     },
     "facing=west_up_south,shape=vertical_outer_back_right": {
-      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_right",
-      "uvlock": true,
-      "y": 90
+      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_right",
+      "uvlock": true
     },
-    "facing=west_up_south,shape=vertical_straight": {
-      "model": "additionalplacements:block/stairs/dynamic/side/straight",
-      "uvlock": true,
-      "y": 90
+    "facing=north_up_west,shape=vertical_outer_back_right": {
+      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_right",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=east_up_north,shape=vertical_outer_back_right": {
+      "model": "additionalplacements:block/stairs/dynamic/top/outer_bottom_right",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=south_down_west,shape=vertical_outer_back_right": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_left",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=west_down_north,shape=vertical_outer_back_right": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_left",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=north_down_east,shape=vertical_outer_back_right": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_left",
+      "y": 270,
+      "uvlock": true
+    },
+    "facing=east_down_south,shape=vertical_outer_back_right": {
+      "model": "additionalplacements:block/stairs/dynamic/bottom/outer_top_left",
+      "uvlock": true
     }
   }
 }
