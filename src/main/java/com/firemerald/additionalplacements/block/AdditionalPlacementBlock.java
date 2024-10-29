@@ -10,10 +10,12 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
 import com.firemerald.additionalplacements.common.AdditionalPlacementsBlockTags;
+import com.firemerald.additionalplacements.util.BlockRotation;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
@@ -25,10 +27,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -39,18 +38,20 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public abstract class AdditionalPlacementBlock<T extends Block> extends Block implements IPlacementBlock<T>
 {
-	private static Set<Property<?>> copyPropsStatic;
-	protected final T parentBlock;
+	private static List<Property<?>> copyPropsStatic = new ArrayList<>();;
+	public final T parentBlock;
 	private final Property<?>[] copyProps;
 
 	public AdditionalPlacementBlock(T parentBlock)
 	{
 		super(theHack(parentBlock));
 		this.copyProps = copyPropsStatic.toArray(Property[]::new);
-		copyPropsStatic = null;
+		copyPropsStatic.clear();
 		this.parentBlock = parentBlock;
 	}
 
@@ -62,15 +63,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 
 	public static Properties theHack(Block parentBlock)
 	{
-		Set<Property<?>> props = new HashSet<>(parentBlock.defaultBlockState().getProperties());
-		if (parentBlock instanceof SlabBlock) props.remove(SlabBlock.TYPE);
-		else if (parentBlock instanceof StairBlock)
-		{
-			props.remove(StairBlock.FACING);
-			props.remove(StairBlock.SHAPE);
-			props.remove(StairBlock.HALF);
-		}
-		copyPropsStatic = props;
+		copyPropsStatic.addAll(parentBlock.defaultBlockState().getProperties());
 		return BlockBehaviour.Properties.copy(parentBlock);
 	}
 
@@ -90,6 +83,10 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 		for (Property prop : copyProps) to = to.setValue(prop, from.getValue(prop));
 		return to;
 	}
+	
+	protected boolean isValidProperty(Property<?> prop) {
+		return true;
+	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
@@ -97,14 +94,8 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 		super.createBlockStateDefinition(builder);
 		Set<Property<?>> invalid = new HashSet<>();
 		copyPropsStatic.forEach(prop -> {
-			try
-			{
-				builder.add(prop);
-			}
-			catch (IllegalArgumentException e)
-			{
-				invalid.add(prop);
-			}
+			if (isValidProperty(prop)) builder.add(prop);
+			else invalid.add(prop);
 		});
 		copyPropsStatic.removeAll(invalid);
 	}
@@ -132,6 +123,13 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 		return copyProperties(worldState, getModelState());
 	}
 
+	public BlockState getUnrotatedModelState(BlockState worldState)
+	{
+		return withUnrotatedPlacement(worldState, getModelState(worldState));
+	}
+	
+	public abstract BlockState withUnrotatedPlacement(BlockState worldState, BlockState modelState);
+
 	@Override
 	@Deprecated
 	public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder)
@@ -140,16 +138,10 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
+	@Deprecated
 	public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state)
 	{
-		try
-		{
-			return parentBlock.getCloneItemStack(level, pos, state);
-		}
-		catch (Exception e)
-		{
-			return ItemStack.EMPTY;
-		}
+		return parentBlock.getCloneItemStack(level, pos, state);
 	}
 
 	@Override
@@ -225,11 +217,11 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
+	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving)
 	{
-		if (!state.is(newState.getBlock()))
+		if (!state.is(oldState.getBlock()))
 		{
-			getModelState(state).onRemove(level, pos, newState, isMoving);
+			getModelState(state).onRemove(level, pos, oldState, isMoving);
 		}
 	}
 
@@ -334,6 +326,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 		return AdditionalPlacementsBlockTags.remap(tags, getTagTypeName(), getTagTypeNamePlural());
 	}
 
+
 	@Override
 	public boolean hasAdditionalStates()
 	{
@@ -385,6 +378,13 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
+	@Deprecated
+	public boolean skipRendering(BlockState thisState, BlockState adjacentState, Direction dir)
+	{
+		return this.getModelState(thisState).skipRendering(adjacentState, dir);
+	}
+
+	@Override
 	public boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos)
 	{
 		return this.getModelState(state).propagatesSkylightDown(level, pos);
@@ -396,12 +396,33 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 		return this.getModelState(state).getShadeBrightness(level, pos);
 	}
 
-	//TODO we need to make additional sub-classes for this now, fml
-	/*
 	@Override
-	public float[] getBeaconColorMultiplier(BlockState state, LevelReader level, BlockPos pos1, BlockPos pos2)
+	@Deprecated
+	public boolean isSignalSource(BlockState state)
 	{
-		return this.getModelState(state).getBeaconColorMultiplier(level, pos1, pos2);
+		return parentBlock.isSignalSource(this.getModelState(state));
 	}
-	*/
+	
+	public abstract boolean rotatesLogic(BlockState state);
+	
+	public abstract boolean rotatesTexture(BlockState state);
+	
+	public abstract boolean rotatesModel(BlockState state);
+	
+	public abstract BlockRotation getRotation(BlockState state);
+
+	
+	@Override
+	@Deprecated
+	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
+	{
+		if (rotatesModel(state))
+			return getRotation(state).applyBlockSpace(getUnrotatedModelState(state).getShape(level, pos, context));
+		else
+			return getShapeInternal(state, level, pos, context);
+	}
+
+	public abstract VoxelShape getShapeInternal(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context);
+
+	public abstract ResourceLocation getDynamicBlockstateJson();
 }

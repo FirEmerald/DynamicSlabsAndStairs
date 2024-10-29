@@ -9,6 +9,7 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
+import com.firemerald.additionalplacements.config.APConfigs;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
@@ -19,10 +20,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.*;
 import net.minecraft.network.chat.ClickEvent.Action;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.rcon.RconConsoleSource;
 import net.minecraft.tags.TagKey;
@@ -44,7 +43,7 @@ public class TagMismatchChecker extends Thread
 		TagMismatchChecker old = thread;
 		thread = new TagMismatchChecker();
 		if (old != null) old.halted = true;
-		thread.setPriority(AdditionalPlacementsMod.COMMON_CONFIG.checkerPriority.get());
+		thread.setPriority(APConfigs.common().checkerPriority.get());
 		CommonModEvents.misMatchedTags = false;
 		thread.start();
 	}
@@ -95,12 +94,12 @@ public class TagMismatchChecker extends Thread
 			if (!blockMissingExtra.isEmpty())
 			{
 				CommonModEvents.misMatchedTags = true;
-				boolean autoRebuild = AdditionalPlacementsMod.COMMON_CONFIG.autoRebuildTags.get() && AdditionalPlacementsMod.SERVER_CONFIG.autoRebuildTags.get();
+				boolean autoRebuild = APConfigs.common().autoRebuildTags.get() && APConfigs.server().autoRebuildTags.get();
 				if (!autoRebuild) server.getPlayerList().getPlayers().forEach(player -> {
 					if (canGenerateTags(player)) player.sendSystemMessage(MESSAGE);
 				});
 				AdditionalPlacementsMod.LOGGER.warn("Found missing and/or extra tags on generated blocks. Use \"/ap_tags_export\" to generate the tags, then \"/reload\" to re-load them (or re-load the world if that fails).");
-				if (AdditionalPlacementsMod.COMMON_CONFIG.logTagMismatch.get())
+				if (APConfigs.common().logTagMismatch.get())
 				{
 					AdditionalPlacementsMod.LOGGER.warn("====== BEGIN LIST ======");
 					blockMissingExtra.forEach(blockMissingExtra -> {
