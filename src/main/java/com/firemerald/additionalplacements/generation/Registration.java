@@ -47,7 +47,7 @@ public class Registration {
 		}
 	}
 	
-	public static <T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>> V registerType(Class<T> clazz, ResourceLocation name, String description, GenerationTypeConstructor<V> typeConstructor) {
+	protected static <T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>> V registerType(Class<T> clazz, ResourceLocation name, String description, GenerationTypeConstructor<V> typeConstructor) {
 		if (CommonModEventHandler.lockGenerationTypeRegistry) throw new IllegalStateException("A mod tried to register an Additional Placements generation type too late into the load sequence! Types must be registered before net.minecraftforge.registries.NewRegistryEvent is fired. The offending GenerationType name (whose namespace is generally the offending mod ID) is " + name);
 		if (TYPES.containsKey(name)) throw new IllegalStateException("A generation type with name " + name + " is already registered!");
 		V type = typeConstructor.construct(PROTECTION_KEY, name, description);

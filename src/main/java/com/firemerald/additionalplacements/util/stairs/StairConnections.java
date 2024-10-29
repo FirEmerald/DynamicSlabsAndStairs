@@ -2,6 +2,7 @@ package com.firemerald.additionalplacements.util.stairs;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 
@@ -28,6 +29,7 @@ public enum StairConnections {
 	public final boolean allowVertical, allowMixed;
 	public final ResourceLocation dynamicBlockstateJson;
 	public final EnumProperty<CompressedStairShape> shapeProperty;
+	public final StairShape[] shapes;
 	
 	StairConnections(String name, String shortName, boolean allowVertical, boolean allowMixed, CompressedStairShape... validShapes) {
 		this(name, shortName, allowVertical, allowMixed, new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "blockstate_templates/stairs/" + name + ".json"), EnumProperty.create("shape", CompressedStairShape.class, validShapes));
@@ -49,5 +51,6 @@ public enum StairConnections {
 		this.allowMixed = allowMixed;
 		this.dynamicBlockstateJson = dynamicBlockstateJson;
 		this.shapeProperty = shapeProperty;
+		this.shapes = shapeProperty.getAllValues().map(shape -> shape.value().shape).collect(Collectors.toSet()).toArray(StairShape[]::new);
 	}
 }
