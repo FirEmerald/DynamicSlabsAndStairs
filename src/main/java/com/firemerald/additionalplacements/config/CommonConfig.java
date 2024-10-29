@@ -8,13 +8,13 @@ import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
 
 import com.firemerald.additionalplacements.generation.GenerationType;
 
-public class ConfigCommon
+public class CommonConfig
 {
 	public final BooleanValue showTooltip;
 	public final BooleanValue checkTags, autoRebuildTags, logTagMismatch;
 	public final IntValue checkerPriority;
 
-	public ConfigCommon(ModConfigSpec.Builder builder)
+	public CommonConfig(ModConfigSpec.Builder builder)
 	{
         builder.comment("Common settings").push("common");
         showTooltip = builder

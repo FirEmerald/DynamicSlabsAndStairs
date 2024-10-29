@@ -13,26 +13,26 @@ import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class APConfigs {
-    public static final ConfigBootup BOOTUP;
-    public static final ModConfigSpec BOOTUP_SPEC;
-    public static final ConfigCommon COMMON;
+    public static final StartupConfig STARTUP;
+    public static final ModConfigSpec STARTUP_SPEC;
+    public static final CommonConfig COMMON;
     public static final ModConfigSpec COMMON_SPEC;
-    public static final ConfigServer SERVER;
+    public static final ServerConfig SERVER;
     public static final ModConfigSpec SERVER_SPEC;
-    public static final ConfigClient CLIENT;
+    public static final ClientConfig CLIENT;
     public static final ModConfigSpec CLIENT_SPEC;
     
     static {
-        final Pair<ConfigBootup, ModConfigSpec> bootupSpecPair = new ModConfigSpec.Builder().configure(ConfigBootup::new);
-        BOOTUP = bootupSpecPair.getLeft();
-        BOOTUP_SPEC = bootupSpecPair.getRight();
-        final Pair<ConfigCommon, ModConfigSpec> commonSpecPair = new ModConfigSpec.Builder().configure(ConfigCommon::new);
+        final Pair<StartupConfig, ModConfigSpec> startupSpecPair = new ModConfigSpec.Builder().configure(StartupConfig::new);
+        STARTUP = startupSpecPair.getLeft();
+        STARTUP_SPEC = startupSpecPair.getRight();
+        final Pair<CommonConfig, ModConfigSpec> commonSpecPair = new ModConfigSpec.Builder().configure(CommonConfig::new);
         COMMON = commonSpecPair.getLeft();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, COMMON_SPEC = commonSpecPair.getRight());
-        final Pair<ConfigServer, ModConfigSpec> serverSpecPair = new ModConfigSpec.Builder().configure(ConfigServer::new);
+        final Pair<ServerConfig, ModConfigSpec> serverSpecPair = new ModConfigSpec.Builder().configure(ServerConfig::new);
         SERVER = serverSpecPair.getLeft();
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SERVER_SPEC = serverSpecPair.getRight());
-        final Pair<ConfigClient, ModConfigSpec> clientSpecPair = new ModConfigSpec.Builder().configure(ConfigClient::new);
+        final Pair<ClientConfig, ModConfigSpec> clientSpecPair = new ModConfigSpec.Builder().configure(ClientConfig::new);
         CLIENT = clientSpecPair.getLeft();
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_SPEC = clientSpecPair.getRight());
     }

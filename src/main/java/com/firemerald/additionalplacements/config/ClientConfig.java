@@ -8,12 +8,12 @@ import net.neoforged.neoforge.common.ModConfigSpec.LongValue;
 
 import com.firemerald.additionalplacements.generation.GenerationType;
 
-public class ConfigClient
+public class ClientConfig
 {
 	public final BooleanValue defaultPlacementLogicState;
 	public final LongValue toggleQuickpressTime;
 
-	public ConfigClient(ModConfigSpec.Builder builder)
+	public ClientConfig(ModConfigSpec.Builder builder)
 	{
         builder.comment("Client settings").push("client");
         defaultPlacementLogicState = builder
