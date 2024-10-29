@@ -6,6 +6,7 @@ import com.firemerald.additionalplacements.block.interfaces.IStairBlock;
 import com.firemerald.additionalplacements.util.ComplexFacing;
 import com.firemerald.additionalplacements.util.stairs.StairShape;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 
 import net.minecraft.commands.CommandBuildContext;
@@ -21,11 +22,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class CommandGenerateStairsDebugger
 {
-    private static final SimpleCommandExceptionType ERROR_WRONG_BLOCK = new SimpleCommandExceptionType(Component.translatable("commands.ap_stairs_state_debug.wrong_block"));
-    
 	public static void register(CommandDispatcher<CommandSourceStack> dispatch, CommandBuildContext buildContext)
 	{
 		dispatch.register(Commands.literal("ap_stairs_state_debug")
@@ -69,9 +69,13 @@ public class CommandGenerateStairsDebugger
 											}
 										}
 									}
-									else throw ERROR_WRONG_BLOCK.create(); //TODO
-									return 0;
+									else throwInvalidBlock(blockInput.getState());
+									return 1;
 								}))));
+	}
+	
+	private static void throwInvalidBlock(BlockState state) throws CommandSyntaxException {
+		throw new SimpleCommandExceptionType(Component.translatable("commands.ap_stairs_state_debug.wrong_block", ForgeRegistries.BLOCKS.getKey(state.getBlock()))).create();
 	}
 	
 	private static void set(ServerLevel serverLevel, IStairBlock<?> stair, BlockState rootState, Set<Property<?>> props, CompoundTag tag, ComplexFacing facing, BlockPos middle, BlockPos.MutableBlockPos pos, int offset, int offFront, int offTop) {
