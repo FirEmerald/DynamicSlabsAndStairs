@@ -58,7 +58,7 @@ public interface IPlacementBlock<T extends Block> extends ItemLike
 
 	public default void appendHoverTextImpl(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag)
 	{
-		if (APConfigs.COMMON.showTooltip.get() && getGenerationType().placementEnabled()) addPlacementTooltip(stack, level, tooltip, flag);
+		if (APConfigs.common().showTooltip.get() && getGenerationType().placementEnabled()) addPlacementTooltip(stack, level, tooltip, flag);
 	}
 
 	public void addPlacementTooltip(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag);

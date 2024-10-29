@@ -52,7 +52,7 @@ public class CommonEventHandler
 	public static void onTagsUpdated(TagsUpdatedEvent event)
 	{
 		misMatchedTags = false;
-		if (APConfigs.COMMON.checkTags.get() && (!APConfigs.SERVER_SPEC.isLoaded() || APConfigs.SERVER.checkTags.get()))
+		if (APConfigs.common().checkTags.get() && (!APConfigs.serverLoaded() || APConfigs.server().checkTags.get()))
 			TagMismatchChecker.startChecker(); //TODO halt on datapack reload
 	}
 
@@ -86,7 +86,7 @@ public class CommonEventHandler
 	@SubscribeEvent
 	public static void onPlayerLogin(PlayerLoggedInEvent event)
 	{
-		if (misMatchedTags && !(APConfigs.COMMON.autoRebuildTags.get() && APConfigs.SERVER.autoRebuildTags.get()) && TagMismatchChecker.canGenerateTags(event.getEntity())) event.getEntity().sendSystemMessage(TagMismatchChecker.MESSAGE);
+		if (misMatchedTags && !(APConfigs.common().autoRebuildTags.get() && APConfigs.server().autoRebuildTags.get()) && TagMismatchChecker.canGenerateTags(event.getEntity())) event.getEntity().sendSystemMessage(TagMismatchChecker.MESSAGE);
 	}
 
 	@SubscribeEvent
