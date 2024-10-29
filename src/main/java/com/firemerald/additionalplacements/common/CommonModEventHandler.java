@@ -44,7 +44,7 @@ public class CommonModEventHandler
 		if (!lockGenerationTypeRegistry) {
 			lockGenerationTypeRegistry = true;
 			APConfigs.init();
-			APConfigs.BOOTUP.loadConfig(FMLPaths.CONFIGDIR.get().resolve("additionalplacements-bootup.toml"), APConfigs.BOOTUP_SPEC);
+			APConfigs.STARTUP.loadConfig(FMLPaths.CONFIGDIR.get().resolve("additionalplacements-startup.toml"), APConfigs.STARTUP_SPEC);
 		}
 	}
 	
