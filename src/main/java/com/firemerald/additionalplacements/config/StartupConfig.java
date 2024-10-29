@@ -13,10 +13,10 @@ import com.firemerald.additionalplacements.generation.GenerationType;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
-public class ConfigBootup {
-	public ConfigBootup(ForgeConfigSpec.Builder builder) {
-        builder.comment("Bootup settings").push("bootup");
-        Registration.buildConfig(builder, GenerationType::buildBootupConfig);
+public class StartupConfig {
+	public StartupConfig(ForgeConfigSpec.Builder builder) {
+        builder.comment("Startup settings").push("startup");
+        Registration.buildConfig(builder, GenerationType::buildStartupConfig);
 	}
 	
 	public void loadValues() {
