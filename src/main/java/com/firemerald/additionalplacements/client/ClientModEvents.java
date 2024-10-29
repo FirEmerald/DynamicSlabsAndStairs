@@ -4,12 +4,11 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
-import com.firemerald.additionalplacements.client.models.BakedParticleDeferredBlockModel;
 import com.firemerald.additionalplacements.client.models.PlacementBlockModelLoader;
 import com.firemerald.additionalplacements.common.CommonModEvents;
+import com.firemerald.additionalplacements.config.APConfigs;
 
 import io.github.fabricators_of_create.porting_lib.models.geometry.RegisterGeometryLoadersCallback;
 import net.fabricmc.api.ClientModInitializer;
@@ -36,8 +35,6 @@ import net.minecraft.server.packs.repository.Pack.Info;
 import net.minecraft.server.packs.repository.Pack.ResourcesSupplier;
 import net.minecraft.server.packs.repository.PackCompatibility;
 import net.minecraft.server.packs.repository.PackSource;
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
-import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.BlockItem;
@@ -51,7 +48,6 @@ import net.minecraft.world.phys.HitResult;
 @Environment(EnvType.CLIENT)
 public class ClientModEvents implements ClientModInitializer
 {
-	public static PlacementBlockModelLoader loader;
 	public static final Pack GENERATED_RESOURCES_PACK = Pack.create(
 			"Additional Placements blockstate redirection pack",
 			Component.literal("title"),
@@ -80,13 +76,13 @@ public class ClientModEvents implements ClientModInitializer
 	@Override
 	public void onInitializeClient()
 	{
-    	ItemTooltipCallback.EVENT.register(ClientModEvents::onItemTooltip);
-    	WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register(ClientModEvents::onHighlightBlock);
-    	ClientLifecycleEvents.CLIENT_STARTED.register(client -> CommonModEvents.init());
-    	ClientLifecycleEvents.CLIENT_STARTED.register(ClientModEvents::init);
-    	ClientTickEvents.END_CLIENT_TICK.register(ClientModEvents::onClientEndTick);
-    	ClientPlayConnectionEvents.JOIN.register(ClientModEvents::onServerJoined);
-    	RegisterGeometryLoadersCallback.EVENT.register(loaders -> loaders.put(PlacementBlockModelLoader.ID, loader = new PlacementBlockModelLoader()));
+		ItemTooltipCallback.EVENT.register(ClientModEvents::onItemTooltip);
+		WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register(ClientModEvents::onHighlightBlock);
+		ClientLifecycleEvents.CLIENT_STARTED.register(client -> CommonModEvents.init());
+		ClientLifecycleEvents.CLIENT_STARTED.register(ClientModEvents::init);
+		ClientTickEvents.END_CLIENT_TICK.register(ClientModEvents::onClientEndTick);
+		ClientPlayConnectionEvents.JOIN.register(ClientModEvents::onServerJoined);
+		RegisterGeometryLoadersCallback.EVENT.register(loaders -> loaders.put(PlacementBlockModelLoader.ID, new PlacementBlockModelLoader()));
 		KeyBindingHelper.registerKeyBinding(APClientData.AP_PLACEMENT_KEY);
 	}
 
@@ -97,16 +93,14 @@ public class ClientModEvents implements ClientModInitializer
 		if (!hasInit)
 		{
 			BuiltInRegistries.BLOCK.forEach(block -> {
-	    		if (block instanceof AdditionalPlacementBlock)
-	    		{
-	    			@SuppressWarnings("deprecation")
+				if (block instanceof AdditionalPlacementBlock)
+				{
+					@SuppressWarnings("deprecation")
 					BlockState modelState = ((AdditionalPlacementBlock<?>) block).getModelState();
-	    			BlockRenderLayerMap.INSTANCE.putBlock(block, ItemBlockRenderTypes.getChunkRenderType(modelState));
-	    		}
-	    	});
-	    	client.getBlockColors().register(new AdditionalBlockColor(), BuiltInRegistries.BLOCK.stream().filter(block -> block instanceof AdditionalPlacementBlock && !((AdditionalPlacementBlock<?>) block).hasCustomColors()).toArray(Block[]::new));
-	    	((ReloadableResourceManager) client.getResourceManager()).registerReloadListener(ClientModEvents.loader);
-			((ReloadableResourceManager) client.getResourceManager()).registerReloadListener((ResourceManagerReloadListener) (v -> BakedParticleDeferredBlockModel.clearCache()));
+					BlockRenderLayerMap.INSTANCE.putBlock(block, ItemBlockRenderTypes.getChunkRenderType(modelState));
+				}
+			});
+			client.getBlockColors().register(new AdditionalBlockColor(), BuiltInRegistries.BLOCK.stream().filter(block -> block instanceof AdditionalPlacementBlock && !((AdditionalPlacementBlock<?>) block).hasCustomColors()).toArray(Block[]::new));
 			hasInit = true;
 		}
 	}
@@ -147,7 +141,7 @@ public class ClientModEvents implements ClientModInitializer
 
 	public static void onServerJoined(ClientPacketListener handler, PacketSender sender, Minecraft client)
 	{
-		APClientData.setPlacementEnabledAndSynchronize(AdditionalPlacementsMod.CLIENT_CONFIG.defaultPlacementLogicState.get());
+		APClientData.setPlacementEnabledAndSynchronize(APConfigs.client().defaultPlacementLogicState.get());
 	}
 
 	public static void onClientEndTick(Minecraft mc)
@@ -162,7 +156,7 @@ public class ClientModEvents implements ClientModInitializer
 		else if (APClientData.placementKeyDown && !APClientData.AP_PLACEMENT_KEY.isDown()) //released
 		{
 			APClientData.placementKeyDown = false;
-			if ((System.currentTimeMillis() - APClientData.placementKeyPressTime) > AdditionalPlacementsMod.CLIENT_CONFIG.toggleQuickpressTime.get()) //more than half-second press, toggle back
+			if ((System.currentTimeMillis() - APClientData.placementKeyPressTime) > APConfigs.client().toggleQuickpressTime.get()) //more than half-second press, toggle back
 			{
 				APClientData.togglePlacementEnabled();
 			}
