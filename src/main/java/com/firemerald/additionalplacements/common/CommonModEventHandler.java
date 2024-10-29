@@ -26,7 +26,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.NewRegistryEvent;
@@ -42,7 +41,6 @@ public class CommonModEventHandler
 		if (!lockGenerationTypeRegistry) {
 			lockGenerationTypeRegistry = true;
 			APConfigs.init();
-			APConfigs.STARTUP.loadConfig(FMLPaths.CONFIGDIR.get().resolve("additionalplacements-startup.toml"), APConfigs.STARTUP_SPEC);
 		}
 	}
 	
