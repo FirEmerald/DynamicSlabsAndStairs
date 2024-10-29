@@ -31,7 +31,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.network.event.OnGameConfigurationEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
@@ -48,7 +47,6 @@ public class CommonModEventHandler
 		if (!lockGenerationTypeRegistry) {
 			lockGenerationTypeRegistry = true;
 			APConfigs.init();
-			APConfigs.STARTUP.loadConfig(FMLPaths.CONFIGDIR.get().resolve("additionalplacements-startup.toml"), APConfigs.STARTUP_SPEC);
 		}
 	}
 	
