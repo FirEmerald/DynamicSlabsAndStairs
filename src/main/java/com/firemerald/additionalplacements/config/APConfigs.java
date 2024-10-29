@@ -34,7 +34,8 @@ public class APConfigs {
         ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.SERVER, serverSpec = serverSpecPair.getRight());
         final Pair<ClientConfig, ModConfigSpec> clientSpecPair = new ModConfigSpec.Builder().configure(ClientConfig::new);
         client = clientSpecPair.getLeft();
-        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.CLIENT, clientSpec = clientSpecPair.getRight());}
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.CLIENT, clientSpec = clientSpecPair.getRight());
+    }
     
     public static StartupConfig bootup() {
     	return startup;
