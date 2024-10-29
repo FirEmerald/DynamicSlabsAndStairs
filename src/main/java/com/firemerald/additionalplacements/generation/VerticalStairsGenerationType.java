@@ -119,7 +119,7 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 						namespaces.getAllKeys().forEach(namespace -> {
 							ListTag blocks = namespaces.getList(namespace, Tag.TAG_STRING);
 							if (blocks != null) for (int i = 0; i < blocks.size(); ++i) {
-								connectionTypes.put(new ResourceLocation(namespace, blocks.getString(i)), type);
+								connectionTypes.put(ResourceLocation.tryBuild(namespace, blocks.getString(i)), type);
 							}
 						});
 					} else {

@@ -5,9 +5,6 @@ import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-
 import com.firemerald.additionalplacements.block.VerticalSlabBlock;
 import com.firemerald.additionalplacements.common.CommonModEventHandler;
 import com.firemerald.additionalplacements.generation.APGenerationTypes;
@@ -15,16 +12,17 @@ import com.firemerald.additionalplacements.generation.GenerationType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
@@ -198,34 +196,33 @@ public interface ISlabBlock<T extends Block> extends IPlacementBlock<T>
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public default void renderPlacementHighlight(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial)
+	public default void renderPlacementHighlight(PoseStack poseStack, VertexConsumer vertexConsumer, Player player, BlockHitResult result, DeltaTracker delta)
 	{
-		Matrix4f poseMat = pose.last().pose();
-		Matrix3f normMat = pose.last().normal();
-		vertexConsumer.vertex(poseMat, -.5f, -.5f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, .5f, -.5f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, .5f, -.5f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, .5f, .5f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, .5f, .5f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -.5f, .5f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -.5f, .5f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -.5f, -.5f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -.25f, -.25f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, .25f, -.25f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, .25f, -.25f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, .25f, .25f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, .25f, .25f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -.25f, .25f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -.25f, .25f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -.25f, -.25f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -.5f, -.5f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -.25f, -.25f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, .5f, -.5f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, .25f, -.25f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, .5f, .5f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, .25f, .25f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -.5f, .5f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -.25f, .25f, -.5f).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		PoseStack.Pose pose = poseStack.last();
+		vertexConsumer.addVertex(pose, -.5f, -.5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, .5f, -.5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, .5f, -.5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, .5f, .5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, .5f, .5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -.5f, .5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -.5f, .5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -.5f, -.5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -.25f, -.25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, .25f, -.25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, .25f, -.25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, .25f, .25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, .25f, .25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -.25f, .25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -.25f, .25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -.25f, -.25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -.5f, -.5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -.25f, -.25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, .5f, -.5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, .25f, -.25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, .5f, .5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, .25f, .25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -.5f, .5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -.25f, .25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 	}
     
 	@Override
@@ -234,7 +231,7 @@ public interface ISlabBlock<T extends Block> extends IPlacementBlock<T>
 	}
 
     @Override
-	public default void addPlacementTooltip(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag)
+	public default void addPlacementTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag)
 	{
 		tooltip.add(Component.translatable("tooltip.additionalplacements.vertical_placement"));
 	}

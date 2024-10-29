@@ -106,7 +106,6 @@ public abstract class MixinWeightedPressurePlateBlock extends Block implements I
 
 	@Override
 	@Unique(silent = true)
-	@SuppressWarnings("deprecation")
 	public BlockState rotate(BlockState blockState, Rotation rotation)
 	{
 		if (this.hasAdditionalStates()) return rotateImpl(blockState, rotation);
@@ -125,14 +124,12 @@ public abstract class MixinWeightedPressurePlateBlock extends Block implements I
 
 	@Override
 	@Unique(silent = true)
-	@SuppressWarnings("deprecation")
 	public BlockState mirror(BlockState blockState, Mirror mirror)
 	{
 		if (this.hasAdditionalStates()) return mirrorImpl(blockState, mirror);
 		else return super.mirror(blockState, mirror);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public BlockState updateShapeImpl(BlockState state, Direction direction, BlockState otherState, LevelAccessor level, BlockPos pos, BlockPos otherPos)
 	{

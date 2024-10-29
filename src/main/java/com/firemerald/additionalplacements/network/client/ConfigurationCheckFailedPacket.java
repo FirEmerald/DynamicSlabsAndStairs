@@ -18,11 +18,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class ConfigurationCheckFailedPacket extends ClientPacket<ConfigurationPayloadContext>
+public class ConfigurationCheckFailedPacket extends ClientPacket<FriendlyByteBuf>
 {
-	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "configuration_check_failed");
+	public static final Type<ConfigurationCheckFailedPacket> TYPE = new Type<>(ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "configuration_check_failed"));
 	
 	private final List<Triple<ResourceLocation, List<MessageTree>, List<MessageTree>>> compiledErrors;
 	
@@ -41,9 +41,9 @@ public class ConfigurationCheckFailedPacket extends ClientPacket<ConfigurationPa
 	}
 
 	@Override
-	public ResourceLocation id()
+	public Type<ConfigurationCheckFailedPacket> type()
 	{
-		return ID;
+		return TYPE;
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class ConfigurationCheckFailedPacket extends ClientPacket<ConfigurationPa
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void handleClient(ConfigurationPayloadContext context)
+	public void handleClient(IPayloadContext context)
 	{
 		MessageTree rootError = new MessageTree(Component.translatable("msg.additionalplacements.errors.type"));
 		compiledErrors.forEach(data -> {
@@ -76,7 +76,7 @@ public class ConfigurationCheckFailedPacket extends ClientPacket<ConfigurationPa
 			rootError.children.add(typeError);
 		});
 		rootError.output(AdditionalPlacementsMod.LOGGER::warn);
-		context.workHandler().submitAsync(() -> {
+		context.enqueueWork(() -> {
 			Minecraft minecraft = Minecraft.getInstance();
 			Screen desScreen = new TitleScreen();
 			if (!minecraft.isLocalServer()) {

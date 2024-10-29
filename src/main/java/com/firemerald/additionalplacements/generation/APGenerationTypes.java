@@ -42,11 +42,11 @@ public class APGenerationTypes {
 	WEIGHTED_PRESSURE_PLATE = get(WeightedPressurePlateBlock.class, "weighted_pressure_plate", "Weighted pressure plates", AdditionalWeightedPressurePlateBlock::of);
 	
 	private static <T extends Block, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock> SimpleRotatableGenerationType<T, U> get(Class<T> clazz, String name, String description, Function<T, U> constructor) {
-		return Registration.registerType(clazz, new ResourceLocation(AdditionalPlacementsMod.MOD_ID, name), description, new SimpleRotatableGenerationType.Builder<T, U>().constructor(constructor));
+		return Registration.registerType(clazz, ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, name), description, new SimpleRotatableGenerationType.Builder<T, U>().constructor(constructor));
 	}
 	
 	private static <T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>> V get(Class<T> clazz, String name, String description, GenerationTypeConstructor<V> typeConstructor) {
-		return Registration.registerType(clazz, new ResourceLocation(AdditionalPlacementsMod.MOD_ID, name), description, typeConstructor);
+		return Registration.registerType(clazz, ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, name), description, typeConstructor);
 	}
 	
 	public static void init() {}

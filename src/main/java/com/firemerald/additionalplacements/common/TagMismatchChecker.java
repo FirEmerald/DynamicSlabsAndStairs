@@ -31,10 +31,10 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.TickEvent.ServerTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
-public class TagMismatchChecker extends Thread implements Consumer<ServerTickEvent>
+public class TagMismatchChecker extends Thread implements Consumer<ServerTickEvent.Post>
 {
 	private static TagMismatchChecker thread = null;
 	public static final Component MESSAGE =
@@ -49,7 +49,7 @@ public class TagMismatchChecker extends Thread implements Consumer<ServerTickEve
 		TagMismatchChecker old = thread;
 		thread = new TagMismatchChecker();
 		if (old != null) old.halted = true;
-		thread.setPriority(APConfigs.COMMON.checkerPriority.get());
+		thread.setPriority(APConfigs.common().checkerPriority.get());
 		CommonEventHandler.misMatchedTags = false;
 		thread.start();
 	}
@@ -89,7 +89,7 @@ public class TagMismatchChecker extends Thread implements Consumer<ServerTickEve
 
 	//this is only ever called on the server thread
 	@Override
-	public void accept(ServerTickEvent event)
+	public void accept(ServerTickEvent.Post event)
 	{
 		NeoForge.EVENT_BUS.unregister(this); //only listen once
 		if (!halted) //wasn't canceled
@@ -97,13 +97,13 @@ public class TagMismatchChecker extends Thread implements Consumer<ServerTickEve
 			if (!blockMissingExtra.isEmpty())
 			{
 				CommonEventHandler.misMatchedTags = true;
-				boolean autoRebuild = APConfigs.COMMON.autoRebuildTags.get() && APConfigs.SERVER.autoRebuildTags.get();
+				boolean autoRebuild = APConfigs.common().autoRebuildTags.get() && APConfigs.server().autoRebuildTags.get();
 				MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 				if (!autoRebuild) server.getPlayerList().getPlayers().forEach(player -> {
 					if (canGenerateTags(player)) player.sendSystemMessage(MESSAGE);
 				});
 				AdditionalPlacementsMod.LOGGER.warn("Found missing and/or extra tags on generated blocks. Use \"/ap_tags_export\" to generate the tags, then \"/reload\" to re-load them (or re-load the world if that fails).");
-				if (APConfigs.COMMON.logTagMismatch.get())
+				if (APConfigs.common().logTagMismatch.get())
 				{
 					AdditionalPlacementsMod.LOGGER.warn("====== BEGIN LIST ======");
 					blockMissingExtra.forEach(blockMissingExtra -> {

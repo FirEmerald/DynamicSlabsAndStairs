@@ -17,11 +17,11 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.connection.ConnectionUtils;
-import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class CheckDataServerPacket extends ServerPacket<ConfigurationPayloadContext>
+public class CheckDataServerPacket extends ServerPacket<FriendlyByteBuf>
 {
-	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "check_data_server");
+	public static final Type<CheckDataServerPacket> TYPE = new Type<>(ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "check_data_server"));
 	
 	private final Map<ResourceLocation, Pair<CompoundTag, List<MessageTree>>> serverData;
 	
@@ -39,7 +39,7 @@ public class CheckDataServerPacket extends ServerPacket<ConfigurationPayloadCont
 
 	public CheckDataServerPacket(FriendlyByteBuf buf)
 	{
-		serverData = buf.readMap(FriendlyByteBuf::readResourceLocation, buf2 -> {
+		serverData = buf.readMap(buffer -> buffer.readResourceLocation(), buf2 -> {
 			CompoundTag clientTag = buf2.readNbt();
 			List<MessageTree> clientErrors = buf2.readList(MessageTree::new);
 			return Pair.of(clientTag, clientErrors);
@@ -47,15 +47,15 @@ public class CheckDataServerPacket extends ServerPacket<ConfigurationPayloadCont
 	}
 
 	@Override
-	public ResourceLocation id()
+	public Type<CheckDataServerPacket> type()
 	{
-		return ID;
+		return TYPE;
 	}
 
 	@Override
 	public void write(FriendlyByteBuf buf)
 	{
-		buf.writeMap(serverData, FriendlyByteBuf::writeResourceLocation, (buf2, data) -> {
+		buf.writeMap(serverData, (buffer, id) -> buffer.writeResourceLocation(id), (buf2, data) -> {
 			buf2.writeNbt(data.getLeft());
 			buf2.writeCollection(data.getRight(), MessageTree::write);
 		});
@@ -63,7 +63,7 @@ public class CheckDataServerPacket extends ServerPacket<ConfigurationPayloadCont
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void handleServer(ConfigurationPayloadContext context)
+	public void handleServer(IPayloadContext context)
 	{
 		List<Triple<ResourceLocation, List<MessageTree>, List<MessageTree>>> compiledErrors = new ArrayList<>();
 		Registration.forEach((id, type) -> {
@@ -86,6 +86,6 @@ public class CheckDataServerPacket extends ServerPacket<ConfigurationPayloadCont
 			//if it turns out this CAN prevent the above packet from being sent, move disconnect to client-side. It did not prevent it in testing.
 			ConnectionUtils.getConnection(context.channelHandlerContext()).disconnect(Component.translatableWithFallback("msg.additionalplacements.disconnected", "Additional Placements configuration conflict"));
 		}
-		context.taskCompletedHandler().onTaskCompleted(CheckDataConfigurationTask.TYPE); //finish task, very important!
+		context.finishCurrentTask(CheckDataConfigurationTask.TYPE); //finish task, very important!
 	}
 }

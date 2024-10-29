@@ -19,7 +19,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -136,7 +135,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	@Deprecated
 	public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder)
 	{
-		return parentBlock.getDrops(this.getDefaultVanillaState(state), builder);
+		return getModelState(state).getDrops(builder);
 	}
 
 	@Override
@@ -149,7 +148,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	@Deprecated
 	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state)
 	{
-		return parentBlock.getCloneItemStack(level, pos, state);
+		return parentBlock.getCloneItemStack(level, pos, getModelState(state));
 	}
 
 	@Override
@@ -213,14 +212,13 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
-	@Deprecated
 	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving)
 	{
 		if (!state.is(oldState.getBlock()))
 		{
 			BlockState modelState = getModelState(state);
-			modelState.neighborChanged(level, pos, Blocks.AIR, pos, isMoving);
-			modelState.getBlock().onPlace(modelState, level, pos, oldState, isMoving);
+			modelState.handleNeighborChanged(level, pos, Blocks.AIR, pos, isMoving);
+			modelState.onPlace(level, pos, oldState, isMoving);
 		}
 	}
 
@@ -236,7 +234,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	@Override
 	public boolean isRandomlyTicking(BlockState state)
 	{
-		return getOtherBlock().isRandomlyTicking(getModelState(state));
+		return getModelState(state).isRandomlyTicking();
 	}
 
 	@Override
@@ -244,7 +242,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand)
 	{
 		BlockState modelState = getModelState(state);
-		modelState.getBlock().randomTick(modelState, level, pos, rand);
+		modelState.randomTick(level, pos, rand);
 		applyChanges(state, modelState, level, pos);
 	}
 
@@ -253,15 +251,15 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand)
 	{
 		BlockState modelState = getModelState(state);
-		modelState.getBlock().tick(modelState, level, pos, rand);
+		modelState.tick(level, pos, rand);
 		applyChanges(state, modelState, level, pos);
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+	public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult)
 	{
 		BlockState modelState = getModelState(state);
-		InteractionResult res = getModelState(state).use(level, player, hand, hitResult);
+		InteractionResult res = getModelState(state).useWithoutItem(level, player, hitResult);
 		applyChanges(state, modelState, level, pos);
 		return res;
 	}
@@ -300,7 +298,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType pathType)
+	public boolean isPathfindable(BlockState state, PathComputationType pathComputationType)
 	{
 		return false;
 	}
@@ -366,9 +364,9 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag)
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag)
 	{
-		appendHoverTextImpl(stack, level, tooltip, flag);
+		appendHoverTextImpl(stack, context, tooltip, flag);
 	}
 
 	@Override
@@ -405,16 +403,15 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
-	public float[] getBeaconColorMultiplier(BlockState state, LevelReader level, BlockPos pos1, BlockPos pos2)
+	public Integer getBeaconColorMultiplier(BlockState state, LevelReader level, BlockPos pos1, BlockPos pos2)
 	{
 		return this.getModelState(state).getBeaconColorMultiplier(level, pos1, pos2);
 	}
 
 	@Override
-	@Deprecated
 	public boolean isSignalSource(BlockState state)
 	{
-		return parentBlock.isSignalSource(this.getModelState(state));
+		return getModelState(state).isSignalSource();
 	}
 
 	@Override

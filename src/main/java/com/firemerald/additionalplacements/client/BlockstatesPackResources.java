@@ -11,6 +11,7 @@ import com.firemerald.additionalplacements.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
@@ -22,6 +23,12 @@ import net.neoforged.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class BlockstatesPackResources implements PackResources
 {
+	private final PackLocationInfo info;
+	
+	public BlockstatesPackResources(PackLocationInfo info) {
+		this.info = info;
+	}
+
 	@Override
 	public IoSupplier<InputStream> getRootResource(String... p_10294_)
 	{
@@ -37,7 +44,7 @@ public class BlockstatesPackResources implements PackResources
 		else if (resource.getPath().startsWith("blockstates/")) //blockstate json
 		{
 			String blockName = resource.getPath().substring(12, resource.getPath().length() - 5);
-			Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(AdditionalPlacementsMod.MOD_ID, blockName));
+			Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, blockName));
 			IoSupplier<InputStream> ioResource = getResourceFor(block);
 			if (ioResource != null) return ioResource;
 			else return null;
@@ -55,7 +62,7 @@ public class BlockstatesPackResources implements PackResources
 				if (id.getNamespace().equals(AdditionalPlacementsMod.MOD_ID))
 				{
 					IoSupplier<InputStream> ioResource = getResourceFor(entry.getValue());
-					if (ioResource != null) filter.accept(new ResourceLocation(id.getNamespace(), "blockstates/" + id.getPath() + ".json"), ioResource);
+					if (ioResource != null) filter.accept(ResourceLocation.tryBuild(id.getNamespace(), "blockstates/" + id.getPath() + ".json"), ioResource);
 				}
 			});
 		}
@@ -95,14 +102,13 @@ public class BlockstatesPackResources implements PackResources
 	public void close() {}
 
 	@Override
-	public boolean isBuiltin()
+	public boolean isHidden()
 	{
 		return true;
 	}
 
 	@Override
-	public boolean isHidden()
-	{
-		return true;
+	public PackLocationInfo location() {
+		return info;
 	}
 }

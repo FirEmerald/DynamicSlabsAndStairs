@@ -29,7 +29,7 @@ import net.minecraft.util.Mth;
 
 public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelectionList.Entry<E>> extends AbstractContainerWidget {
 	protected static final int SCROLLBAR_WIDTH = 6;
-	private static final ResourceLocation SCROLLER_SPRITE = new ResourceLocation("widget/scroller");
+	private static final ResourceLocation SCROLLER_SPRITE = ResourceLocation.withDefaultNamespace("widget/scroller");
 	protected final Minecraft minecraft;
 	protected final int normalItemHeight;
 	private final List<E> children = new TrackedList();
@@ -180,7 +180,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 		if (this.renderBackground) {
 			guiGraphics.setColor(0.125F, 0.125F, 0.125F, 1.0F);
 			int texSize = 32;
-			guiGraphics.blit(Screen.BACKGROUND_LOCATION, this.getX(), this.getY(), this.getRight(), this.getBottom() + (int) this.getScrollAmount(), this.width, this.height, texSize, texSize);
+			guiGraphics.blit(Screen.MENU_BACKGROUND, this.getX(), this.getY(), this.getRight(), this.getBottom() + (int) this.getScrollAmount(), this.width, this.height, texSize, texSize);
 			guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
 		}
 

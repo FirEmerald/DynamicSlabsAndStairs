@@ -13,7 +13,7 @@ import net.minecraft.world.phys.AABB;
 
 public class AdditionalWeightedPressurePlateBlock extends AdditionalBasePressurePlateBlock<WeightedPressurePlateBlock> implements IWeightedPressurePlateBlock<WeightedPressurePlateBlock>
 {
-	static final ResourceLocation WEIGHTED_PRESSURE_PLATE_BLOCKSTATES = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "blockstate_templates/weighted_pressure_plate.json");
+	static final ResourceLocation WEIGHTED_PRESSURE_PLATE_BLOCKSTATES = ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "blockstate_templates/weighted_pressure_plate.json");
 	
 	public static AdditionalWeightedPressurePlateBlock of(WeightedPressurePlateBlock plate)
 	{

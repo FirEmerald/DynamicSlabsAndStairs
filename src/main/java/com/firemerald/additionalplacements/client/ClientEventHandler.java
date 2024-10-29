@@ -15,14 +15,10 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
-import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.RenderHighlightEvent;
-import net.neoforged.neoforge.client.event.ScreenEvent;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.*;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
 @OnlyIn(Dist.CLIENT)
 public class ClientEventHandler
 {
@@ -39,7 +35,7 @@ public class ClientEventHandler
 			if (block instanceof IPlacementBlock)
 			{
 				IPlacementBlock<?> verticalBlock = ((IPlacementBlock<?>) block);
-				if (verticalBlock.hasAdditionalStates()) verticalBlock.renderHighlight(event.getPoseStack(), event.getMultiBufferSource().getBuffer(RenderType.LINES), player, event.getTarget(), event.getCamera(), event.getPartialTick());
+				if (verticalBlock.hasAdditionalStates()) verticalBlock.renderHighlight(event.getPoseStack(), event.getMultiBufferSource().getBuffer(RenderType.LINES), player, event.getTarget(), event.getCamera(), event.getDeltaTracker());
 			}
 		}
 	}
@@ -57,7 +53,7 @@ public class ClientEventHandler
 		else if (APClientData.placementKeyDown && !APClientData.AP_PLACEMENT_KEY.isDown()) //released
 		{
 			APClientData.placementKeyDown = false;
-			if ((System.currentTimeMillis() - APClientData.placementKeyPressTime) > APConfigs.CLIENT.toggleQuickpressTime.get()) //more than half-second press, toggle back
+			if ((System.currentTimeMillis() - APClientData.placementKeyPressTime) > APConfigs.client().toggleQuickpressTime.get()) //more than half-second press, toggle back
 			{
 				APClientData.togglePlacementEnabled();
 			}
@@ -85,20 +81,17 @@ public class ClientEventHandler
 	@SubscribeEvent
 	public static void onPlayerLoggingIn(ClientPlayerNetworkEvent.LoggingIn event)
 	{
-		APClientData.setPlacementEnabledAndSynchronize(APConfigs.CLIENT.defaultPlacementLogicState.get());
+		APClientData.setPlacementEnabledAndSynchronize(APConfigs.client().defaultPlacementLogicState.get());
 	}
 
 	@SuppressWarnings("resource")
 	@SubscribeEvent
-	public static void onClientTick(TickEvent.ClientTickEvent event)
+	public static void onClientTick(ClientTickEvent.Post event)
 	{
 		if (Minecraft.getInstance().player == null) return;
-		if (event.phase == TickEvent.Phase.END)
+		if ((System.currentTimeMillis() - APClientData.lastSynchronizedTime) > 10000) //synchronize every 10 seconds in case of desync
 		{
-			if ((System.currentTimeMillis() - APClientData.lastSynchronizedTime) > 10000) //synchronize every 10 seconds in case of desync
-			{
-				APClientData.synchronizePlacementEnabled();
-			}
+			APClientData.synchronizePlacementEnabled();
 		}
 	}
 

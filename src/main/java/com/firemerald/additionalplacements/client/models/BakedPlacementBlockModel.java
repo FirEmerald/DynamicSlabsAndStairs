@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.BakedModelWrapper;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.common.util.TriState;
 
 public class BakedPlacementBlockModel extends BakedModelWrapper<BakedModel>
 {
@@ -40,17 +41,12 @@ public class BakedPlacementBlockModel extends BakedModelWrapper<BakedModel>
 	}
 
     @Override
-    public boolean useAmbientOcclusion(BlockState state)
+    public TriState useAmbientOcclusion(BlockState state, ModelData extraData, RenderType renderType)
     {
-    	BlockState modelState = BlockModelUtils.getModeledState(state);
-        return BlockModelUtils.getBakedModel(modelState).useAmbientOcclusion(modelState);
-    }
-
-    @Override
-    public boolean useAmbientOcclusion(BlockState state, RenderType renderType)
-    {
-    	BlockState modelState = BlockModelUtils.getModeledState(state);
-        return BlockModelUtils.getBakedModel(modelState).useAmbientOcclusion(modelState, renderType);
+		BlockState modelState = extraData.get(BlockModelUtils.MODEL_STATE);
+		if (modelState == null) modelState = BlockModelUtils.getModeledState(state);
+		ModelData modelData = BlockModelUtils.getModelData(modelState, extraData);
+        return BlockModelUtils.getBakedModel(modelState).useAmbientOcclusion(modelState, modelData, renderType);
     }
 
 	@Override

@@ -145,7 +145,7 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 		if (enabledForBlock(blockId)) {
 			U created = construct(block, blockId);
 			this.created.add(Pair.of(blockId, created));
-			action.accept(new ResourceLocation(name.getNamespace(), blockId.getNamespace() + "." + blockId.getPath()), created);
+			action.accept(ResourceLocation.tryBuild(name.getNamespace(), blockId.getNamespace() + "." + blockId.getPath()), created);
 		}
 	}
 	

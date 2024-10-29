@@ -9,12 +9,12 @@ import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
 
 public class PlacementBlockModelLoader implements IGeometryLoader<PlacementBlockModel>
 {
-	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "placement_block_loader");
+	public static final ResourceLocation ID = ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "placement_block_loader");
 
 	@Override
 	public PlacementBlockModel read(JsonObject modelContents, JsonDeserializationContext deserializationContext)
 	{
-		return new PlacementBlockModel(new ResourceLocation(modelContents.get("model").getAsString()));
+		return new PlacementBlockModel(ResourceLocation.parse(modelContents.get("model").getAsString()));
 	}
 
 }

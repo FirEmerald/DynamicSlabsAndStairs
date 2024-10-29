@@ -69,7 +69,7 @@ public class ModelType<T extends Block>
 			BlockModelProvider modelProvider = stateProvider.models();
 			Function<String, BlockModelBuilder> startModel;
 			if (parentMod == null || parentFolder == null) startModel = model -> modelProvider.getBuilder(folder + model);
-			else startModel = model -> modelProvider.withExistingParent(folder + model, new ResourceLocation(parentMod, parentFolder + model));
+			else startModel = model -> modelProvider.withExistingParent(folder + model, ResourceLocation.tryBuild(parentMod, parentFolder + model));
 			if (actions == null) actions = (builder, model) -> {};
 			for (String model : models) actions.accept(startModel.apply(model), model);
 			if (block != null)

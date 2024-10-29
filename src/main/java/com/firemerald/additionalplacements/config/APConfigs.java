@@ -13,42 +13,60 @@ import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class APConfigs {
-    public static final ConfigBootup BOOTUP;
-    public static final ModConfigSpec BOOTUP_SPEC;
-    public static final ConfigCommon COMMON;
-    public static final ModConfigSpec COMMON_SPEC;
-    public static final ConfigServer SERVER;
-    public static final ModConfigSpec SERVER_SPEC;
-    public static final ConfigClient CLIENT;
-    public static final ModConfigSpec CLIENT_SPEC;
+    private static ConfigBootup bootup;
+    private static ModConfigSpec bootupSpec;
+    private static ConfigCommon common;
+    private static ModConfigSpec commonSpec;
+    private static ConfigServer server;
+    private static ModConfigSpec serverSpec;
+    private static ConfigClient client;
+    private static ModConfigSpec clientSpec;
     
-    static {
+    public static void init() {
         final Pair<ConfigBootup, ModConfigSpec> bootupSpecPair = new ModConfigSpec.Builder().configure(ConfigBootup::new);
-        BOOTUP = bootupSpecPair.getLeft();
-        BOOTUP_SPEC = bootupSpecPair.getRight();
+        bootup = bootupSpecPair.getLeft();
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.STARTUP, bootupSpec = bootupSpecPair.getRight());
         final Pair<ConfigCommon, ModConfigSpec> commonSpecPair = new ModConfigSpec.Builder().configure(ConfigCommon::new);
-        COMMON = commonSpecPair.getLeft();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, COMMON_SPEC = commonSpecPair.getRight());
+        common = commonSpecPair.getLeft();
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, commonSpec = commonSpecPair.getRight());
         final Pair<ConfigServer, ModConfigSpec> serverSpecPair = new ModConfigSpec.Builder().configure(ConfigServer::new);
-        SERVER = serverSpecPair.getLeft();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SERVER_SPEC = serverSpecPair.getRight());
+        server = serverSpecPair.getLeft();
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.SERVER, serverSpec = serverSpecPair.getRight());
         final Pair<ConfigClient, ModConfigSpec> clientSpecPair = new ModConfigSpec.Builder().configure(ConfigClient::new);
-        CLIENT = clientSpecPair.getLeft();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_SPEC = clientSpecPair.getRight());
+        client = clientSpecPair.getLeft();
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.CLIENT, clientSpec = clientSpecPair.getRight());}
+    
+    public static ConfigBootup bootup() {
+    	return bootup;
     }
     
-    public static void init() {}
+    public static ConfigCommon common() {
+    	return common;
+    }
+    
+    public static ConfigServer server() {
+    	return server;
+    }
+    
+    public static boolean serverLoaded() {
+    	return serverSpec.isLoaded();
+    }
+    
+    public static ConfigClient client() {
+    	return client;
+    }
     
     public static void onModConfigsLoaded(ModConfigEvent.Loading event) {
-    	if (event.getConfig().getSpec() == COMMON_SPEC) sendConfigEvent(GenerationType::onCommonConfigLoaded);
-    	else if (event.getConfig().getSpec() == SERVER_SPEC) sendConfigEvent(GenerationType::onServerConfigLoaded);
-    	else if (event.getConfig().getSpec() == CLIENT_SPEC) sendConfigEvent(GenerationType::onClientConfigLoaded);
+    	if (event.getConfig().getSpec() == bootupSpec) sendConfigEvent(GenerationType::onBootupConfigLoaded);
+    	else if (event.getConfig().getSpec() == commonSpec) sendConfigEvent(GenerationType::onCommonConfigLoaded);
+    	else if (event.getConfig().getSpec() == serverSpec) sendConfigEvent(GenerationType::onServerConfigLoaded);
+    	else if (event.getConfig().getSpec() == clientSpec) sendConfigEvent(GenerationType::onClientConfigLoaded);
     }
     
     public static void onModConfigsReloaded(ModConfigEvent.Reloading event) {
-    	if (event.getConfig().getSpec() == COMMON_SPEC) sendConfigEvent(GenerationType::onCommonConfigReloaded);
-    	else if (event.getConfig().getSpec() == SERVER_SPEC) sendConfigEvent(GenerationType::onServerConfigReloaded);
-    	else if (event.getConfig().getSpec() == CLIENT_SPEC) sendConfigEvent(GenerationType::onClientConfigReloaded);
+    	if (event.getConfig().getSpec() == commonSpec) sendConfigEvent(GenerationType::onCommonConfigReloaded);
+    	else if (event.getConfig().getSpec() == serverSpec) sendConfigEvent(GenerationType::onServerConfigReloaded);
+    	else if (event.getConfig().getSpec() == clientSpec) sendConfigEvent(GenerationType::onClientConfigReloaded);
     }
     
     public static void sendConfigEvent(Consumer<GenerationType<?, ?>> action) {

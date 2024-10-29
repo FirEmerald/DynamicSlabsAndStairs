@@ -1,16 +1,23 @@
 package com.firemerald.additionalplacements.client;
 
-import java.util.List;
+import java.util.Collections;
+import java.util.Optional;
 
+import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.client.models.PlacementBlockModelLoader;
 
+import net.minecraft.SharedConstants;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.PackSelectionConfig;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.KnownPack;
 import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.repository.Pack.Info;
+import net.minecraft.server.packs.repository.Pack.Metadata;
+import net.minecraft.server.packs.repository.Pack.Position;
 import net.minecraft.server.packs.repository.Pack.ResourcesSupplier;
 import net.minecraft.server.packs.repository.PackCompatibility;
 import net.minecraft.server.packs.repository.PackSource;
@@ -20,41 +27,50 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ModelEvent.RegisterGeometryLoaders;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 @OnlyIn(Dist.CLIENT)
 public class ClientModEventHandler
 {
 	//create(String p_252257_, Component p_248717_, boolean p_248811_, Pack.ResourcesSupplier p_248969_, Pack.Info p_251314_, Pack.Position p_252110_, boolean p_250237_, PackSource p_248524_) {
 	//public Info(Component description, PackCompatibility compatibility, FeatureFlagSet requestedFeatures, List<String> overlays)
-	public static final Pack GENERATED_RESOURCES_PACK = Pack.create(
-			"Additional Placements blockstate redirection pack",
-			Component.literal("title"),
-			true,
-			new ResourcesSupplier() { //TODO
-
+	public static final Pack GENERATED_RESOURCES_PACK = new Pack(
+			new PackLocationInfo(
+					"Additional Placements blockstate redirection pack", 
+					Component.literal("title"), 
+					PackSource.BUILT_IN, 
+					Optional.of(new KnownPack(
+							AdditionalPlacementsMod.MOD_ID, 
+							"Additional Placements blockstate redirection pack", 
+							SharedConstants.getCurrentVersion().getId()))),
+			new ResourcesSupplier() {
 				@Override
-				public PackResources openPrimary(String p_298664_)
-				{
-					return new BlockstatesPackResources();
+				public PackResources openPrimary(PackLocationInfo info) {
+					return new BlockstatesPackResources(info);
 				}
 
 				@Override
-				public PackResources openFull(String p_251717_, Info p_298253_)
-				{
-					return new BlockstatesPackResources();
+				public PackResources openFull(PackLocationInfo info, Metadata meta) {
+					return new BlockstatesPackResources(info);
 				}
-
 			},
-			new Pack.Info(Component.literal("description"), PackCompatibility.COMPATIBLE, FeatureFlagSet.of(), List.of(), true),
-			Pack.Position.BOTTOM,
-			true,
-			PackSource.BUILT_IN
+			new Metadata(
+					Component.literal("Additional Placements blockstate redirection pack"),
+					PackCompatibility.COMPATIBLE,
+					FeatureFlagSet.of(),
+					Collections.emptyList(),
+					true
+					),
+			new PackSelectionConfig(
+					true,
+					Position.BOTTOM,
+					true
+					)
 			);
 	private static PlacementBlockModelLoader loader;
 

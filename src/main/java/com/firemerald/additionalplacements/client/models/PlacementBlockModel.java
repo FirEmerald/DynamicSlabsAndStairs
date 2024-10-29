@@ -22,8 +22,7 @@ public class PlacementBlockModel implements IUnbakedGeometry<PlacementBlockModel
 	}
 
 	@Override
-	public BakedModel bake(IGeometryBakingContext context, ModelBaker bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation)
-	{
-		return new BakedPlacementBlockModel(bakery.getModel(model).bake(bakery, spriteGetter, modelTransform, modelLocation)); //TODO make better
+	public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides) {
+		return new BakedPlacementBlockModel(baker.getModel(model).bake(baker, spriteGetter, modelState)); //TODO make better
 	}
 }

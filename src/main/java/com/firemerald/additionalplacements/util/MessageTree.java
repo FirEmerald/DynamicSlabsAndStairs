@@ -5,10 +5,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 public class MessageTree {
+    public static final StreamCodec<ByteBuf, Component> COMPONENT_CODEC = ByteBufCodecs.fromCodec(ComponentSerialization.CODEC);
+    
 	public final Component message;
 	public final List<MessageTree> children;
 	
@@ -23,12 +29,12 @@ public class MessageTree {
 	}
 	
 	public MessageTree(FriendlyByteBuf buf) {
-		this.message = buf.readComponent();
+		this.message = COMPONENT_CODEC.decode(buf);
 		this.children = buf.readList(MessageTree::new);
 	}
 	
 	public void write(FriendlyByteBuf buf) {
-		buf.writeComponent(message);
+		COMPONENT_CODEC.encode(buf, message);
 		buf.writeCollection(children, MessageTree::write);
 	}
 	

@@ -4,13 +4,13 @@ import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.client.APClientData;
 import com.firemerald.additionalplacements.common.IAPServerPlayer;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class SetPlacementTogglePacket extends ServerPacket<PlayPayloadContext>
+public class SetPlacementTogglePacket extends ServerPacket<RegistryFriendlyByteBuf>
 {
-	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "set_placement_toggle");
+	public static final Type<SetPlacementTogglePacket> TYPE = new Type<>(ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "set_placement_toggle"));
 	
 	private boolean state;
 
@@ -19,27 +19,27 @@ public class SetPlacementTogglePacket extends ServerPacket<PlayPayloadContext>
 		this.state = state;
 	}
 
-	public SetPlacementTogglePacket(FriendlyByteBuf buf)
+	public SetPlacementTogglePacket(RegistryFriendlyByteBuf buf)
 	{
 		this.state = buf.readBoolean();
 	}
 
 	@Override
-	public ResourceLocation id()
+	public Type<SetPlacementTogglePacket> type()
 	{
-		return ID;
+		return TYPE;
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buf)
+	public void write(RegistryFriendlyByteBuf buf)
 	{
 		buf.writeBoolean(state);
 	}
 
 	@Override
-	public void handleServer(PlayPayloadContext context)
+	public void handleServer(IPayloadContext context)
 	{
-		((IAPServerPlayer) context.player().get()).setPlacementEnabled(state);
+		((IAPServerPlayer) context.player()).setPlacementEnabled(state);
 	}
 
 	@Override
