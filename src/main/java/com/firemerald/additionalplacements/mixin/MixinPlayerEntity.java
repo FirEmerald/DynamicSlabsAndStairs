@@ -13,6 +13,6 @@ public class MixinPlayerEntity implements IAPPlayer
 	@Override
 	public boolean isPlacementEnabled()
 	{
-		return APConfigs.SERVER.fakePlayerPlacement.get();
+		return APConfigs.server().fakePlayerPlacement.get();
 	}
 }
