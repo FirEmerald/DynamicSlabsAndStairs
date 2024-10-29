@@ -1,5 +1,6 @@
 package com.firemerald.additionalplacements.block;
 
+import com.firemerald.additionalplacements.block.interfaces.IAdditionalBeaconBeamBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
 import com.firemerald.additionalplacements.block.interfaces.IStairBlock;
 import com.firemerald.additionalplacements.util.*;
@@ -11,6 +12,7 @@ import com.firemerald.additionalplacements.util.stairs.StairShape;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.BeaconBeamBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,9 +32,17 @@ public class VerticalStairBlock extends AdditionalPlacementLiquidBlock<StairBloc
 	public static VerticalStairBlock of(StairBlock stairs, StairConnections allowedConnections)
 	{
 		staticAllowedConnections = allowedConnections;
-		VerticalStairBlock ret = new VerticalStairBlock(stairs, allowedConnections);
+		VerticalStairBlock ret = stairs instanceof BeaconBeamBlock ? new AdditionalBeaconBeamVerticalStairBlock(stairs, allowedConnections) : new VerticalStairBlock(stairs, allowedConnections);
 		staticAllowedConnections = null;
 		return ret;
+	}
+
+	private static class AdditionalBeaconBeamVerticalStairBlock extends VerticalStairBlock implements IAdditionalBeaconBeamBlock<StairBlock>
+	{
+		AdditionalBeaconBeamVerticalStairBlock(StairBlock stairs, StairConnections allowedConnections)
+		{
+			super(stairs, allowedConnections);
+		}
 	}
 	
 	public final StairConnections allowedConnections;

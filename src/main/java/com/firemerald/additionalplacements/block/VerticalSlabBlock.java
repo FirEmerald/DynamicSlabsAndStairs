@@ -1,6 +1,7 @@
 package com.firemerald.additionalplacements.block;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
+import com.firemerald.additionalplacements.block.interfaces.IAdditionalBeaconBeamBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISlabBlock;
 import com.firemerald.additionalplacements.util.BlockRotation;
@@ -14,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.BeaconBeamBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,7 +32,15 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 
 	public static VerticalSlabBlock of(SlabBlock slab)
 	{
-		return new VerticalSlabBlock(slab);
+		return slab instanceof BeaconBeamBlock ? new AdditionalBeaconBeamVerticalSlabBlock(slab) : new VerticalSlabBlock(slab);
+	}
+
+	private static class AdditionalBeaconBeamVerticalSlabBlock extends VerticalSlabBlock implements IAdditionalBeaconBeamBlock<SlabBlock>
+	{
+		AdditionalBeaconBeamVerticalSlabBlock(SlabBlock slab)
+		{
+			super(slab);
+		}
 	}
 	
 	public boolean rotateLogic = true, rotateModel = true, rotateTex = true;
