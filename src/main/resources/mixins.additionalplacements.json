@@ -16,7 +16,6 @@
 	],
 	"client": [
 		"MixinModResourcePackCreator",
-		"MixinModelLoaderRegistry",
 		"MixinBlockModelShaper",
 		"MixinLocalPlayer"
 	],

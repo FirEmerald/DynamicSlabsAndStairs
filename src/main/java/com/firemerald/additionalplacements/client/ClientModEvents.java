@@ -6,9 +6,11 @@ import org.jetbrains.annotations.Nullable;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
+import com.firemerald.additionalplacements.client.models.PlacementBlockModelLoader;
 import com.firemerald.additionalplacements.common.CommonModEvents;
 import com.firemerald.additionalplacements.config.APConfigs;
 
+import io.github.fabricators_of_create.porting_lib.model.ModelLoaderRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -82,6 +84,7 @@ public class ClientModEvents implements ClientModInitializer
 	    		}
 	    	});
 	    	client.getBlockColors().register(new AdditionalBlockColor(), Registry.BLOCK.stream().filter(block -> block instanceof AdditionalPlacementBlock && !((AdditionalPlacementBlock<?>) block).hasCustomColors()).toArray(Block[]::new));
+	    	ModelLoaderRegistry.registerLoader(PlacementBlockModelLoader.ID, new PlacementBlockModelLoader());
 			hasInit = true;
 		}
 	}
