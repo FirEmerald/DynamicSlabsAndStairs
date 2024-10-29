@@ -28,6 +28,9 @@ Pressure plates can be placed on walls and ceilings.",
 		],
 		"fabric-datagen": [
 			"com.firemerald.additionalplacements.datagen.AdditionalPlacementsDataGenerator"
+		],
+		"additional-placements-generators": [
+			"com.firemerald.additionalplacements.generation.APGenerationTypes"
 		]
 	},
 	"mixins": [

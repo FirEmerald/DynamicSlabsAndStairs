@@ -4,14 +4,14 @@
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
 		"MixinBasePressurePlateBlock",
-		"MixinMappedRegistry",
 		"MixinCarpetBlock",
 		"MixinPressurePlateBlock",
 		"MixinSlabBlock",
 		"MixinStairBlock",
 		"MixinWeightedPressurePlateBlock",
 		"MixinPlayer",
-		"MixinServerPlayer"
+		"MixinServerPlayer",
+		"MixinChunkStorage"
 	],
 	"client": [
 		"MixinModResourcePackCreator",
