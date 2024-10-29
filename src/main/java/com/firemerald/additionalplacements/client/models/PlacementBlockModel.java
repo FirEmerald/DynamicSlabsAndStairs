@@ -26,7 +26,7 @@ public class PlacementBlockModel implements IModelGeometry<PlacementBlockModel>
 	@Override
 	public BakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation)
 	{
-		return new BakedPlacementBlockModel(bakery.bake(model, modelTransform));
+		return new BakedPlacementBlockModel(bakery.getModel(model).bake(bakery, spriteGetter, modelTransform, modelLocation)); //TODO make better
 	}
 
 	@Override
@@ -36,5 +36,4 @@ public class PlacementBlockModel implements IModelGeometry<PlacementBlockModel>
 		if (model != null) return model.getMaterials(modelGetter, missingTextureErrors);
 		else return Collections.emptyList();
 	}
-
 }

@@ -5,14 +5,14 @@
 	"mixins": [
 		"MixinStructureTransform",
 		"MixinBasePressurePlateBlock",
-		"MixinMappedRegistry",
 		"MixinCarpetBlock",
 		"MixinPressurePlateBlock",
 		"MixinSlabBlock",
 		"MixinStairBlock",
 		"MixinWeightedPressurePlateBlock",
 		"MixinPlayer",
-		"MixinServerPlayer"
+		"MixinServerPlayer",
+		"MixinChunkStorage"
 	],
 	"client": [
 		"MixinModResourcePackCreator",

@@ -9,6 +9,7 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
+import com.firemerald.additionalplacements.config.APConfigs;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
@@ -46,7 +47,7 @@ public class TagMismatchChecker extends Thread
 		TagMismatchChecker old = thread;
 		thread = new TagMismatchChecker();
 		if (old != null) old.halted = true;
-		thread.setPriority(AdditionalPlacementsMod.COMMON_CONFIG.checkerPriority.get());
+		thread.setPriority(APConfigs.common().checkerPriority.get());
 		CommonModEvents.misMatchedTags = false;
 		thread.start();
 	}
@@ -97,12 +98,12 @@ public class TagMismatchChecker extends Thread
 			if (!blockMissingExtra.isEmpty())
 			{
 				CommonModEvents.misMatchedTags = true;
-				boolean autoRebuild = AdditionalPlacementsMod.COMMON_CONFIG.autoRebuildTags.get() && AdditionalPlacementsMod.SERVER_CONFIG.autoRebuildTags.get();
+				boolean autoRebuild = APConfigs.common().autoRebuildTags.get() && APConfigs.server().autoRebuildTags.get();
 				if (!autoRebuild) server.getPlayerList().getPlayers().forEach(player -> {
 					if (canGenerateTags(player)) player.sendMessage(MESSAGE, Util.NIL_UUID);
 				});
 				AdditionalPlacementsMod.LOGGER.warn("Found missing and/or extra tags on generated blocks. Use \"/ap_tags_export\" to generate the tags, then \"/reload\" to re-load them (or re-load the world if that fails).");
-				if (AdditionalPlacementsMod.COMMON_CONFIG.logTagMismatch.get())
+				if (APConfigs.common().logTagMismatch.get())
 				{
 					AdditionalPlacementsMod.LOGGER.warn("====== BEGIN LIST ======");
 					blockMissingExtra.forEach(blockMissingExtra -> {

@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
-import com.firemerald.additionalplacements.client.models.BakedParticleDeferredBlockModel;
 import com.firemerald.additionalplacements.common.CommonModEvents;
+import com.firemerald.additionalplacements.config.APConfigs;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -32,8 +31,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackCompatibility;
 import net.minecraft.server.packs.repository.PackSource;
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
-import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -85,7 +82,6 @@ public class ClientModEvents implements ClientModInitializer
 	    		}
 	    	});
 	    	client.getBlockColors().register(new AdditionalBlockColor(), Registry.BLOCK.stream().filter(block -> block instanceof AdditionalPlacementBlock && !((AdditionalPlacementBlock<?>) block).hasCustomColors()).toArray(Block[]::new));
-			((ReloadableResourceManager) client.getResourceManager()).registerReloadListener((ResourceManagerReloadListener) (v -> BakedParticleDeferredBlockModel.clearCache()));
 			hasInit = true;
 		}
 	}
@@ -126,7 +122,7 @@ public class ClientModEvents implements ClientModInitializer
 
 	public static void onServerJoined(ClientPacketListener handler, PacketSender sender, Minecraft client)
 	{
-		APClientData.setPlacementEnabledAndSynchronize(AdditionalPlacementsMod.CLIENT_CONFIG.defaultPlacementLogicState.get());
+		APClientData.setPlacementEnabledAndSynchronize(APConfigs.client().defaultPlacementLogicState.get());
 	}
 
 	public static void onClientEndTick(Minecraft mc)
@@ -141,7 +137,7 @@ public class ClientModEvents implements ClientModInitializer
 		else if (APClientData.placementKeyDown && !APClientData.AP_PLACEMENT_KEY.isDown()) //released
 		{
 			APClientData.placementKeyDown = false;
-			if ((System.currentTimeMillis() - APClientData.placementKeyPressTime) > AdditionalPlacementsMod.CLIENT_CONFIG.toggleQuickpressTime.get()) //more than half-second press, toggle back
+			if ((System.currentTimeMillis() - APClientData.placementKeyPressTime) > APConfigs.client().toggleQuickpressTime.get()) //more than half-second press, toggle back
 			{
 				APClientData.togglePlacementEnabled();
 			}
