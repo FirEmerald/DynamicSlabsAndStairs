@@ -40,6 +40,19 @@ public enum StairShape implements IStringSerializable {
 	private static final StairShape[] FROM_BASIC_BOTTOM = new StairShape[5];
 	
 	static {
+		STRAIGHT.flipped = STRAIGHT;
+		
+		setFlipped(INNER_FRONT_LEFT, INNER_TOP_RIGHT);
+		setFlipped(INNER_TOP_LEFT, INNER_FRONT_RIGHT);
+		setFlipped(INNER_BOTH_LEFT, INNER_BOTH_RIGHT);
+		
+		setFlipped(OUTER_BACK_LEFT, OUTER_BOTTOM_RIGHT);
+		setFlipped(OUTER_BOTTOM_LEFT, OUTER_BACK_RIGHT);
+		setFlipped(OUTER_BOTH_LEFT, OUTER_BOTH_RIGHT);
+
+		OUTER_BACK_LEFT_BOTTOM_RIGHT.flipped = OUTER_BACK_LEFT_BOTTOM_RIGHT;
+		OUTER_BACK_RIGHT_BOTTOM_LEFT.flipped = OUTER_BACK_RIGHT_BOTTOM_LEFT;
+		
 		List<StairShape> noVerticalConnections = new ArrayList<>();
 		List<StairShape> noMixedConnections = new ArrayList<>();
 		for (StairShape shape : ALL_SHAPES) {
@@ -50,6 +63,11 @@ public enum StairShape implements IStringSerializable {
 		}
 		NO_VERTICAL_CONNECTIONS = noVerticalConnections.toArray(new StairShape[noVerticalConnections.size()]);
 		NO_MIXED_CONNECTIONS = noMixedConnections.toArray(new StairShape[noMixedConnections.size()]);
+	}
+	
+	private static void setFlipped(StairShape a, StairShape b) {
+		a.flipped = b;
+		b.flipped = a;
 	}
 	
 	public static StairShape getShape(StairsShape basicShape, Half half) {
@@ -65,6 +83,7 @@ public enum StairShape implements IStringSerializable {
 	public final Function<ComplexFacing, VoxelShape> getShape;
 	public final StairsShape vanillaTopShape, vanillaBottomShape;
 	public final boolean isVerticalConnection, isMixedConnection;
+	private StairShape flipped;
 	
 	StairShape(String name, Function<ComplexFacing, VoxelShape> getShape, boolean isVerticalConnection, boolean isMixedConnection) {
 		this(name, getShape, null, null, isVerticalConnection, isMixedConnection);
@@ -89,6 +108,10 @@ public enum StairShape implements IStringSerializable {
 	
 	public StairsShape getVanillaShape(ComplexFacing facing) {
 		return facing.vanillaStairsHalf == null ? null : getVanillaShape(facing.vanillaStairsHalf);
+	}
+	
+	public StairShape flipped() { 
+		return flipped;
 	}
 
 	@Override
