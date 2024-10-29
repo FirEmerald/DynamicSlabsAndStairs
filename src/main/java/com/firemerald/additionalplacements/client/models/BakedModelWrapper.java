@@ -1,62 +1,35 @@
 package com.firemerald.additionalplacements.client.models;
 
-import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class BakedModelWrapper implements BakedModel
+public abstract class BakedModelWrapper extends ForwardingBakedModel
 {
-	public final BakedModel originalModel;
-	
 	protected BakedModelWrapper(BakedModel originalModel)
 	{
-		this.originalModel = originalModel;
+		this.wrapped = originalModel;
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState blockState, Direction face, Random rand) {
-		return originalModel.getQuads(blockState, face, rand);
+	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+		context.bakedModelConsumer().accept(this, state);
 	}
 
 	@Override
-	public boolean useAmbientOcclusion() {
-		return originalModel.useAmbientOcclusion();
+	public boolean isVanillaAdapter() {
+		return true;
 	}
 
 	@Override
-	public boolean isGui3d() {
-		return originalModel.isGui3d();
-	}
-
-	@Override
-	public boolean isCustomRenderer() {
-		return originalModel.isCustomRenderer();
-	}
-
-	@Override
-	public TextureAtlasSprite getParticleIcon() {
-		return originalModel.getParticleIcon();
-	}
-
-	@Override
-	public boolean usesBlockLight() {
-		return originalModel.usesBlockLight();
-	}
-
-	@Override
-	public ItemTransforms getTransforms() {
-		return originalModel.getTransforms();
-	}
-
-	@Override
-	public ItemOverrides getOverrides() {
-		return originalModel.getOverrides();
+	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+		context.bakedModelConsumer().accept(this, null);
 	}
 }

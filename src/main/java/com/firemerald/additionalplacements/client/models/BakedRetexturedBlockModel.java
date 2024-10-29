@@ -36,7 +36,7 @@ public class BakedRetexturedBlockModel extends BakedModelWrapper
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand)
 	{
-		return BlockModelUtils.retexturedQuads(state, BlockModelUtils.getModeledState(state), (unused) -> originalModel, newModel, side, rand);
+		return BlockModelUtils.retexturedQuads(state, BlockModelUtils.getModeledState(state), (unused) -> wrapped, newModel, side, rand);
 	}
 
 	/* Too much information about the quad is hidden, making re-ordering vertices (to fix an annoying AO bug) impossible, so we will have to use vanilla model code

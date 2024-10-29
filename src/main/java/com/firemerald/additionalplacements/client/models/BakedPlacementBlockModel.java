@@ -26,11 +26,11 @@ public class BakedPlacementBlockModel extends BakedModelWrapper
 			AdditionalPlacementBlock<?> block = (AdditionalPlacementBlock<?>) state.getBlock();
 			if (block.rotatesModel(state)) return BlockModelUtils.rotatedQuads(modelState, BlockModelUtils::getBakedModel, block.getRotation(state), block.rotatesTexture(state), side, rand);
 		}
-		return BlockModelUtils.retexturedQuads(state, modelState, BlockModelUtils::getBakedModel, originalModel, side, rand);
+		return BlockModelUtils.retexturedQuads(state, modelState, BlockModelUtils::getBakedModel, wrapped, side, rand);
 	}
 	
 	public BakedModel originalModel() {
-		return originalModel;
+		return wrapped;
 	}
 
 	/* Too much information about the quad is hidden, making re-ordering vertices (to fix an annoying AO bug) impossible, so we will have to use vanilla model code

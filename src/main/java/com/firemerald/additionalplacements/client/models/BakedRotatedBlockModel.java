@@ -39,7 +39,7 @@ public class BakedRotatedBlockModel extends BakedModelWrapper
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand)
 	{
-		return BlockModelUtils.rotatedQuads(BlockModelUtils.getModeledState(state), unused -> originalModel, rotation, rotateTex, side, rand);
+		return BlockModelUtils.rotatedQuads(BlockModelUtils.getModeledState(state), unused -> wrapped, rotation, rotateTex, side, rand);
 	}
 
 	/* Too much information about the quad is hidden, making re-ordering vertices (to fix an annoying AO bug) impossible, so we will have to use vanilla model code
