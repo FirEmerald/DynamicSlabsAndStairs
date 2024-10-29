@@ -7,11 +7,11 @@ import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
 
 import com.firemerald.additionalplacements.generation.GenerationType;
 
-public class ConfigServer
+public class ServerConfig
 {
 	public final BooleanValue checkTags, autoRebuildTags, fakePlayerPlacement;
 
-	public ConfigServer(ModConfigSpec.Builder builder)
+	public ServerConfig(ModConfigSpec.Builder builder)
 	{
         builder.comment("World settings").push("server");
         checkTags = builder

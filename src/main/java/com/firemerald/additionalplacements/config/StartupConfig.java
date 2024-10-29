@@ -6,9 +6,9 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 
 import com.firemerald.additionalplacements.generation.GenerationType;
 
-public class ConfigBootup {
-	public ConfigBootup(ModConfigSpec.Builder builder) {
-        builder.comment("Bootup settings").push("bootup");
-        Registration.buildConfig(builder, GenerationType::buildBootupConfig);
+public class StartupConfig {
+	public StartupConfig(ModConfigSpec.Builder builder) {
+        builder.comment("Startup settings").push("startup");
+        Registration.buildConfig(builder, GenerationType::buildStartupConfig);
 	}
 }

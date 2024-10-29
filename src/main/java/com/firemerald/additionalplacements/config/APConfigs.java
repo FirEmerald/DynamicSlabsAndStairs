@@ -13,38 +13,38 @@ import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class APConfigs {
-    private static ConfigBootup bootup;
-    private static ModConfigSpec bootupSpec;
-    private static ConfigCommon common;
+    private static StartupConfig startup;
+    private static ModConfigSpec startupSpec;
+    private static CommonConfig common;
     private static ModConfigSpec commonSpec;
-    private static ConfigServer server;
+    private static ServerConfig server;
     private static ModConfigSpec serverSpec;
-    private static ConfigClient client;
+    private static ClientConfig client;
     private static ModConfigSpec clientSpec;
     
     public static void init() {
-        final Pair<ConfigBootup, ModConfigSpec> bootupSpecPair = new ModConfigSpec.Builder().configure(ConfigBootup::new);
-        bootup = bootupSpecPair.getLeft();
-        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.STARTUP, bootupSpec = bootupSpecPair.getRight());
-        final Pair<ConfigCommon, ModConfigSpec> commonSpecPair = new ModConfigSpec.Builder().configure(ConfigCommon::new);
+        final Pair<StartupConfig, ModConfigSpec> startupSpecPair = new ModConfigSpec.Builder().configure(StartupConfig::new);
+        startup = startupSpecPair.getLeft();
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.STARTUP, startupSpec = startupSpecPair.getRight());
+        final Pair<CommonConfig, ModConfigSpec> commonSpecPair = new ModConfigSpec.Builder().configure(CommonConfig::new);
         common = commonSpecPair.getLeft();
         ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, commonSpec = commonSpecPair.getRight());
-        final Pair<ConfigServer, ModConfigSpec> serverSpecPair = new ModConfigSpec.Builder().configure(ConfigServer::new);
+        final Pair<ServerConfig, ModConfigSpec> serverSpecPair = new ModConfigSpec.Builder().configure(ServerConfig::new);
         server = serverSpecPair.getLeft();
         ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.SERVER, serverSpec = serverSpecPair.getRight());
-        final Pair<ConfigClient, ModConfigSpec> clientSpecPair = new ModConfigSpec.Builder().configure(ConfigClient::new);
+        final Pair<ClientConfig, ModConfigSpec> clientSpecPair = new ModConfigSpec.Builder().configure(ClientConfig::new);
         client = clientSpecPair.getLeft();
         ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.CLIENT, clientSpec = clientSpecPair.getRight());}
     
-    public static ConfigBootup bootup() {
-    	return bootup;
+    public static StartupConfig bootup() {
+    	return startup;
     }
     
-    public static ConfigCommon common() {
+    public static CommonConfig common() {
     	return common;
     }
     
-    public static ConfigServer server() {
+    public static ServerConfig server() {
     	return server;
     }
     
@@ -52,12 +52,12 @@ public class APConfigs {
     	return serverSpec.isLoaded();
     }
     
-    public static ConfigClient client() {
+    public static ClientConfig client() {
     	return client;
     }
     
     public static void onModConfigsLoaded(ModConfigEvent.Loading event) {
-    	if (event.getConfig().getSpec() == bootupSpec) sendConfigEvent(GenerationType::onBootupConfigLoaded);
+    	if (event.getConfig().getSpec() == startupSpec) sendConfigEvent(GenerationType::onBootupConfigLoaded);
     	else if (event.getConfig().getSpec() == commonSpec) sendConfigEvent(GenerationType::onCommonConfigLoaded);
     	else if (event.getConfig().getSpec() == serverSpec) sendConfigEvent(GenerationType::onServerConfigLoaded);
     	else if (event.getConfig().getSpec() == clientSpec) sendConfigEvent(GenerationType::onClientConfigLoaded);
