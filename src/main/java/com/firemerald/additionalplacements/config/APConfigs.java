@@ -12,26 +12,26 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 
 public class APConfigs {
-    public static final ConfigBootup BOOTUP;
-    public static final ForgeConfigSpec BOOTUP_SPEC;
-    public static final ConfigCommon COMMON;
+    public static final StartupConfig STARTUP;
+    public static final ForgeConfigSpec STARTUP_SPEC;
+    public static final CommonConfig COMMON;
     public static final ForgeConfigSpec COMMON_SPEC;
-    public static final ConfigServer SERVER;
+    public static final ServerConfig SERVER;
     public static final ForgeConfigSpec SERVER_SPEC;
-    public static final ConfigClient CLIENT;
+    public static final ClientConfig CLIENT;
     public static final ForgeConfigSpec CLIENT_SPEC;
     
     static {
-        final Pair<ConfigBootup, ForgeConfigSpec> bootupSpecPair = new ForgeConfigSpec.Builder().configure(ConfigBootup::new);
-        BOOTUP = bootupSpecPair.getLeft();
-        BOOTUP_SPEC = bootupSpecPair.getRight();
-        final Pair<ConfigCommon, ForgeConfigSpec> commonSpecPair = new ForgeConfigSpec.Builder().configure(ConfigCommon::new);
+        final Pair<StartupConfig, ForgeConfigSpec> startupSpecPair = new ForgeConfigSpec.Builder().configure(StartupConfig::new);
+        STARTUP = startupSpecPair.getLeft();
+        STARTUP_SPEC = startupSpecPair.getRight();
+        final Pair<CommonConfig, ForgeConfigSpec> commonSpecPair = new ForgeConfigSpec.Builder().configure(CommonConfig::new);
         COMMON = commonSpecPair.getLeft();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, COMMON_SPEC = commonSpecPair.getRight());
-        final Pair<ConfigServer, ForgeConfigSpec> serverSpecPair = new ForgeConfigSpec.Builder().configure(ConfigServer::new);
+        final Pair<ServerConfig, ForgeConfigSpec> serverSpecPair = new ForgeConfigSpec.Builder().configure(ServerConfig::new);
         SERVER = serverSpecPair.getLeft();
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SERVER_SPEC = serverSpecPair.getRight());
-        final Pair<ConfigClient, ForgeConfigSpec> clientSpecPair = new ForgeConfigSpec.Builder().configure(ConfigClient::new);
+        final Pair<ClientConfig, ForgeConfigSpec> clientSpecPair = new ForgeConfigSpec.Builder().configure(ClientConfig::new);
         CLIENT = clientSpecPair.getLeft();
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_SPEC = clientSpecPair.getRight());
     }
