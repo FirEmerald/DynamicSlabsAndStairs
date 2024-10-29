@@ -63,9 +63,9 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 		return placementEnabled.get();
 	}
 	
-	//The following method is for the "bootup" config, a custom config that loads before block registration and doesn't support re-loading changed values in-game.
+	//The following method is for the "startup" config, a custom config that loads before block registration and doesn't support re-loading changed values in-game.
 	//They should be used for options that affect the dynamic generation of additional placement blocks.
-	public void buildBootupConfig(ForgeConfigSpec.Builder builder) {
+	public void buildStartupConfig(ForgeConfigSpec.Builder builder) {
 		builder
 		.comment("Options for controlling which blocks (that are valid for this type) will generate variants of this type")
 		.push("enabled");
