@@ -1,7 +1,6 @@
 package com.firemerald.additionalplacements.block.interfaces;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Function;
 
 import javax.annotation.Nullable;
@@ -13,6 +12,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -63,8 +63,9 @@ public interface IFloorBlock<T extends Block> extends IPlacementBlock<T>
 		return from;
 	}
 
+	@Override
 	@Environment(EnvType.CLIENT)
-	public default Function<Direction, Direction> getModelDirectionFunction(BlockState state, Random rand)
+	public default Function<Direction, Direction> getModelDirectionFunction(BlockState state, RandomSource rand)
 	{
 		return switch(getPlacing(state)) {
 		case UP -> side -> switch (side) {

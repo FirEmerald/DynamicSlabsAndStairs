@@ -6,7 +6,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
-import com.firemerald.additionalplacements.client.models.BakedParticleDeferredBlockModel;
+import com.firemerald.additionalplacements.client.models.BakedRotatedBlockModel;
+import com.firemerald.additionalplacements.client.models.BakedRetexturedBlockModel;
 import com.firemerald.additionalplacements.client.models.BakedPlacementBlockModel;
 
 import net.minecraft.client.renderer.block.BlockModelShaper;
@@ -22,8 +23,11 @@ public class MixinBlockModelShaper
 		if (state.getBlock() instanceof AdditionalPlacementBlock && ci.getReturnValue() instanceof BakedPlacementBlockModel)
 		{
 			AdditionalPlacementBlock<?> block = (AdditionalPlacementBlock<?>) state.getBlock();
-			BlockState modelState = block.getModelState(state);
-			ci.setReturnValue(BakedParticleDeferredBlockModel.of(ci.getReturnValue(), ((BlockModelShaper) (Object) this).getBlockModel(modelState).getParticleIcon()));
+			boolean rotatesModel = block.rotatesModel(state);
+			BakedModel modelModel = ((BlockModelShaper) (Object) this).getBlockModel(rotatesModel ? block.getUnrotatedModelState(state) : block.getModelState(state));
+			ci.setReturnValue(rotatesModel ? 
+					BakedRotatedBlockModel.of(modelModel, block.getRotation(state), block.rotatesTexture(state)) : 
+						BakedRetexturedBlockModel.of(modelModel, ((BakedPlacementBlockModel) ci.getReturnValue()).originalModel()));
 		}
     }
 }
