@@ -25,5 +25,6 @@
 	"additionalplacements.stairs.connections_type.all_connections": "All connections allowed",
 	"additionalplacements.stairs.connections_type.no_mixed_connections": "No mixed connections allowed",
 	"additionalplacements.stairs.connections_type.no_vertical_connections": "No vertical connections allowed",
-	"msg.additionalplacements.stairs.mismatched.footer": "To connect to this server, correct the entries in config/additionalplacements-bootup.toml and relaunch the game."
+	"msg.additionalplacements.stairs.mismatched.footer": "To connect to this server, correct the entries in config/additionalplacements-bootup.toml and relaunch the game.",
+	"commands.ap_stairs_state_debug.wrong_block": "%s is not a valid block, must be a stair block with additional states."
 }
