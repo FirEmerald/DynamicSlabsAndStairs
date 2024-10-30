@@ -227,7 +227,7 @@ public interface ISlabBlock<T extends Block> extends IPlacementBlock<T>
     
 	@Override
 	public default GenerationType<?, ?> getGenerationType() {
-		return APGenerationTypes.SLAB;
+		return APGenerationTypes.slab();
 	}
 
     @Override
