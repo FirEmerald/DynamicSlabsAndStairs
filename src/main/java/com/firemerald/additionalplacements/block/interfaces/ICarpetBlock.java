@@ -32,6 +32,6 @@ public interface ICarpetBlock<T extends Block> extends IFloorBlock<T>
 
 	@Override
 	public default GenerationType<?, ?> getGenerationType() {
-		return APGenerationTypes.CARPET;
+		return APGenerationTypes.carpet();
 	}
 }
