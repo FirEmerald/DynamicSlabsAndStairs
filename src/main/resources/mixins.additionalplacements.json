@@ -5,7 +5,7 @@
 	"refmap": "mixins.additionalplacements.refmap.json",
 	"mixins": [
 		"MixinBasePressurePlateBlock",
-		"MixinBlockCallbacks",
+		"MixinForgeRegistry",
 		"MixinCarpetBlock",
 		"MixinPressurePlateBlock",
 		"MixinSlabBlock",
