@@ -6,7 +6,7 @@
 	"mixins": [
 		"MixinStructureTransform",
 		"MixinBasePressurePlateBlock",
-		"MixinBlockCallbacks",
+		"MixinForgeRegistry",
 		"MixinCarpetBlock",
 		"MixinPressurePlateBlock",
 		"MixinSlabBlock",
