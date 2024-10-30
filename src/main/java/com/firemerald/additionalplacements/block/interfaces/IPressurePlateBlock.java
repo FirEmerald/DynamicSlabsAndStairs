@@ -12,6 +12,6 @@ public interface IPressurePlateBlock<T extends Block> extends IBasePressurePlate
 
 	@Override
 	public default GenerationType<?, ?> getGenerationType() {
-		return APGenerationTypes.PRESSURE_PLATE;
+		return APGenerationTypes.pressurePlate();
 	}
 }
