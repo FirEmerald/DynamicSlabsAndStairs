@@ -34,13 +34,14 @@ import net.minecraftforge.registries.RegisterEvent;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CommonModEventHandler
 {
-	public static boolean lockGenerationTypeRegistry = false;
+	private static boolean init = false;
 	
 	@SubscribeEvent
 	public static void onNewRegistry(NewRegistryEvent event) { //best hook I could find for loading a config after all mods have been processed but before registries are built
-		if (!lockGenerationTypeRegistry) {
-			lockGenerationTypeRegistry = true;
+		if (!init) {
+			Registration.registerTypes();
 			APConfigs.init();
+			init = true;
 		}
 	}
 	
