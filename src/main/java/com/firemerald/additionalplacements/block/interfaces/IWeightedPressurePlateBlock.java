@@ -12,6 +12,6 @@ public interface IWeightedPressurePlateBlock<T extends Block> extends IBasePress
 
 	@Override
 	public default GenerationType<?, ?> getGenerationType() {
-		return APGenerationTypes.WEIGHTED_PRESSURE_PLATE;
+		return APGenerationTypes.weightedPressurePlate();
 	}
 }
