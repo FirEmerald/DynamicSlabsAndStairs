@@ -6,15 +6,27 @@ import java.util.function.BiConsumer;
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
-import com.firemerald.additionalplacements.common.CommonModEventHandler;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.eventbus.api.Event;
 
 public class Registration {
+	private static List<RegistrationInitializer> registrators = new ArrayList<>();
+	
+	public static void addRegistration(RegistrationInitializer listener) {
+		if (registrators == null) throw new IllegalStateException("A mod tried to register a registrator too late into the load sequence! Registrators should be registered in your mod constructor.");
+		registrators.add(listener);
+	}
+	
+	public static void registerTypes() {
+		registrators.forEach(registrator -> registrator.onInitializeRegistration(Registration::registerType));
+		registrators = null;
+	}
+	
 	private static final Map<ResourceLocation, GenerationType<?, ?>> TYPES = new LinkedHashMap<>();
 	private static final Map<Class<?>, GenerationType<?, ?>> TYPES_BY_CLASS = new HashMap<>();
 	private static final Object PROTECTION_KEY = new Object(); //this simple object is used to determine if a GenerationType is being instantiated improperly
@@ -47,8 +59,7 @@ public class Registration {
 		}
 	}
 	
-	public static <T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>> V registerType(Class<T> clazz, ResourceLocation name, String description, GenerationTypeConstructor<V> typeConstructor) {
-		if (CommonModEventHandler.lockGenerationTypeRegistry) throw new IllegalStateException("A mod tried to register an Additional Placements generation type too late into the load sequence! Types must be registered before net.minecraftforge.registries.NewRegistryEvent is fired. The offending GenerationType name (whose namespace is generally the offending mod ID) is " + name);
+	private static <T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>> V registerType(Class<T> clazz, ResourceLocation name, String description, GenerationTypeConstructor<V> typeConstructor) {
 		if (TYPES.containsKey(name)) throw new IllegalStateException("A generation type with name " + name + " is already registered!");
 		V type = typeConstructor.construct(PROTECTION_KEY, name, description);
 		TYPES.put(name, type);
@@ -77,5 +88,11 @@ public class Registration {
     private static List<String> split(String path)
     {
         return Lists.newArrayList(DOT_SPLITTER.split(path));
+    }
+    
+    public static class GatherGenerationTypesEvent extends Event {
+    	public <T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>> V registerType(Class<T> clazz, ResourceLocation name, String description, GenerationTypeConstructor<V> typeConstructor) {
+    		return Registration.registerType(clazz, name, description, typeConstructor);
+    	}
     }
 }

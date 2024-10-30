@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.firemerald.additionalplacements.config.APConfigs;
 import com.firemerald.additionalplacements.generation.APGenerationTypes;
+import com.firemerald.additionalplacements.generation.Registration;
 import com.firemerald.additionalplacements.network.APNetwork;
 
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -24,11 +25,11 @@ public class AdditionalPlacementsMod
 
     public AdditionalPlacementsMod()
     {
-        APGenerationTypes.init();
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener((FMLCommonSetupEvent event) -> APNetwork.register());
         bus.addListener(APConfigs::onModConfigsLoaded);
         bus.addListener(APConfigs::onModConfigsReloaded);
+        Registration.addRegistration(new APGenerationTypes());
         LOGGER.warn("During block registration you may recieve several reports of \"Potentially Dangerous alternative prefix `additionalplacements`\". Ignore these, they are intended.");
     }
 }

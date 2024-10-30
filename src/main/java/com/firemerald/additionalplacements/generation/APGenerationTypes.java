@@ -10,44 +10,67 @@ import com.firemerald.additionalplacements.config.BlockBlacklist;
 import net.minecraft.block.*;
 import net.minecraft.util.ResourceLocation;
 
-public class APGenerationTypes {
-	public static final SimpleRotatableGenerationType<SlabBlock, VerticalSlabBlock>
-	SLAB                    = get(SlabBlock.class                 , "slab"                   , "Slabs"                   , 
-			new SimpleRotatableGenerationType.Builder<SlabBlock, VerticalSlabBlock>()
-			.blacklistModelRotation(new BlockBlacklist.Builder()
-					.blockBlacklist(
-							"minecraft:sandstone_slab", 
-							"minecraft:cut_sandstone_slab", 
-							"minecraft:red_sandstone_slab", 
-							"minecraft:cut_red_sandstone_slab")
-					.build())
-			.blacklistTextureRotation(new BlockBlacklist.Builder()
-					.blockBlacklist("minecraft:smooth_stone_slab")
-					.build())
-			.constructor(VerticalSlabBlock::of));
-	public static final VerticalStairsGenerationType<StairsBlock, VerticalStairBlock>
-	STAIRS                  = get(StairsBlock.class                , "stairs"                 , "Stairs"                  , 
-			new VerticalStairsGenerationType.Builder<StairsBlock, VerticalStairBlock>()
-			.blacklistModelRotation(new BlockBlacklist.Builder()
-					.blockBlacklist(
-							"minecraft:sandstone_stairs", 
-							"minecraft:red_sandstone_stairs")
-					.build())
-			.constructor(VerticalStairBlock::of));
-	public static final SimpleRotatableGenerationType<CarpetBlock, AdditionalCarpetBlock>
-	CARPET                  = get(CarpetBlock.class               , "carpet"                 , "Carpets"                 , AdditionalCarpetBlock::of);
-	public static final SimpleRotatableGenerationType<PressurePlateBlock, AdditionalPressurePlateBlock>
-	PRESSURE_PLATE          = get(PressurePlateBlock.class        , "pressure_plate"         , "Regular pressure plates" , AdditionalPressurePlateBlock::of);
-	public static final SimpleRotatableGenerationType<WeightedPressurePlateBlock, AdditionalWeightedPressurePlateBlock>
-	WEIGHTED_PRESSURE_PLATE = get(WeightedPressurePlateBlock.class, "weighted_pressure_plate", "Weighted pressure plates", AdditionalWeightedPressurePlateBlock::of);
+public class APGenerationTypes implements RegistrationInitializer {
+	private static SimpleRotatableGenerationType<SlabBlock, VerticalSlabBlock> slab;
+	private static VerticalStairsGenerationType<StairsBlock, VerticalStairBlock> stairs;
+	private static SimpleRotatableGenerationType<CarpetBlock, AdditionalCarpetBlock> carpet;
+	private static SimpleRotatableGenerationType<PressurePlateBlock, AdditionalPressurePlateBlock> pressurePlate;
+	private static SimpleRotatableGenerationType<WeightedPressurePlateBlock, AdditionalWeightedPressurePlateBlock> weightedPressurePlate;
 	
-	private static <T extends Block, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock> SimpleRotatableGenerationType<T, U> get(Class<T> clazz, String name, String description, Function<T, U> constructor) {
-		return Registration.registerType(clazz, new ResourceLocation(AdditionalPlacementsMod.MOD_ID, name), description, new SimpleRotatableGenerationType.Builder<T, U>().constructor(constructor));
+	@Override
+	public void onInitializeRegistration(IRegistration register) {
+		slab                    = get(register, SlabBlock.class                 , "slab"                   , "Slabs"                   , 
+				new SimpleRotatableGenerationType.Builder<SlabBlock, VerticalSlabBlock>()
+				.blacklistModelRotation(new BlockBlacklist.Builder()
+						.blockBlacklist(
+								"minecraft:sandstone_slab", 
+								"minecraft:cut_sandstone_slab", 
+								"minecraft:red_sandstone_slab", 
+								"minecraft:cut_red_sandstone_slab")
+						.build())
+				.blacklistTextureRotation(new BlockBlacklist.Builder()
+						.blockBlacklist("minecraft:smooth_stone_slab")
+						.build())
+				.constructor(VerticalSlabBlock::of));
+		stairs                  = get(register, StairsBlock.class                , "stairs"                 , "Stairs"                  , 
+				new VerticalStairsGenerationType.Builder<StairsBlock, VerticalStairBlock>()
+				.blacklistModelRotation(new BlockBlacklist.Builder()
+						.blockBlacklist(
+								"minecraft:sandstone_stairs", 
+								"minecraft:red_sandstone_stairs")
+						.build())
+				.constructor(VerticalStairBlock::of));
+		carpet                  = get(register, CarpetBlock.class               , "carpet"                 , "Carpets"                 , AdditionalCarpetBlock::of);
+		pressurePlate           = get(register, PressurePlateBlock.class        , "pressure_plate"         , "Regular pressure plates" , AdditionalPressurePlateBlock::of);
+		weightedPressurePlate   = get(register, WeightedPressurePlateBlock.class, "weighted_pressure_plate", "Weighted pressure plates", AdditionalWeightedPressurePlateBlock::of);
 	}
 	
-	private static <T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>> V get(Class<T> clazz, String name, String description, GenerationTypeConstructor<V> typeConstructor) {
-		return Registration.registerType(clazz, new ResourceLocation(AdditionalPlacementsMod.MOD_ID, name), description, typeConstructor);
+	private static <T extends Block, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock> SimpleRotatableGenerationType<T, U> get(IRegistration register, Class<T> clazz, String name, String description, Function<T, U> constructor) {
+		return register.registerType(clazz, new ResourceLocation(AdditionalPlacementsMod.MOD_ID, name), description, new SimpleRotatableGenerationType.Builder<T, U>().constructor(constructor));
 	}
 	
-	public static void init() {}
+	private static <T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>> V get(IRegistration register, Class<T> clazz, String name, String description, GenerationTypeConstructor<V> typeConstructor) {
+		return register.registerType(clazz, new ResourceLocation(AdditionalPlacementsMod.MOD_ID, name), description, typeConstructor);
+	}
+
+	public static SimpleRotatableGenerationType<SlabBlock, VerticalSlabBlock> slab() {
+		return slab;
+	}
+	
+	public static VerticalStairsGenerationType<StairsBlock, VerticalStairBlock> stairs() {
+		return stairs;
+	}
+	
+	public static SimpleRotatableGenerationType<CarpetBlock, AdditionalCarpetBlock> carpet() {
+		return carpet;
+	}
+	
+	public static SimpleRotatableGenerationType<PressurePlateBlock, AdditionalPressurePlateBlock> pressurePlate() {
+		return pressurePlate;
+	}
+	
+	public static SimpleRotatableGenerationType<WeightedPressurePlateBlock, AdditionalWeightedPressurePlateBlock> weightedPressurePlate() {
+		return weightedPressurePlate;
+	}
+	
 }
