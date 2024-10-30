@@ -313,7 +313,7 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
     
 	@Override
 	public default GenerationType<?, ?> getGenerationType() {
-		return APGenerationTypes.STAIRS;
+		return APGenerationTypes.stairs();
 	}
 
 	public default ComplexFacing getFacing(BlockHitResult hitResult)
