@@ -2,6 +2,7 @@ package com.firemerald.additionalplacements.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Desc;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -18,8 +19,8 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class MixinForgeRegistry
 {
 	@SuppressWarnings("unchecked")
-	@Inject(method = "register", at = @At("RETURN"), remap = false)
-	private <V> void register(ResourceLocation key, V value, CallbackInfo ci)
+	@Inject(target = @Desc(value = "register", args = {ResourceLocation.class, Object.class}), at = @At("RETURN"), remap = false)
+	private void register(ResourceLocation key, Object value, CallbackInfo ci)
     {
 		if (this == ForgeRegistries.BLOCKS && AdditionalPlacementsMod.dynamicRegistration)
 		{
