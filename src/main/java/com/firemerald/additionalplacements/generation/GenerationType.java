@@ -1,12 +1,13 @@
 package com.firemerald.additionalplacements.generation;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.config.GenerationBlacklist;
 import com.firemerald.additionalplacements.util.MessageTree;
@@ -14,18 +15,29 @@ import com.firemerald.additionalplacements.util.MessageTree;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
 
 public abstract class GenerationType<T extends Block, U extends AdditionalPlacementBlock<T>> {
 	
 	protected abstract static class BuilderBase<T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>, W extends BuilderBase<T, U, V, W>> {
+		protected Set<String> addsProperties = Collections.emptySet();
 		protected GenerationBlacklist blacklist = new GenerationBlacklist.Builder().build();
 		protected boolean placementEnabled = true;
 		
 		@SuppressWarnings("unchecked")
 		protected W me() {
 			return (W) this;
+		}
+		
+		public W addsProperties(String... properties) {
+			return addsProperties(Arrays.asList(properties));
+		}
+		
+		public W addsProperties(Collection<String> properties) {
+			this.addsProperties = new HashSet<String>(properties);
+			return me();
 		}
 		
 		public W blacklist(GenerationBlacklist blacklist) {
@@ -48,6 +60,7 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 	
 	public final ResourceLocation name;
 	public final String description;
+	private final Set<String> addsProperties;
 	private final GenerationBlacklist blacklist;
 	private final boolean defaultPlacementEnabled;
 	private BooleanValue placementEnabled;
@@ -56,6 +69,7 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 	protected GenerationType(ResourceLocation name, String description, BuilderBase<T, U, ?, ?> builder) {
 		this.name = name;
 		this.description = description;
+		this.addsProperties = builder.addsProperties;
 		this.blacklist = builder.blacklist;
 		this.defaultPlacementEnabled = builder.placementEnabled;
 	}
@@ -139,7 +153,15 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 	public void checkServerData(CompoundTag tag, Consumer<MessageTree> logError) {}
 	
 	public final boolean enabledForBlock(T block, ResourceLocation blockId) {
-		return blacklist.test(blockId);
+		if (blacklist.test(blockId)) {
+			Collection<String> has = block.defaultBlockState().getProperties().stream().map(Property::getName).filter(addsProperties::contains).collect(Collectors.toList());
+			if (!has.isEmpty()) {
+				AdditionalPlacementsMod.LOGGER.warn("Generation type " + this.name + " cannot generate for " + blockId + " as it already contains the following properties that would be added: ");
+				AdditionalPlacementsMod.LOGGER.warn(has.toString());
+				AdditionalPlacementsMod.LOGGER.warn("Add it to the blacklist inside additionalplacements-startup.toml to stop this message from appearing in the future.");
+				return false;
+			} else return true;
+		} else return false;
 	}
 	
 	public final void apply(T block, ResourceLocation blockId, BiConsumer<ResourceLocation, U> action) {
