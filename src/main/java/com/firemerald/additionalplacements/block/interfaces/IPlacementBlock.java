@@ -35,7 +35,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public interface IPlacementBlock<T extends Block> extends ItemLike
+public interface IPlacementBlock<T extends Block> extends ItemLike, IGenerationControl
 {
 	public T getOtherBlock();
 
@@ -142,4 +142,13 @@ public interface IPlacementBlock<T extends Block> extends ItemLike
 	}
 	
 	public GenerationType<?, ?> getGenerationType();
+	
+	@Override
+	public default boolean generateAdditionalStates() {
+		return true;
+	}
+	
+	public default boolean canGenerateAdditionalStates() {
+		return generateAdditionalStates() && !hasAdditionalStates();
+	}
 }
