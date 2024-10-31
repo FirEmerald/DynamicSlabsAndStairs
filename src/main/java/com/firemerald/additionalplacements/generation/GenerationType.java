@@ -19,7 +19,7 @@ import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
 
 public abstract class GenerationType<T extends Block, U extends AdditionalPlacementBlock<T>> {
 	
-	public abstract static class BuilderBase<T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>, W extends BuilderBase<T, U, V, W>> implements GenerationTypeConstructor<V> {
+	protected abstract static class BuilderBase<T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>, W extends BuilderBase<T, U, V, W>> {
 		protected GenerationBlacklist blacklist = new GenerationBlacklist.Builder().build();
 		protected boolean placementEnabled = true;
 		
@@ -42,6 +42,8 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 			placementEnabled = false;
 			return me();
 		}
+		
+		public abstract V construct(ResourceLocation name, String description);
 	}
 	
 	public final ResourceLocation name;
@@ -51,12 +53,11 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 	private BooleanValue placementEnabled;
 	private List<Pair<ResourceLocation, U>> created = new ArrayList<>();
 
-	protected GenerationType(Object protectionKey, ResourceLocation name, String description, GenerationBlacklist blacklist, boolean defaultPlacementEnabled) {
-		if (!Registration.isProtectionKey(protectionKey)) throw new IllegalStateException("A mod attempted to construct an instance of com.firemerald.additionalplacements.api.Registration.GenerationType manually. This is not allowed. You should use com.firemerald.additionalplacements.api.Registration.getType() with a function that invokes the constructor instead. The offending GenerationType name (whose namespace is generally the offending mod ID) is " + name);
+	protected GenerationType(ResourceLocation name, String description, BuilderBase<T, U, ?, ?> builder) {
 		this.name = name;
 		this.description = description;
-		this.blacklist = blacklist;
-		this.defaultPlacementEnabled = defaultPlacementEnabled;
+		this.blacklist = builder.blacklist;
+		this.defaultPlacementEnabled = builder.placementEnabled;
 	}
 	
 	public boolean placementEnabled() {
@@ -137,12 +138,12 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 	 */
 	public void checkServerData(CompoundTag tag, Consumer<MessageTree> logError) {}
 	
-	public final boolean enabledForBlock(ResourceLocation blockId) {
+	public final boolean enabledForBlock(T block, ResourceLocation blockId) {
 		return blacklist.test(blockId);
 	}
 	
 	public final void apply(T block, ResourceLocation blockId, BiConsumer<ResourceLocation, U> action) {
-		if (enabledForBlock(blockId)) {
+		if (enabledForBlock(block, blockId)) {
 			U created = construct(block, blockId);
 			this.created.add(Pair.of(blockId, created));
 			action.accept(ResourceLocation.tryBuild(name.getNamespace(), blockId.getNamespace() + "." + blockId.getPath()), created);
