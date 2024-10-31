@@ -7,7 +7,6 @@ import java.util.function.Function;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
 import com.firemerald.additionalplacements.block.interfaces.IStairBlock;
-import com.firemerald.additionalplacements.config.BlockBlacklist;
 import com.firemerald.additionalplacements.config.GenerationBlacklist;
 import com.firemerald.additionalplacements.util.MessageTree;
 import com.firemerald.additionalplacements.util.stairs.StairConnections;
@@ -22,17 +21,18 @@ import net.minecraft.world.level.block.StairBlock;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class VerticalStairsGenerationType<T extends StairBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock> extends SimpleRotatableGenerationType<T, U> {
-	public abstract static class BuilderBase<T extends StairBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock, V extends SimpleRotatableGenerationType<T, U>, W extends BuilderBase<T, U, V, W>> extends SimpleRotatableGenerationType.BuilderBase<T, U, V, W> {
-		protected Constructor<T, U> constructor;
+	protected abstract static class BuilderBase<T extends StairBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock, V extends SimpleRotatableGenerationType<T, U>, W extends BuilderBase<T, U, V, W>> extends SimpleRotatableGenerationType.BuilderBase<T, U, V, W> {
+		protected Constructor<? super T, ? extends U> constructor;
 		protected GenerationBlacklist 
 		vertcialConnectionsBlacklist = new GenerationBlacklist.Builder().build(),
 		mixedConnectionsBlacklist = new GenerationBlacklist.Builder().build();
-		
-		public W constructor(Function<T, U> constructor) {
+
+		@Override
+		public W constructor(Function<? super T, ? extends U> constructor) {
 			throw new IllegalStateException("Function<T, U> constructor not supported");
 		}
 		
-		public W constructor(Constructor<T, U> constructor) {
+		public W constructor(Constructor<? super T, ? extends U> constructor) {
 			this.constructor = constructor;
 			return me();
 		}
@@ -50,20 +50,20 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 	
 	public static class Builder<T extends StairBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock> extends BuilderBase<T, U, VerticalStairsGenerationType<T, U>, Builder<T, U>> {
 		@Override
-		public VerticalStairsGenerationType<T, U> construct(Object protectionKey, ResourceLocation name, String description) {
-			return new VerticalStairsGenerationType<>(protectionKey, name, description, constructor, blacklist, placementEnabled, logicRotationBlacklist, textureRotationBlacklist, modelRotationBlacklist, vertcialConnectionsBlacklist, mixedConnectionsBlacklist);
+		public VerticalStairsGenerationType<T, U> construct(ResourceLocation name, String description) {
+			return new VerticalStairsGenerationType<>(name, description, this);
 		}
 	}
 	
-	private final Constructor<T, U> constructor;
+	private final Constructor<? super T, ? extends U> constructor;
 	private final GenerationBlacklist vertcialConnectionsBlacklist;
 	private final GenerationBlacklist mixedConnectionsBlacklist;
-	
-	protected VerticalStairsGenerationType(Object protectionKey, ResourceLocation name, String description, Constructor<T, U> constructor, GenerationBlacklist blacklist, boolean placementEnabled, BlockBlacklist logicRotationBlackist, BlockBlacklist textureRotationBlacklist, BlockBlacklist modelRotationBlacklist, GenerationBlacklist vertcialConnectionsBlacklist, GenerationBlacklist mixedConnectionsBlacklist) {
-		super(protectionKey, name, description, null, blacklist, placementEnabled, logicRotationBlackist, textureRotationBlacklist, modelRotationBlacklist);
-		this.constructor = constructor;
-		this.vertcialConnectionsBlacklist = vertcialConnectionsBlacklist;
-		this.mixedConnectionsBlacklist = mixedConnectionsBlacklist;
+
+	protected VerticalStairsGenerationType(ResourceLocation name, String description, BuilderBase<T, U, ?, ?> builder) {
+		super(name, description, builder);
+		this.constructor = builder.constructor;
+		this.vertcialConnectionsBlacklist = builder.vertcialConnectionsBlacklist;
+		this.mixedConnectionsBlacklist = builder.mixedConnectionsBlacklist;
 	}
 
 	public void buildStartupConfig(ForgeConfigSpec.Builder builder) {
