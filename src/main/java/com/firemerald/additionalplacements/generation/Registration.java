@@ -37,7 +37,7 @@ public class Registration {
 	
 	@SuppressWarnings("unchecked")
 	public static <T extends Block, U extends AdditionalPlacementBlock<T>> void tryApply(Block block, ResourceLocation blockId, BiConsumer<ResourceLocation, AdditionalPlacementBlock<?>> action) {
-		if (block instanceof IPlacementBlock && !((IPlacementBlock<?>) block).hasAdditionalStates()) {
+		if (block instanceof IPlacementBlock && ((IPlacementBlock<?>) block).canGenerateAdditionalStates()) {
 			GenerationType<T, U> type = (GenerationType<T, U>) getType(block);
 			if (type != null) type.apply((T) block, blockId, (BiConsumer<ResourceLocation, U>) action);
 		}

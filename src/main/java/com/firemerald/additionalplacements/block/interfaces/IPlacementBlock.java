@@ -35,7 +35,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
 
-public interface IPlacementBlock<T extends Block> extends IItemProvider
+public interface IPlacementBlock<T extends Block> extends IItemProvider, IGenerationControl
 {
 	public T getOtherBlock();
 
@@ -144,4 +144,13 @@ public interface IPlacementBlock<T extends Block> extends IItemProvider
 	}
 	
 	public GenerationType<?, ?> getGenerationType();
+	
+	@Override
+	public default boolean generateAdditionalStates() {
+		return true;
+	}
+	
+	public default boolean canGenerateAdditionalStates() {
+		return generateAdditionalStates() && !hasAdditionalStates();
+	}
 }
