@@ -6,6 +6,7 @@ import java.util.function.BiConsumer;
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
+import com.firemerald.additionalplacements.generation.GenerationType.BuilderBase;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 
@@ -17,11 +18,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public class Registration {
 	private static final Map<ResourceLocation, GenerationType<?, ?>> TYPES = new LinkedHashMap<>();
 	private static final Map<Class<?>, GenerationType<?, ?>> TYPES_BY_CLASS = new HashMap<>();
-	private static final Object PROTECTION_KEY = new Object(); //this simple object is used to determine if a GenerationType is being instantiated improperly
-	
-	protected static boolean isProtectionKey(Object obj) {
-		return obj == PROTECTION_KEY;
-	}
 	
 	public static void gatherTypes() { 
 		EntrypointUtils.invoke("additional-placements-generators", RegistrationInitializer.class, instance -> instance.onInitializeRegistration(Registration::registerType));
@@ -51,9 +47,9 @@ public class Registration {
 		}
 	}
 	
-	protected static <T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>> V registerType(Class<T> clazz, ResourceLocation name, String description, GenerationTypeConstructor<V> typeConstructor) {
+	protected static <T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>> V registerType(Class<T> clazz, ResourceLocation name, String description, BuilderBase<T, U, V, ?> builder) {
 		if (TYPES.containsKey(name)) throw new IllegalStateException("A generation type with name " + name + " is already registered!");
-		V type = typeConstructor.construct(PROTECTION_KEY, name, description);
+		V type = builder.construct(name, description);
 		TYPES.put(name, type);
 		if (TYPES_BY_CLASS.containsKey(clazz)) AdditionalPlacementsMod.LOGGER.warn("A generation type for class " + clazz + " is already registered. The registration with name " + name + " will not be used.");
 		else TYPES_BY_CLASS.put(clazz, type);
