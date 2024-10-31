@@ -7,7 +7,5 @@ public interface IGenerationControl {
 	/**
 	 * @return whether to allow the generation of an additional states block for this block. Does not guarantee the creation of one!
 	 */
-	public default boolean generateAdditionalStates() {
-		return false;
-	}
+	public boolean generateAdditionalStates();
 }
