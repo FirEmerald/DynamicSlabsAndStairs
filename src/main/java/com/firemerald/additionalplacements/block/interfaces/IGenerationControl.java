@@ -1,7 +1,7 @@
 package com.firemerald.additionalplacements.block.interfaces;
 
 /**
- * A mod author may choose to implement this on a custom block to further control whether or not an additional placement block can be generated for it.</br>
+ * A mod author may choose to add the method below (<b>with or without implementing this interface</b>) on a custom block to further control whether or not an additional placement block can be generated for it.</br>
  */
 public interface IGenerationControl {
 	/**
