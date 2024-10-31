@@ -1,7 +1,7 @@
 package com.firemerald.additionalplacements;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.firemerald.additionalplacements.config.APConfigs;
 import com.firemerald.additionalplacements.generation.APGenerationTypes;
@@ -19,7 +19,7 @@ public class AdditionalPlacementsMod
 	//TODO: fences walls panes bars
 	public static final String MOD_ID = "additionalplacements";
 	public static final String OLD_ID = "dvsas";
-    public static final Logger LOGGER = LoggerFactory.getLogger("Additional Placements");
+    public static final Logger LOGGER = LogManager.getLogger("Additional Placements");
 
     public static boolean dynamicRegistration = false;
 
