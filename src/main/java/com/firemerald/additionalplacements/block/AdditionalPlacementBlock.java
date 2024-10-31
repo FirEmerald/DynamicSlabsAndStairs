@@ -446,4 +446,9 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	public abstract VoxelShape getShapeInternal(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context);
 
 	public abstract ResourceLocation getDynamicBlockstateJson();
+	
+	@Override
+	public boolean canGenerateAdditionalStates() {
+		return false;
+	}
 }
