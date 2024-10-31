@@ -32,7 +32,8 @@ public class APGenerationTypes implements RegistrationInitializer {
 				.blacklistTextureRotation(new BlockBlacklist.Builder()
 						.blockBlacklist("minecraft:smooth_stone_slab")
 						.build())
-				.constructor(VerticalSlabBlock::of));
+				.constructor(VerticalSlabBlock::of)
+				.addsProperties("axis"));
 		stairs                  = get(register, StairBlock.class                , "stairs"                 , "Stairs"                  , 
 				new VerticalStairsGenerationType.Builder<StairBlock, VerticalStairBlock>()
 				.blacklistModelRotation(new BlockBlacklist.Builder()
@@ -41,13 +42,13 @@ public class APGenerationTypes implements RegistrationInitializer {
 								"minecraft:red_sandstone_stairs")
 						.build())
 				.constructor((VerticalStairsGenerationType.Constructor<StairBlock, VerticalStairBlock>) VerticalStairBlock::of));
-		carpet                  = get(register, CarpetBlock.class               , "carpet"                 , "Carpets"                 , AdditionalCarpetBlock::of);
-		pressurePlate           = get(register, PressurePlateBlock.class        , "pressure_plate"         , "Regular pressure plates" , AdditionalPressurePlateBlock::of);
-		weightedPressurePlate   = get(register, WeightedPressurePlateBlock.class, "weighted_pressure_plate", "Weighted pressure plates", AdditionalWeightedPressurePlateBlock::of);
+		carpet                  = get(register, CarpetBlock.class               , "carpet"                 , "Carpets"                 , AdditionalCarpetBlock::of,                "facing");
+		pressurePlate           = get(register, PressurePlateBlock.class        , "pressure_plate"         , "Regular pressure plates" , AdditionalPressurePlateBlock::of,         "facing");
+		weightedPressurePlate   = get(register, WeightedPressurePlateBlock.class, "weighted_pressure_plate", "Weighted pressure plates", AdditionalWeightedPressurePlateBlock::of, "facing");
 	}
 	
-	private static <T extends Block, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock> SimpleRotatableGenerationType<T, U> get(IRegistration register, Class<T> clazz, String name, String description, Function<? super T, ? extends U> constructor) {
-		return register.registerType(clazz, new ResourceLocation(AdditionalPlacementsMod.MOD_ID, name), description, new SimpleRotatableGenerationType.Builder<T, U>().constructor(constructor));
+	private static <T extends Block, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock> SimpleRotatableGenerationType<T, U> get(IRegistration register, Class<T> clazz, String name, String description, Function<? super T, ? extends U> constructor, String... addsProperties) {
+		return register.registerType(clazz, new ResourceLocation(AdditionalPlacementsMod.MOD_ID, name), description, new SimpleRotatableGenerationType.Builder<T, U>().constructor(constructor).addsProperties(addsProperties));
 	}
 	
 	private static <T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>> V get(IRegistration register, Class<T> clazz, String name, String description, BuilderBase<T, U, V, ?> builder) {
