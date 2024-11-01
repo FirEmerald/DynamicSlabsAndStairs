@@ -80,8 +80,14 @@ public class TagMismatchChecker extends Thread
 				if (mismatch != null) blockMissingExtra.add(mismatch);
 			}
 		}
-		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-		if (server != null) server.submit(() -> process(server));
+		MinecraftServer server = null;
+		while (!halted && (server = ServerLifecycleHooks.getCurrentServer()) == null) try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {}
+		if (!halted && server != null) {
+			final MinecraftServer server2 = server;
+			server.submit(() -> process(server2));
+		}
 	}
 
 	//this is only ever called on the server thread
