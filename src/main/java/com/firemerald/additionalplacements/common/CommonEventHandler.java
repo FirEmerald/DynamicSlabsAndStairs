@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
+import net.minecraftforge.event.TagsUpdatedEvent.UpdateCause;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
@@ -24,6 +25,7 @@ import net.minecraftforge.registries.MissingMappingsEvent;
 public class CommonEventHandler
 {
 	public static boolean misMatchedTags = false;
+	protected static boolean reloadedFromChecker = false;
 
 	@SubscribeEvent
 	public static void onItemTooltip(ItemTooltipEvent event)
@@ -49,9 +51,12 @@ public class CommonEventHandler
 	@SubscribeEvent
 	public static void onTagsUpdated(TagsUpdatedEvent event)
 	{
-		misMatchedTags = false;
-		if (APConfigs.common().checkTags.get() && (!APConfigs.serverLoaded() || APConfigs.server().checkTags.get()))
-			TagMismatchChecker.startChecker(); //TODO halt on datapack reload
+		if (event.getUpdateCause() == UpdateCause.SERVER_DATA_LOAD) {
+			misMatchedTags = false;
+			if (reloadedFromChecker) reloadedFromChecker = false;
+			else if (APConfigs.common().checkTags.get() && (!APConfigs.serverLoaded() || APConfigs.server().checkTags.get()))
+				TagMismatchChecker.startChecker(); //TODO halt on datapack reload
+		}
 	}
 
 	@SubscribeEvent
@@ -91,5 +96,6 @@ public class CommonEventHandler
 	public static void onServerStopping(ServerStoppingEvent event)
 	{
 		TagMismatchChecker.stopChecker();
+		reloadedFromChecker = false;
 	}
 }
