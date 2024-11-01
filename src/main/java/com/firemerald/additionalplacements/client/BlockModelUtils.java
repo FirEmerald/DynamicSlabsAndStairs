@@ -11,6 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
 import com.firemerald.additionalplacements.util.BlockRotation;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
 
@@ -188,7 +189,7 @@ public class BlockModelUtils
 
 	public static List<BakedQuad> retexturedQuads(BlockState modelState, BakedModel originalModel, BakedModel ourModel, Direction side, Direction modelSide, RandomSource rand, ModelData modelData, RenderType renderType)
 	{
-		VertexFormat format = renderType.format();
+		VertexFormat format = renderType == null ? DefaultVertexFormat.BLOCK : renderType.format();
 		int vertexSize = format.getVertexSize();
 		int posOffset = format.getOffset(VertexFormatElement.POSITION) / 4;
 		int uvOffset = format.getOffset(VertexFormatElement.UV) / 4;
@@ -217,7 +218,7 @@ public class BlockModelUtils
 
 	public static List<BakedQuad> rotatedQuads(BlockState modelState, BakedModel model, BlockRotation rotation, boolean rotateTex, Direction side, RandomSource rand, ModelData modelData, RenderType renderType)
 	{
-		VertexFormat format = renderType.format();
+		VertexFormat format = renderType == null ? DefaultVertexFormat.BLOCK : renderType.format();
 		int vertexSize = format.getVertexSize();
 		int posOffset = format.getOffset(VertexFormatElement.POSITION) / 4;
 		int uvOffset = format.getOffset(VertexFormatElement.UV) / 4;
