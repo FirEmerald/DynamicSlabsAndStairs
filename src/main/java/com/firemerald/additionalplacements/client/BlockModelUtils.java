@@ -190,7 +190,7 @@ public class BlockModelUtils
 	public static List<BakedQuad> retexturedQuads(BlockState modelState, BakedModel originalModel, BakedModel ourModel, Direction side, Direction modelSide, RandomSource rand, ModelData modelData, RenderType renderType)
 	{
 		VertexFormat format = renderType == null ? DefaultVertexFormat.BLOCK : renderType.format();
-		int vertexSize = format.getVertexSize();
+		int vertexSize = format.getVertexSize() / 4;
 		int posOffset = format.getOffset(VertexFormatElement.POSITION) / 4;
 		int uvOffset = format.getOffset(VertexFormatElement.UV) / 4;
 		@SuppressWarnings("unchecked")
@@ -219,7 +219,7 @@ public class BlockModelUtils
 	public static List<BakedQuad> rotatedQuads(BlockState modelState, BakedModel model, BlockRotation rotation, boolean rotateTex, Direction side, RandomSource rand, ModelData modelData, RenderType renderType)
 	{
 		VertexFormat format = renderType == null ? DefaultVertexFormat.BLOCK : renderType.format();
-		int vertexSize = format.getVertexSize();
+		int vertexSize = format.getVertexSize() / 4;
 		int posOffset = format.getOffset(VertexFormatElement.POSITION) / 4;
 		int uvOffset = format.getOffset(VertexFormatElement.UV) / 4;
 		List<BakedQuad> originalQuads = model.getQuads(modelState, rotation.unapply(side), rand, modelData, renderType);
