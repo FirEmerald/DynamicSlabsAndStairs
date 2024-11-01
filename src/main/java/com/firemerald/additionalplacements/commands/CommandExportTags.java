@@ -104,7 +104,7 @@ public class CommandExportTags
 				tagMap.forEach((tag, blocks) -> {
 					try
 					{
-						Path tagPath = dataPath.resolve(tag.location().getNamespace() + "/tags/blocks/" + tag.location().getPath() + ".json");
+						Path tagPath = dataPath.resolve(tag.location().getNamespace() + "/tags/block/" + tag.location().getPath() + ".json");
 						optionalMakeDirectories(tagPath.getParent());
 						JsonObject obj = new JsonObject();
 						obj.addProperty("replace", false);
