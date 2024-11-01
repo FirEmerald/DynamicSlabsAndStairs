@@ -13,6 +13,7 @@ import com.firemerald.additionalplacements.config.APConfigs;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import io.github.fabricators_of_create.porting_lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
@@ -48,11 +49,6 @@ public class TagMismatchChecker extends Thread
 		thread.start();
 	}
 
-	public static void onServerTickEnd(MinecraftServer server)
-	{
-		if (thread != null) thread.accept(server);
-	}
-
 	public static void stopChecker()
 	{
 		if (thread != null)
@@ -83,10 +79,12 @@ public class TagMismatchChecker extends Thread
 				if (mismatch != null) blockMissingExtra.add(mismatch);
 			}
 		}
+		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+		if (server != null) server.submit(() -> process(server));
 	}
 
 	//this is only ever called on the server thread
-	public void accept(MinecraftServer server)
+	public void process(MinecraftServer server)
 	{
 		thread = null;
 		if (!halted) //wasn't canceled
@@ -127,6 +125,7 @@ public class TagMismatchChecker extends Thread
 					CommandSourceStack source = server.createCommandSourceStack();
 					try
 					{
+						CommonModEvents.reloadedFromChecker = true;
 						dispatch.execute("ap_tags_export", source);
 						dispatch.execute("reload", source);
 					}
