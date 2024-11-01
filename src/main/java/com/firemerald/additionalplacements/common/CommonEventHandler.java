@@ -16,12 +16,14 @@ import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonEventHandler
 {
 	public static boolean misMatchedTags = false;
+	protected static boolean reloadedFromChecker = false;
 
 	@SubscribeEvent
 	public static void onRegisterCommands(RegisterCommandsEvent event)
@@ -31,11 +33,14 @@ public class CommonEventHandler
 	}
 
 	@SubscribeEvent
-	public static void onTagsUpdated(TagsUpdatedEvent event)
+	public static void onTagsUpdated(TagsUpdatedEvent.CustomTagTypes event)
 	{
-		misMatchedTags = false;
-		if (APConfigs.common().checkTags.get() && (!APConfigs.serverLoaded() || APConfigs.server().checkTags.get()))
-			TagMismatchChecker.startChecker(); //TODO halt on datapack reload
+		if (event.getTagManager() == ServerLifecycleHooks.getCurrentServer().getTags()) {
+			misMatchedTags = false;
+			if (reloadedFromChecker) reloadedFromChecker = false;
+			else if (APConfigs.common().checkTags.get() && (!APConfigs.serverLoaded() || APConfigs.server().checkTags.get()))
+				TagMismatchChecker.startChecker(); //TODO halt on datapack reload
+		}
 	}
 
 	@SubscribeEvent
@@ -75,5 +80,6 @@ public class CommonEventHandler
 	public static void onServerStopping(FMLServerStoppingEvent event)
 	{
 		TagMismatchChecker.stopChecker();
+		reloadedFromChecker = false;
 	}
 }

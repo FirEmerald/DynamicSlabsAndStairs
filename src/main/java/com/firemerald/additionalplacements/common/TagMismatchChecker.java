@@ -3,7 +3,6 @@ package com.firemerald.additionalplacements.common;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.IntPredicate;
 
 import org.apache.commons.lang3.tuple.Triple;
@@ -27,13 +26,11 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.ClickEvent.Action;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent.ServerTickEvent;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class TagMismatchChecker extends Thread implements Consumer<ServerTickEvent>
+public class TagMismatchChecker extends Thread
 {
 	private static TagMismatchChecker thread = null;
 	public static final ITextComponent MESSAGE = new TranslationTextComponent("msg.additionalplacements.mismatchedtags.0").append(
@@ -86,21 +83,19 @@ public class TagMismatchChecker extends Thread implements Consumer<ServerTickEve
 				if (mismatch != null) blockMissingExtra.add(mismatch);
 			}
 		}
-		MinecraftForge.EVENT_BUS.addListener(this); //listen for next server tick
+		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+		if (server != null) server.submit(() -> process(server));
 	}
 
 	//this is only ever called on the server thread
-	@Override
-	public void accept(ServerTickEvent event)
+	public void process(MinecraftServer server)
 	{
-		MinecraftForge.EVENT_BUS.unregister(this); //only listen once
 		if (!halted) //wasn't canceled
 		{
 			if (!blockMissingExtra.isEmpty())
 			{
 				CommonEventHandler.misMatchedTags = true;
 				boolean autoRebuild = APConfigs.common().autoRebuildTags.get() && APConfigs.server().autoRebuildTags.get();
-				MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 				if (!autoRebuild) server.getPlayerList().getPlayers().forEach(player -> {
 					if (autoRebuild || canGenerateTags(player)) player.sendMessage(MESSAGE, Util.NIL_UUID);
 				});
@@ -133,6 +128,7 @@ public class TagMismatchChecker extends Thread implements Consumer<ServerTickEve
 					CommandSource source = server.createCommandSourceStack();
 					try
 					{
+						CommonEventHandler.reloadedFromChecker = true;
 						dispatch.execute("ap_tags_export", source);
 						dispatch.execute("reload", source);
 					}
