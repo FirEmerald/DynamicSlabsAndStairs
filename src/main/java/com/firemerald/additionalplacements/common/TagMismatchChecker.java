@@ -3,7 +3,6 @@ package com.firemerald.additionalplacements.common;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.IntPredicate;
 
 import org.apache.commons.lang3.tuple.Triple;
@@ -30,11 +29,9 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
-public class TagMismatchChecker extends Thread implements Consumer<ServerTickEvent.Post>
+public class TagMismatchChecker extends Thread
 {
 	private static TagMismatchChecker thread = null;
 	public static final Component MESSAGE =
@@ -84,21 +81,19 @@ public class TagMismatchChecker extends Thread implements Consumer<ServerTickEve
 				if (mismatch != null) blockMissingExtra.add(mismatch);
 			}
 		}
-		NeoForge.EVENT_BUS.addListener(this); //listen for next server tick
+		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+		if (server != null) server.submit(() -> process(server));
 	}
 
 	//this is only ever called on the server thread
-	@Override
-	public void accept(ServerTickEvent.Post event)
+	public void process(MinecraftServer server)
 	{
-		NeoForge.EVENT_BUS.unregister(this); //only listen once
 		if (!halted) //wasn't canceled
 		{
 			if (!blockMissingExtra.isEmpty())
 			{
 				CommonEventHandler.misMatchedTags = true;
 				boolean autoRebuild = APConfigs.common().autoRebuildTags.get() && APConfigs.server().autoRebuildTags.get();
-				MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 				if (!autoRebuild) server.getPlayerList().getPlayers().forEach(player -> {
 					if (canGenerateTags(player)) player.sendSystemMessage(MESSAGE);
 				});
@@ -131,6 +126,7 @@ public class TagMismatchChecker extends Thread implements Consumer<ServerTickEve
 					CommandSourceStack source = server.createCommandSourceStack();
 					try
 					{
+						CommonEventHandler.reloadedFromChecker = true;
 						dispatch.execute("ap_tags_export", source);
 						dispatch.execute("reload", source);
 					}
