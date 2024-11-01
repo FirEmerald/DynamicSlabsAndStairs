@@ -7,6 +7,7 @@ import com.firemerald.additionalplacements.config.APConfigs;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -35,7 +36,8 @@ public class CommonEventHandler
 	@SubscribeEvent
 	public static void onTagsUpdated(TagsUpdatedEvent.CustomTagTypes event)
 	{
-		if (event.getTagManager() == ServerLifecycleHooks.getCurrentServer().getTags()) {
+		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+		if (server == null || event.getTagManager() == server.getTags()) {
 			misMatchedTags = false;
 			if (reloadedFromChecker) reloadedFromChecker = false;
 			else if (APConfigs.common().checkTags.get() && (!APConfigs.serverLoaded() || APConfigs.server().checkTags.get()))
