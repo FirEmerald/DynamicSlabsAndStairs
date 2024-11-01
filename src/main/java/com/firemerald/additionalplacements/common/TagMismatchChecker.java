@@ -81,11 +81,18 @@ public class TagMismatchChecker extends Thread
 				if (mismatch != null) blockMissingExtra.add(mismatch);
 			}
 		}
-		ServerLifecycleHooks.getCurrentServer().submit(this::process);
+		MinecraftServer server = null;
+		while (!halted && (server = ServerLifecycleHooks.getCurrentServer()) == null) try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {}
+		if (!halted && server != null) {
+			final MinecraftServer server2 = server;
+			server.submit(() -> process(server2));
+		}
 	}
 
 	//this is only ever called on the server thread
-	public void process()
+	public void process(MinecraftServer server)
 	{
 		if (!halted) //wasn't canceled
 		{
@@ -93,7 +100,6 @@ public class TagMismatchChecker extends Thread
 			{
 				CommonEventHandler.misMatchedTags = true;
 				boolean autoRebuild = APConfigs.common().autoRebuildTags.get() && APConfigs.server().autoRebuildTags.get();
-				MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 				if (!autoRebuild) server.getPlayerList().getPlayers().forEach(player -> {
 					if (canGenerateTags(player)) player.sendSystemMessage(MESSAGE);
 				});
