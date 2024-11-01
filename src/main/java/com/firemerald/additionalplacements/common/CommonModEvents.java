@@ -146,6 +146,7 @@ public class CommonModEvents implements ModInitializer
 	}
 
 	public static boolean misMatchedTags = false;
+	protected static boolean reloadedFromChecker = false;
 
 	public static void onRegisterCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess, Commands.CommandSelection environment)
 	{
@@ -155,9 +156,12 @@ public class CommonModEvents implements ModInitializer
 
 	public static void onTagsUpdated(RegistryAccess registries, boolean client)
 	{
-		misMatchedTags = false;
-		if (APConfigs.common().checkTags.get() && (!APConfigs.serverLoaded() || APConfigs.server().checkTags.get()))
-			TagMismatchChecker.startChecker(); //TODO halt on datapack reload
+		if (!client) {
+			misMatchedTags = false;
+			if (reloadedFromChecker) reloadedFromChecker = false;
+			else if (APConfigs.common().checkTags.get() && (!APConfigs.serverLoaded() || APConfigs.server().checkTags.get()))
+				TagMismatchChecker.startChecker(); //TODO halt on datapack reload
+		}
 	}
 
 	public static void onPlayerLogin(ServerGamePacketListenerImpl handler, PacketSender sender, MinecraftServer server)
@@ -168,5 +172,6 @@ public class CommonModEvents implements ModInitializer
 	public static void onServerStopping(MinecraftServer server)
 	{
 		TagMismatchChecker.stopChecker();
+		reloadedFromChecker = false;
 	}
 }
