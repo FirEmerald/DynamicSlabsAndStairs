@@ -11,6 +11,7 @@
 	"msg.additionalplacements.generate.failure.tag": "Error generating datapack: failed to save tag %s",
 	"msg.additionalplacements.generate.failure.initialization": "Error generating datapack: failed to initialize datapack",
 	"msg.additionalplacements.generate.success": "Finished exporting tags",
+	"msg.additionalplacements.generate.notfixed": "Automatic tag creation failed to resolve tag mismatches. Manual correction is required. Ensure tag mismatch logging is enabled and then check the game output log. Knowledge of datapack creation and how to add or remove block tags is required.",
 	"key.categories.additionalplacements": "Additional Placements",
 	"key.additionalplacements.placement_toggle": "Toggle placement logic",
 	"msg.additionalplacements.placement_enable": "Additional Placements placement logic enabled",

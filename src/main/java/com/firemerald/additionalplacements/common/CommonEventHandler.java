@@ -7,6 +7,7 @@ import com.firemerald.additionalplacements.commands.CommandGenerateStairsDebugge
 import com.firemerald.additionalplacements.config.APConfigs;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -15,16 +16,18 @@ import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.TagsUpdatedEvent.UpdateCause;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonEventHandler
 {
-	public static boolean misMatchedTags = false;
+	public static boolean misMatchedTags = false, autoGenerateFailed = false;
 	protected static boolean reloadedFromChecker = false;
 
 	@SubscribeEvent
@@ -52,11 +55,26 @@ public class CommonEventHandler
 	public static void onTagsUpdated(TagsUpdatedEvent event)
 	{
 		if (event.getUpdateCause() == UpdateCause.SERVER_DATA_LOAD) {
-			misMatchedTags = false;
-			if (reloadedFromChecker) reloadedFromChecker = false;
-			else if (APConfigs.common().checkTags.get() && (!APConfigs.serverLoaded() || APConfigs.server().checkTags.get()))
-				TagMismatchChecker.startChecker(); //TODO halt on datapack reload
+			boolean fromAutoGenerate;
+			if (reloadedFromChecker) {
+				reloadedFromChecker = false;
+				fromAutoGenerate = true;
+			} else fromAutoGenerate = false;
+			MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+			if (server != null) possiblyCheckTags(server, fromAutoGenerate);
 		}
+	}
+	
+	@SubscribeEvent
+	public static void onServerStarted(ServerStartedEvent event) {
+		possiblyCheckTags(event.getServer(), false);
+	}
+	
+	private static void possiblyCheckTags(MinecraftServer server, boolean fromAutoGenerate) {
+		misMatchedTags = false;
+		autoGenerateFailed = false;
+		if (APConfigs.common().checkTags.get() && APConfigs.server().checkTags.get())
+			TagMismatchChecker.startChecker(server, !fromAutoGenerate && APConfigs.common().autoRebuildTags.get() && APConfigs.server().autoRebuildTags.get(), fromAutoGenerate); //TODO halt on datapack reload
 	}
 
 	@SubscribeEvent
@@ -89,7 +107,7 @@ public class CommonEventHandler
 	@SubscribeEvent
 	public static void onPlayerLogin(PlayerLoggedInEvent event)
 	{
-		if (misMatchedTags && !(APConfigs.common().autoRebuildTags.get() && APConfigs.server().autoRebuildTags.get()) && TagMismatchChecker.canGenerateTags(event.getEntity())) event.getEntity().sendSystemMessage(TagMismatchChecker.MESSAGE);
+		if (misMatchedTags && TagMismatchChecker.canGenerateTags(event.getEntity())) event.getEntity().sendSystemMessage(autoGenerateFailed ? TagMismatchChecker.FAILED : TagMismatchChecker.MESSAGE);
 	}
 
 	@SubscribeEvent
