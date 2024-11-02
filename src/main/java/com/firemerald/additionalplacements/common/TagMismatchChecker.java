@@ -13,7 +13,6 @@ import com.firemerald.additionalplacements.config.APConfigs;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import io.github.fabricators_of_create.porting_lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
@@ -42,12 +41,11 @@ public class TagMismatchChecker extends Thread
 							)
 					)
 			);
+	public static final Component FAILED = new TranslatableComponent("msg.additionalplacements.generate.notfixed").setStyle(Style.EMPTY.withColor(ChatFormatting.RED));
 
-	public static void startChecker()
+	public static void startChecker(MinecraftServer server, boolean autoGenerate, boolean fromAutoGenerate)
 	{
-		TagMismatchChecker old = thread;
-		thread = new TagMismatchChecker();
-		if (old != null) old.halted = true;
+		setThread(new TagMismatchChecker(server, autoGenerate, fromAutoGenerate));
 		thread.setPriority(APConfigs.common().checkerPriority.get());
 		CommonModEvents.misMatchedTags = false;
 		thread.start();
@@ -55,20 +53,26 @@ public class TagMismatchChecker extends Thread
 
 	public static void stopChecker()
 	{
-		if (thread != null)
-		{
-			TagMismatchChecker old = thread;
-			thread = null;
-			old.halted = true;
-		}
+		setThread(null);
+	}
+	
+	private static synchronized void setThread(TagMismatchChecker newThread) {
+		if (thread != null) thread.halted = true;
+		thread = newThread;
 	}
 
+
+	private final MinecraftServer server;
+	private final boolean autoGenerate, fromAutoGenerate;
 	private boolean halted = false;
 	private final List<Triple<Block, Collection<TagKey<Block>>, Collection<TagKey<Block>>>> blockMissingExtra = new LinkedList<>();
 
-	private TagMismatchChecker()
+	private TagMismatchChecker(MinecraftServer server, boolean autoGenerate, boolean fromAutoGenerate)
 	{
 		super("Additional Placements Tag Mismatch Checker");
+		this.server = server;
+		this.autoGenerate = autoGenerate;
+		this.fromAutoGenerate = fromAutoGenerate;
 	}
 
 	@Override
@@ -83,18 +87,11 @@ public class TagMismatchChecker extends Thread
 				if (mismatch != null) blockMissingExtra.add(mismatch);
 			}
 		}
-		MinecraftServer server = null;
-		while (!halted && (server = ServerLifecycleHooks.getCurrentServer()) == null) try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {}
-		if (!halted && server != null) {
-			final MinecraftServer server2 = server;
-			server.submit(() -> process(server2));
-		}
+		if (!halted) server.submit(this::process);
 	}
 
 	//this is only ever called on the server thread
-	public void process(MinecraftServer server)
+	public void process()
 	{
 		thread = null;
 		if (!halted) //wasn't canceled
@@ -102,10 +99,13 @@ public class TagMismatchChecker extends Thread
 			if (!blockMissingExtra.isEmpty())
 			{
 				CommonModEvents.misMatchedTags = true;
-				boolean autoRebuild = APConfigs.common().autoRebuildTags.get() && APConfigs.server().autoRebuildTags.get();
-				if (!autoRebuild) server.getPlayerList().getPlayers().forEach(player -> {
-					if (canGenerateTags(player)) player.sendMessage(MESSAGE, Util.NIL_UUID);
-				});
+				if (fromAutoGenerate) CommonModEvents.autoGenerateFailed = true;
+				if (!autoGenerate) {
+					Component message = fromAutoGenerate ? FAILED : MESSAGE;
+					server.getPlayerList().getPlayers().forEach(player -> {
+						if (canGenerateTags(player)) player.sendMessage(message, Util.NIL_UUID);
+					});
+				}
 				AdditionalPlacementsMod.LOGGER.warn("Found missing and/or extra tags on generated blocks. Use \"/ap_tags_export\" to generate the tags, then \"/reload\" to re-load them (or re-load the world if that fails).");
 				if (APConfigs.common().logTagMismatch.get())
 				{
@@ -128,7 +128,7 @@ public class TagMismatchChecker extends Thread
 					AdditionalPlacementsMod.LOGGER.warn("====== END LIST ======");
 				}
 				else AdditionalPlacementsMod.LOGGER.info("Not logging tag mismatches as it is disabled in the common config");
-				if (autoRebuild)
+				if (autoGenerate)
 				{
 					AdditionalPlacementsMod.LOGGER.info("Rebuilding block tags and reloading datapacks as automatic tag rebuilding is enabled");
 					CommandDispatcher<CommandSourceStack> dispatch = server.getCommands().getDispatcher();
