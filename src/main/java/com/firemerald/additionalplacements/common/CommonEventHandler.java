@@ -16,6 +16,7 @@ import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -23,7 +24,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonEventHandler
 {
-	public static boolean misMatchedTags = false;
+	public static boolean misMatchedTags = false, autoGenerateFailed = false;
 	protected static boolean reloadedFromChecker = false;
 
 	@SubscribeEvent
@@ -38,11 +39,25 @@ public class CommonEventHandler
 	{
 		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 		if (server == null || event.getTagManager() == server.getTags()) {
-			misMatchedTags = false;
-			if (reloadedFromChecker) reloadedFromChecker = false;
-			else if (APConfigs.common().checkTags.get() && (!APConfigs.serverLoaded() || APConfigs.server().checkTags.get()))
-				TagMismatchChecker.startChecker(); //TODO halt on datapack reload
+			boolean fromAutoGenerate;
+			if (reloadedFromChecker) {
+				reloadedFromChecker = false;
+				fromAutoGenerate = true;
+			} else fromAutoGenerate = false;
+			possiblyCheckTags(server, fromAutoGenerate);
 		}
+	}
+	
+	@SubscribeEvent
+	public static void onServerStarted(FMLServerStartedEvent event) {
+		possiblyCheckTags(event.getServer(), false);
+	}
+	
+	private static void possiblyCheckTags(MinecraftServer server, boolean fromAutoGenerate) {
+		misMatchedTags = false;
+		autoGenerateFailed = false;
+		if (APConfigs.common().checkTags.get() && APConfigs.server().checkTags.get())
+			TagMismatchChecker.startChecker(server, !fromAutoGenerate && APConfigs.common().autoRebuildTags.get() && APConfigs.server().autoRebuildTags.get(), fromAutoGenerate); //TODO halt on datapack reload
 	}
 
 	@SubscribeEvent
@@ -75,7 +90,7 @@ public class CommonEventHandler
 	@SubscribeEvent
 	public static void onPlayerLogin(PlayerLoggedInEvent event)
 	{
-		if (misMatchedTags && !(APConfigs.common().autoRebuildTags.get() && APConfigs.server().autoRebuildTags.get()) && TagMismatchChecker.canGenerateTags(event.getPlayer())) event.getPlayer().sendMessage(TagMismatchChecker.MESSAGE, Util.NIL_UUID);
+		if (misMatchedTags && TagMismatchChecker.canGenerateTags(event.getPlayer())) event.getPlayer().sendMessage(autoGenerateFailed ? TagMismatchChecker.FAILED : TagMismatchChecker.MESSAGE, Util.NIL_UUID);
 	}
 
 	@SubscribeEvent
