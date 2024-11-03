@@ -20,13 +20,11 @@ import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
 
 @Mixin(value = BlockModel.class, priority = 900)
-public class MixinBlockModel implements IBlockModelExtensions {
+public abstract class MixinBlockModel implements IBlockModelExtensions {
 	@Unique
 	private PlacementBlockModel placementModel = null;
 	@Shadow
-	private ItemOverrides getItemOverrides(ModelBaker baker, BlockModel model) {
-		return null;
-	}
+	protected abstract ItemOverrides getItemOverrides(ModelBaker baker, BlockModel model);
 	
 	@Inject(method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)Lnet/minecraft/client/resources/model/BakedModel;",
 			at = @At("HEAD"), cancellable = true)
