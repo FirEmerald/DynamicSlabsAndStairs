@@ -169,10 +169,13 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 			U created = construct(block, blockId);
 			this.created.add(Pair.of(blockId, created));
 			action.accept(new ResourceLocation(name.getNamespace(), blockId.getNamespace() + "." + blockId.getPath()), created);
+			applyConfig(created, blockId);
 		}
 	}
 	
 	public abstract U construct(T block, ResourceLocation blockId);
+	
+	public void applyConfig(U block, ResourceLocation blockId) {}
 	
 	protected void forEachCreated(BiConsumer<? super ResourceLocation, ? super U> action) {
 		created.forEach(p -> action.accept(p.getLeft(), p.getRight()));

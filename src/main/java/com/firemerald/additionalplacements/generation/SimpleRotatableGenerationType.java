@@ -86,4 +86,9 @@ public class SimpleRotatableGenerationType<T extends Block, U extends Additional
 		modelRotationBlacklist.loadListsFromConfig();
 		forEachCreated((id, block) -> block.setModelRotation(textureRotationBlacklist.test(id, block), modelRotationBlacklist.test(id, block)));
 	}
+
+	@Override
+	public void applyConfig(U block, ResourceLocation blockId) {
+		block.setModelRotation(textureRotationBlacklist.test(blockId, block), modelRotationBlacklist.test(blockId, block));
+	}
 }
