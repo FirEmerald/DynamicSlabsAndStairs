@@ -10,7 +10,7 @@ import com.firemerald.additionalplacements.generation.GenerationType.BuilderBase
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 
-import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -20,7 +20,7 @@ public class Registration {
 	private static final Map<Class<?>, GenerationType<?, ?>> TYPES_BY_CLASS = new HashMap<>();
 	
 	public static void gatherTypes() { 
-		EntrypointUtils.invoke("additional-placements-generators", RegistrationInitializer.class, instance -> instance.onInitializeRegistration(Registration::registerType));
+		FabricLoader.getInstance().invokeEntrypoints("additional-placements-generators", RegistrationInitializer.class, instance -> instance.onInitializeRegistration(Registration::registerType));
 	}
 	
 	@SuppressWarnings("unchecked")

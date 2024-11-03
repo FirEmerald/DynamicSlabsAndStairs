@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.fabricmc.fabric.impl.renderer.VanillaModelEncoder;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -19,9 +20,8 @@ public abstract class BakedModelWrapper extends ForwardingBakedModel
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
-		context.bakedModelConsumer().accept(this, state);
+		VanillaModelEncoder.emitBlockQuads(this, state, randomSupplier, context, context.getEmitter());
 	}
 
 	@Override
@@ -30,8 +30,7 @@ public abstract class BakedModelWrapper extends ForwardingBakedModel
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
-		context.bakedModelConsumer().accept(this, null);
+		VanillaModelEncoder.emitItemQuads(this, null, randomSupplier, context);
 	}
 }
