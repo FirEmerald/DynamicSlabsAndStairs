@@ -89,6 +89,7 @@ dependencies {
    	modApi("io.github.fabricators_of_create.Porting-Lib:core:${project.porting_lib_version}")
    	modApi("io.github.fabricators_of_create.Porting-Lib:data:${project.porting_lib_version}")
    	modApi("io.github.fabricators_of_create.Porting-Lib:model_generators:${project.porting_lib_version}")
+   	modApi("io.github.fabricators_of_create.Porting-Lib:utility:${project.porting_lib_version}")
 }
 
 processResources {
