@@ -173,8 +173,8 @@ public class BlockModelUtils
 	{
 		VertexFormat format = DefaultVertexFormat.BLOCK;
 		int vertexSize = format.getIntegerSize();
-		int posOffset = format.getOffset(format.getElements().indexOf(DefaultVertexFormat.ELEMENT_POSITION)) / 4;
-		int uvOffset = format.getOffset(format.getElements().indexOf(DefaultVertexFormat.ELEMENT_UV)) / 4;
+		int posOffset = ((IVertexFormatExtensions) format).getIntOffset(DefaultVertexFormat.ELEMENT_POSITION);
+		int uvOffset = ((IVertexFormatExtensions) format).getIntOffset(DefaultVertexFormat.ELEMENT_UV);
 		@SuppressWarnings("unchecked")
 		Pair<TextureAtlasSprite, Integer>[] textures = new Pair[6];
 		List<BakedQuad> originalQuads = ourModel.getQuads(modelState, side, rand);
@@ -201,8 +201,8 @@ public class BlockModelUtils
 	{
 		VertexFormat format = DefaultVertexFormat.BLOCK;
 		int vertexSize = format.getIntegerSize();
-		int posOffset = format.getOffset(format.getElements().indexOf(DefaultVertexFormat.ELEMENT_POSITION)) / 4;
-		int uvOffset = format.getOffset(format.getElements().indexOf(DefaultVertexFormat.ELEMENT_UV)) / 4;
+		int posOffset = ((IVertexFormatExtensions) format).getIntOffset(DefaultVertexFormat.ELEMENT_POSITION);
+		int uvOffset = ((IVertexFormatExtensions) format).getIntOffset(DefaultVertexFormat.ELEMENT_UV);
 		List<BakedQuad> originalQuads = model.getQuads(modelState, rotation.unapply(side), rand);
 		List<BakedQuad> bakedQuads = new ArrayList<>(originalQuads.size());
 		for (BakedQuad originalQuad : originalQuads)
@@ -227,8 +227,8 @@ public class BlockModelUtils
 	{
 		VertexFormat format = DefaultVertexFormat.BLOCK;
 		int vertexSize = format.getIntegerSize();
-		int posOffset = format.getOffset(format.getElements().indexOf(DefaultVertexFormat.ELEMENT_POSITION)) / 4;
-		int uvOffset = format.getOffset(format.getElements().indexOf(DefaultVertexFormat.ELEMENT_UV)) / 4;
+		int posOffset = ((IVertexFormatExtensions) format).getIntOffset(DefaultVertexFormat.ELEMENT_POSITION);
+		int uvOffset = ((IVertexFormatExtensions) format).getIntOffset(DefaultVertexFormat.ELEMENT_UV);
 		List<BakedQuad> originalQuads = model.getQuads(modelState, rotation.unapply(side), rand);
 		List<BakedQuad> bakedQuads = new ArrayList<>(originalQuads.size());
 		for (BakedQuad originalQuad : originalQuads)

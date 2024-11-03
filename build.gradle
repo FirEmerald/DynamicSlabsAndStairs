@@ -84,12 +84,10 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
-	modImplementation("net.fabricmc.fabric-api:fabric-models-v0:0.4.5+9386d8a7cb")
 	
 	modApi("com.simibubi.create:create-fabric-1.20.1:0.5.1-j-build.1562+mc1.20.1")
    	modApi("io.github.fabricators_of_create.Porting-Lib:core:${project.porting_lib_version}")
    	modApi("io.github.fabricators_of_create.Porting-Lib:data:${project.porting_lib_version}")
-   	modApi("io.github.fabricators_of_create.Porting-Lib:model_loader:${project.porting_lib_version}")
    	modApi("io.github.fabricators_of_create.Porting-Lib:model_generators:${project.porting_lib_version}")
    	modApi("io.github.fabricators_of_create.Porting-Lib:model_materials:${project.porting_lib_version}")
    	modApi("io.github.fabricators_of_create.Porting-Lib:utility:${project.porting_lib_version}")
