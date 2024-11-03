@@ -7,14 +7,13 @@ import java.util.function.Function;
 
 import com.mojang.datafixers.util.Pair;
 
-import io.github.fabricators_of_create.porting_lib.model.geometry.IGeometryBakingContext;
-import io.github.fabricators_of_create.porting_lib.model.geometry.IUnbakedGeometry;
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
 
-public class PlacementBlockModel implements IUnbakedGeometry<PlacementBlockModel>
+public class PlacementBlockModel
 {
 	public final ResourceLocation model;
 
@@ -23,14 +22,12 @@ public class PlacementBlockModel implements IUnbakedGeometry<PlacementBlockModel
 		this.model = model;
 	}
 
-	@Override
-	public BakedModel bake(IGeometryBakingContext owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation)
+	public BakedModel bake(BlockModel owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation)
 	{
 		return new BakedPlacementBlockModel(bakery.getModel(model).bake(bakery, spriteGetter, modelTransform, modelLocation)); //TODO make better
 	}
 
-	@Override
-	public Collection<Material> getMaterials(IGeometryBakingContext owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors)
+	public Collection<Material> getMaterials(BlockModel owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors)
 	{
 		UnbakedModel model = modelGetter.apply(this.model);
 		if (model != null) return model.getMaterials(modelGetter, missingTextureErrors);

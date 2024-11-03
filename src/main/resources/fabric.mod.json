@@ -45,8 +45,7 @@ Pressure plates can be placed on walls and ceilings.",
     "fabric": "*",
     "minecraft": "~1.19.2",
     "java": ">=17",
-	"forgeconfigapiport": "*",
-	"porting_lib": "*"
+	"forgeconfigapiport": "*"
   },
   "suggests": {
     "another-mod": "*"

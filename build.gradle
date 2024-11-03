@@ -49,12 +49,14 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 	
-    modApi("net.minecraftforge:forgeconfigapiport-fabric:4.2.11")
+    modImplementation "net.minecraftforge:forgeconfigapiport-fabric:4.2.11"
 	modApi("com.simibubi.create:create-fabric-1.19.2:0.5.1-c-build.1160+mc1.19.2")
 	modApi("io.github.fabricators_of_create.Porting-Lib:Porting-Lib:${project.porting_lib_version}")
-   	modApi("io.github.fabricators_of_create.Porting-Lib:models:${project.porting_lib_version}")
-   	modApi("io.github.fabricators_of_create.Porting-Lib:model_loader:${project.porting_lib_version}")
-   	modApi("io.github.fabricators_of_create.Porting-Lib:model_generators:${project.porting_lib_version}")
+   	//modApi("io.github.fabricators_of_create.Porting-Lib:core:${project.porting_lib_version}")
+   	//modApi("io.github.fabricators_of_create.Porting-Lib:data:${project.porting_lib_version}")
+   	//modApi("io.github.fabricators_of_create.Porting-Lib:model_generators:${project.porting_lib_version}")
+   	//modApi("io.github.fabricators_of_create.Porting-Lib:model_materials:${project.porting_lib_version}")
+   	//modApi("io.github.fabricators_of_create.Porting-Lib:utility:${project.porting_lib_version}")
 }
 
 processResources {
