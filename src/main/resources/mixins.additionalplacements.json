@@ -16,7 +16,9 @@
 	"client": [
 		"MixinModResourcePackCreator",
 		"MixinBlockModelShaper",
-		"MixinLocalPlayer"
+		"MixinLocalPlayer",
+		"MixinBlockModel",
+		"MixinBlockModelDeserializer"
 	],
 	"minVersion": "0.8"
 }
