@@ -15,6 +15,7 @@ import net.minecraft.commands.arguments.blocks.BlockInput;
 import net.minecraft.commands.arguments.blocks.BlockStateArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
@@ -73,7 +74,7 @@ public class CommandGenerateStairsDebugger
 	}
 	
 	private static void throwInvalidBlock(BlockState state) throws CommandSyntaxException {
-		throw new SimpleCommandExceptionType(new TranslatableComponent("commands.ap_stairs_state_debug.wrong_block", state.getBlock().getRegistryName())).create();
+		throw new SimpleCommandExceptionType(new TranslatableComponent("commands.ap_stairs_state_debug.wrong_block", Registry.BLOCK.getKey(state.getBlock()))).create();
 	}
 	
 	private static void set(ServerLevel serverLevel, IStairBlock<?> stair, BlockState rootState, Set<Property<?>> props, CompoundTag tag, ComplexFacing facing, BlockPos middle, BlockPos.MutableBlockPos pos, int offset, int offFront, int offTop) {

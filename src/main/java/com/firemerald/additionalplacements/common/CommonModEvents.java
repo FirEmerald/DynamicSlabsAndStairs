@@ -21,7 +21,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.mojang.brigadier.CommandDispatcher;
 
-import io.github.fabricators_of_create.porting_lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
@@ -48,8 +47,7 @@ public class CommonModEvents implements ModInitializer
     	loadRegistry();
     	CommandRegistrationCallback.EVENT.register(CommonModEvents::onRegisterCommands);
     	CommonLifecycleEvents.TAGS_LOADED.register(CommonModEvents::onTagsUpdated);
-    	ServerLifecycleEvents.SERVER_STARTED.register(server -> CommonModEvents.init());
-    	ServerLifecycleEvents.SERVER_STARTED.register(server -> possiblyCheckTags(server, false));
+    	ServerLifecycleEvents.SERVER_STARTED.register(CommonModEvents::onServerStarted);
     	ServerLifecycleEvents.SERVER_STOPPING.register(CommonModEvents::onServerStopping);
     	ServerPlayConnectionEvents.JOIN.register(CommonModEvents::onPlayerLogin);
     }
@@ -155,25 +153,33 @@ public class CommonModEvents implements ModInitializer
 				reloadedFromChecker = false;
 				fromAutoGenerate = true;
 			} else fromAutoGenerate = false;
-			MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-			if (server != null) possiblyCheckTags(server, fromAutoGenerate);
+			if (currentServer != null) possiblyCheckTags(fromAutoGenerate);
 		}
 	}
 	
-	private static void possiblyCheckTags(MinecraftServer server, boolean fromAutoGenerate) {
+	private static void possiblyCheckTags(boolean fromAutoGenerate) {
 		misMatchedTags = false;
 		autoGenerateFailed = false;
 		if (APConfigs.common().checkTags.get() && APConfigs.server().checkTags.get())
-			TagMismatchChecker.startChecker(server, !fromAutoGenerate && APConfigs.common().autoRebuildTags.get() && APConfigs.server().autoRebuildTags.get(), fromAutoGenerate); //TODO halt on datapack reload
+			TagMismatchChecker.startChecker(currentServer, !fromAutoGenerate && APConfigs.common().autoRebuildTags.get() && APConfigs.server().autoRebuildTags.get(), fromAutoGenerate); //TODO halt on datapack reload
 	}
 
 	public static void onPlayerLogin(ServerGamePacketListenerImpl handler, PacketSender sender, MinecraftServer server)
 	{
 		if (misMatchedTags && TagMismatchChecker.canGenerateTags(handler.getPlayer())) handler.getPlayer().sendMessage(autoGenerateFailed ? TagMismatchChecker.FAILED : TagMismatchChecker.MESSAGE, Util.NIL_UUID);
 	}
+	
+	private static MinecraftServer currentServer = null;
+	
+	public static void onServerStarted(MinecraftServer server) {
+		currentServer = server;
+		init();
+		possiblyCheckTags(false);
+	}
 
 	public static void onServerStopping(MinecraftServer server)
 	{
+		currentServer = null;
 		TagMismatchChecker.stopChecker();
 		reloadedFromChecker = false;
 	}
