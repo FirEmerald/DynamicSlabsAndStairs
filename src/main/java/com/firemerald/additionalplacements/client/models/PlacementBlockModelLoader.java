@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class PlacementBlockModelLoader
 {
-	public static final String ID = AdditionalPlacementsMod.MOD_ID + ":placement_block_loader";
+	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "placement_block_loader");
 
 	public static PlacementBlockModel read(JsonObject modelContents, JsonDeserializationContext deserializationContext)
 	{
