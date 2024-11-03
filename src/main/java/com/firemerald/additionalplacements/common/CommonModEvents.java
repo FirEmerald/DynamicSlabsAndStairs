@@ -76,20 +76,33 @@ public class CommonModEvents implements ModInitializer
 				Class<?> clazz = Class.forName("com.google.common.base.Suppliers$NonSerializableMemoizingSupplier");
 				Field delegate = clazz.getDeclaredField("delegate");
 				delegate.setAccessible(true);
-				Field initialized = clazz.getDeclaredField("initialized");
-				initialized.setAccessible(true);
 				Field value = clazz.getDeclaredField("value");
 				value.setAccessible(true);
+				Field successfullyComputedField = clazz.getDeclaredField("SUCCESSFULLY_COMPUTED");
+				successfullyComputedField.setAccessible(true);
+				Object successfullyComputed = successfullyComputedField.get(null);
+				Function<BiMap<Block, Block>, BiMap<Block, Block>> withAdditionalStates = oldMap -> {
+					BiMap<Block, Block> newMap = HashBiMap.create(oldMap);
+					oldMap.forEach((b1, b2) -> {
+						if (b1 instanceof IPlacementBlock && b2 instanceof IPlacementBlock)
+						{
+							IPlacementBlock<?> p1 = (IPlacementBlock<?>) b1;
+							IPlacementBlock<?> p2 = (IPlacementBlock<?>) b2;
+							if (p1.hasAdditionalStates() && p2.hasAdditionalStates()) newMap.put(p1.getOtherBlock(), p2.getOtherBlock());
+						}
+					});
+					return newMap;
+				};
 				try
 				{
-					modifyMap(WeatheringCopper.NEXT_BY_BLOCK, WeatheringCopper.PREVIOUS_BY_BLOCK, CommonModEvents::addVariants, delegate, initialized, value);
+					modifyMap(WeatheringCopper.NEXT_BY_BLOCK, WeatheringCopper.PREVIOUS_BY_BLOCK, withAdditionalStates, delegate, value, successfullyComputed);
 				}
 				catch (IllegalArgumentException | IllegalAccessException e)
 				{
 					AdditionalPlacementsMod.LOGGER.error("Failed to update WeatheringCopper maps, copper slabs and stairs will weather into vanilla states. Sorry.", e);
 				}
 			}
-			catch (ClassNotFoundException | NoSuchFieldException | SecurityException e)
+			catch (ClassNotFoundException | NoSuchFieldException | SecurityException | IllegalAccessException e)
 			{
 				AdditionalPlacementsMod.LOGGER.error("Failed to update WeatheringCopper maps, copper slabs and stairs will weather into vanilla states. Sorry.", e);
 			}
@@ -114,27 +127,21 @@ public class CommonModEvents implements ModInitializer
 		return newMap;
 	}
 
-	public static <T, U> void modifyMap(Supplier<BiMap<T, U>> forwardMemoized, Supplier<BiMap<U, T>> backwardMemoized, Function<BiMap<T, U>, BiMap<T, U>> modify, Field delegate, Field initialized, Field value) throws IllegalArgumentException, IllegalAccessException
+	public static <T, U> void modifyMap(Supplier<BiMap<T, U>> forwardMemoized, Supplier<BiMap<U, T>> backwardMemoized, Function<BiMap<T, U>, BiMap<T, U>> modify, Field delegate, Field value, Object successfullyComputed) throws IllegalArgumentException, IllegalAccessException
 	{
-		if (initialized.getBoolean(forwardMemoized)) //already computed
+		@SuppressWarnings("unchecked")
+		com.google.common.base.Supplier<BiMap<T, U>> forwardSupplier = (com.google.common.base.Supplier<BiMap<T, U>>) delegate.get(forwardMemoized);
+		if (forwardSupplier == successfullyComputed) //already computed
 		{
 			@SuppressWarnings("unchecked")
 			BiMap<T, U> map = (BiMap<T, U>) value.get(forwardMemoized); //get existing map
 			value.set(forwardMemoized, null); //clear value
-			initialized.setBoolean(forwardMemoized, false); //clear initialized flag
 			delegate.set(forwardMemoized, (com.google.common.base.Supplier<BiMap<T, U>>) () -> modify.apply(map)); //replace with supplier that modifies the existing map
 		}
-		else
-		{
-			@SuppressWarnings("unchecked")
-			com.google.common.base.Supplier<BiMap<T, U>> forwardSupplier = (com.google.common.base.Supplier<BiMap<T, U>>) delegate.get(forwardMemoized); //get the existing supplier
-			delegate.set(forwardMemoized, (com.google.common.base.Supplier<BiMap<T, U>>) () -> modify.apply(forwardSupplier.get())); //replace with supplier that modifies the result of the existing supplier
-		}
-		if (initialized.getBoolean(backwardMemoized))
-		{
-			value.set(backwardMemoized, null); //clear value
-			initialized.setBoolean(backwardMemoized, false); //clear initialized flag
-		}
+		else delegate.set(forwardMemoized, (com.google.common.base.Supplier<BiMap<T, U>>) () -> modify.apply(forwardSupplier.get())); //replace with supplier that modifies the result of the existing supplier
+		@SuppressWarnings("unchecked")
+		com.google.common.base.Supplier<BiMap<U, T>> backwardSupplier = (com.google.common.base.Supplier<BiMap<U, T>>) delegate.get(backwardMemoized);
+		if (backwardSupplier == successfullyComputed) value.set(backwardMemoized, null); //clear computed value
 		delegate.set(backwardMemoized, (com.google.common.base.Supplier<BiMap<U, T>>) () -> forwardMemoized.get().inverse()); //replace with supplier that gets the inverse of the forward map
 	}
 

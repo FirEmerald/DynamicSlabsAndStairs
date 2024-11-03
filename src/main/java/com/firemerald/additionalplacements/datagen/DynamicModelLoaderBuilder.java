@@ -1,7 +1,5 @@
 package com.firemerald.additionalplacements.datagen;
 
-import javax.annotation.Nonnull;
-
 import com.firemerald.additionalplacements.client.models.PlacementBlockModelLoader;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
@@ -20,7 +18,7 @@ public class DynamicModelLoaderBuilder<T extends ModelBuilder<T>> extends Custom
 
     private ResourceLocation model = null;
 
-    public DynamicModelLoaderBuilder<T> setModel(@Nonnull ResourceLocation model)
+    public DynamicModelLoaderBuilder<T> setModel(ResourceLocation model)
     {
     	this.model = model;
     	return this;

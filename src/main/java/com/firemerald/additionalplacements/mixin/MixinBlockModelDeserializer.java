@@ -16,13 +16,10 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.util.GsonHelper;
 
-@Mixin(BlockModel.Deserializer.class)
+@Mixin(value = BlockModel.Deserializer.class, priority = 900)
 public class MixinBlockModelDeserializer {
-	@Inject(
-			//TODO priority above porting-lib
-			method = "deserialize(Lcom/google/gson/JsonElement;Ljava/lang/reflect/Type;Lcom/google/gson/JsonDeserializationContext;)Lnet/minecraft/client/renderer/block/model/BlockModel;", 
-			at = @At("RETURN"), 
-			cancellable = true)
+	@Inject(method = "deserialize(Lcom/google/gson/JsonElement;Ljava/lang/reflect/Type;Lcom/google/gson/JsonDeserializationContext;)Lnet/minecraft/client/renderer/block/model/BlockModel;", 
+			at = @At("RETURN"), cancellable = true)
 	public void deserialize(JsonElement json, Type type, JsonDeserializationContext context, CallbackInfoReturnable<BlockModel> cli) {
         JsonObject jsonObject = json.getAsJsonObject();
         if (jsonObject.has("loader")) {

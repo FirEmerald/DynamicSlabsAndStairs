@@ -19,7 +19,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
 
-@Mixin(BlockModel.class)
+@Mixin(value = BlockModel.class, priority = 900)
 public class MixinBlockModel implements IBlockModelExtensions {
 	@Unique
 	private PlacementBlockModel placementModel = null;
@@ -28,22 +28,14 @@ public class MixinBlockModel implements IBlockModelExtensions {
 		return null;
 	}
 	
-	@Inject(
-			//TODO priority above porting-lib
-			method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)Lnet/minecraft/client/resources/model/BakedModel;",
-			at = @At("HEAD"),
-			cancellable = true
-	)
+	@Inject(method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)Lnet/minecraft/client/resources/model/BakedModel;",
+			at = @At("HEAD"), cancellable = true)
 	private void bake(ModelBaker baker, BlockModel model, Function<Material, TextureAtlasSprite> spriteGetter, ModelState state, ResourceLocation location, boolean guiLight3d, CallbackInfoReturnable<BakedModel> cli) {
 		if (placementModel != null)
 			cli.setReturnValue(placementModel.bake(model, baker, spriteGetter, state, getItemOverrides(baker, model), location, guiLight3d));
 	}
 	
-	@Inject(
-			//TODO priority above porting-lib
-			method = "resolveParents",
-			at = @At("HEAD")
-			)
+	@Inject(method = "resolveParents", at = @At("HEAD"))
 	private void resolveParents(Function<ResourceLocation, UnbakedModel> function, CallbackInfo ci) {
 		if (placementModel != null) placementModel.resolveParents(function, (BlockModel) (Object) this);
 	}

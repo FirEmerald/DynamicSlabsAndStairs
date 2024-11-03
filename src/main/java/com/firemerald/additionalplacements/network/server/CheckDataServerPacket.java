@@ -9,7 +9,6 @@ import org.apache.commons.lang3.tuple.Triple;
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.generation.Registration;
 import com.firemerald.additionalplacements.network.CheckDataConfigurationTask;
-import com.firemerald.additionalplacements.network.client.CheckDataClientPacket;
 import com.firemerald.additionalplacements.network.client.ConfigurationCheckFailedPacket;
 import com.firemerald.additionalplacements.util.MessageTree;
 
@@ -51,7 +50,7 @@ public class CheckDataServerPacket extends ServerConfigurationPacket
 	@Override
 	public ResourceLocation getID()
 	{
-		return CheckDataClientPacket.ID;
+		return ID;
 	}
 
 	@Override
