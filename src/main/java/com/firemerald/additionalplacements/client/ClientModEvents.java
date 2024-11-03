@@ -6,7 +6,6 @@ import org.jetbrains.annotations.Nullable;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
-import com.firemerald.additionalplacements.client.models.PlacementBlockModelLoader;
 import com.firemerald.additionalplacements.common.CommonModEvents;
 import com.firemerald.additionalplacements.config.APConfigs;
 
@@ -29,7 +28,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackResources;
-import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.Pack.Info;
 import net.minecraft.server.packs.repository.Pack.ResourcesSupplier;
@@ -82,7 +80,6 @@ public class ClientModEvents implements ClientModInitializer
 		ClientLifecycleEvents.CLIENT_STARTED.register(ClientModEvents::init);
 		ClientTickEvents.END_CLIENT_TICK.register(ClientModEvents::onClientEndTick);
 		ClientPlayConnectionEvents.JOIN.register(ClientModEvents::onServerJoined);
-		RegisterGeometryLoadersCallback.EVENT.register(loaders -> loaders.put(PlacementBlockModelLoader.ID, new PlacementBlockModelLoader()));
 		KeyBindingHelper.registerKeyBinding(APClientData.AP_PLACEMENT_KEY);
 	}
 
