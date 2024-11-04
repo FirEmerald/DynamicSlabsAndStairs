@@ -25,7 +25,6 @@ public class CheckDataServerPacket extends ServerPacket<FriendlyByteBuf>
 	
 	private final Map<ResourceLocation, Pair<CompoundTag, List<MessageTree>>> serverData;
 	
-	@SuppressWarnings("unchecked")
 	public CheckDataServerPacket(Map<ResourceLocation, CompoundTag> serverData) {
 		this.serverData = new HashMap<>();
 		Registration.forEach((id, type) -> {
@@ -61,7 +60,6 @@ public class CheckDataServerPacket extends ServerPacket<FriendlyByteBuf>
 		});
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void handleServer(IPayloadContext context)
 	{
