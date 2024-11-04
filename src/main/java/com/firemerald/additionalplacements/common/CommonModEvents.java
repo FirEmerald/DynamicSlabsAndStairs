@@ -34,7 +34,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.item.HoneycombItem;
@@ -57,8 +57,8 @@ public class CommonModEvents implements ModInitializer
 	private static void loadRegistry() {
 		Registration.gatherTypes();
 		APConfigs.init();
-		List<Pair<ResourceLocation, Block>> created = new ArrayList<>();
-		BuiltInRegistries.BLOCK.entrySet().forEach(entry -> Registration.tryApply(entry.getValue(), entry.getKey().location(), (id, obj) -> created.add(Pair.of(id, obj))));
+		List<Pair<ResourceKey<Block>, Block>> created = new ArrayList<>();
+		BuiltInRegistries.BLOCK.entrySet().forEach(entry -> Registration.tryApply(entry.getValue(), entry.getKey().location(), (key, obj) -> created.add(Pair.of(key, obj))));
 		created.forEach(pair -> Registry.register(BuiltInRegistries.BLOCK, pair.getLeft(), pair.getRight()));
 		RegistryEntryAddedCallback.event(BuiltInRegistries.BLOCK).register((rawId, id, block) -> {
 			Registration.tryApply(block, id, (blockId, obj) -> Registry.register(BuiltInRegistries.BLOCK, blockId, obj));
@@ -156,7 +156,9 @@ public class CommonModEvents implements ModInitializer
 
 	public static void onTagsUpdated(RegistryAccess registries, boolean client)
 	{
+		Registration.forEach((id, type) -> type.onTagsReloaded());
 		if (!client) {
+			Registration.forEach(type -> type.onTagsUpdated(false));
 			boolean fromAutoGenerate;
 			if (reloadedFromChecker) {
 				reloadedFromChecker = false;
@@ -164,6 +166,7 @@ public class CommonModEvents implements ModInitializer
 			} else fromAutoGenerate = false;
 			if (currentServer != null) possiblyCheckTags(fromAutoGenerate);
 		}
+		else Registration.forEach(type -> type.onTagsUpdated(true));
 	}
 	
 	private static void possiblyCheckTags(boolean fromAutoGenerate) {

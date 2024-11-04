@@ -52,7 +52,8 @@ public class BlockModelUtils
 				newTintIndex,
 				jsonBakedQuad.getDirection(),
 				newSprite,
-				jsonBakedQuad.isShade()
+				jsonBakedQuad.isShade(),
+				jsonBakedQuad.getLightEmission()
 				);
 	}
 	
@@ -213,7 +214,8 @@ public class BlockModelUtils
     				originalQuad.getTintIndex(), 
     				rotation.apply(originalQuad.getDirection()), 
     				originalQuad.getSprite(), 
-    				originalQuad.isShade()
+    				originalQuad.isShade(),
+    				originalQuad.getLightEmission()
     				));
 		}
 		return bakedQuads;
@@ -239,7 +241,8 @@ public class BlockModelUtils
     				originalQuad.getTintIndex(), 
     				rotation.apply(originalQuad.getDirection()), 
     				originalQuad.getSprite(), 
-    				originalQuad.isShade()
+    				originalQuad.isShade(),
+    				originalQuad.getLightEmission()
     				));
 		}
 		return bakedQuads;

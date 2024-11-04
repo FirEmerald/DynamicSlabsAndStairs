@@ -10,6 +10,7 @@ import com.firemerald.additionalplacements.util.stairs.StairConnections;
 import com.firemerald.additionalplacements.util.stairs.StairShape;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.BeaconBeamBlock;
@@ -29,19 +30,19 @@ public class VerticalStairBlock extends AdditionalPlacementLiquidBlock<StairBloc
 
 	private static StairConnections staticAllowedConnections;
 	
-	public static VerticalStairBlock of(StairBlock stairs, StairConnections allowedConnections)
+	public static VerticalStairBlock of(StairBlock stairs, ResourceKey<Block> id, StairConnections allowedConnections)
 	{
 		staticAllowedConnections = allowedConnections;
-		VerticalStairBlock ret = stairs instanceof BeaconBeamBlock ? new AdditionalBeaconBeamVerticalStairBlock(stairs, allowedConnections) : new VerticalStairBlock(stairs, allowedConnections);
+		VerticalStairBlock ret = stairs instanceof BeaconBeamBlock ? new AdditionalBeaconBeamVerticalStairBlock(stairs, id, allowedConnections) : new VerticalStairBlock(stairs, id, allowedConnections);
 		staticAllowedConnections = null;
 		return ret;
 	}
 	
 	private static class AdditionalBeaconBeamVerticalStairBlock extends VerticalStairBlock implements IAdditionalBeaconBeamBlock<StairBlock>
 	{
-		AdditionalBeaconBeamVerticalStairBlock(StairBlock stairs, StairConnections allowedConnections)
+		AdditionalBeaconBeamVerticalStairBlock(StairBlock stairs, ResourceKey<Block> id, StairConnections allowedConnections)
 		{
-			super(stairs, allowedConnections);
+			super(stairs, id, allowedConnections);
 		}
 	}
 	
@@ -49,9 +50,9 @@ public class VerticalStairBlock extends AdditionalPlacementLiquidBlock<StairBloc
 	public boolean rotateLogic = false, rotateModel = false, rotateTex = false;
 
 	@SuppressWarnings("deprecation")
-	private VerticalStairBlock(StairBlock stairs, StairConnections allowedConnections)
+	private VerticalStairBlock(StairBlock stairs, ResourceKey<Block> id, StairConnections allowedConnections)
 	{
-		super(stairs);
+		super(stairs, id);
 		this.registerDefaultState(copyProperties(getModelState(), this.stateDefinition.any()).setValue(FACING, CompressedStairFacing.SOUTH_UP_EAST).setValue(allowedConnections.shapeProperty, CompressedStairShape.VERTICAL_STRAIGHT));
 		((IVanillaStairBlock) stairs).setOtherBlock(this);
 		this.allowedConnections = allowedConnections;

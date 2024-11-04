@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.firemerald.additionalplacements.util.StateFixer;
 import com.mojang.serialization.Codec;
 
+import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -42,9 +43,9 @@ public class MixinChunkStorage {
 							CompoundTag block = (CompoundTag) blockTag;
 							if (block.contains("Name", Tag.TAG_STRING)) {
 								String name = block.getString("Name");
-								Block theBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(name));
-								if (theBlock != null) {
-									Function<CompoundTag, CompoundTag> fixer = StateFixer.getFixer(theBlock.getClass());
+								Optional<Reference<Block>> optionalBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(name));
+								if (optionalBlock.isPresent()) {
+									Function<CompoundTag, CompoundTag> fixer = StateFixer.getFixer(optionalBlock.get().value().getClass());
 									if (fixer != null) {
 										CompoundTag original = block.getCompound("Properties");
 										CompoundTag fixed = fixer.apply(original);

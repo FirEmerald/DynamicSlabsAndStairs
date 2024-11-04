@@ -12,8 +12,10 @@ import com.firemerald.additionalplacements.block.interfaces.IPressurePlateBlock.
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.PressurePlateBlock;
@@ -131,8 +133,8 @@ public abstract class MixinPressurePlateBlock extends Block implements IVanillaP
 	}
 
 	@Override
-	public BlockState updateShapeImpl(BlockState state, Direction direction, BlockState otherState, LevelAccessor level, BlockPos pos, BlockPos otherPos)
+	public BlockState updateShapeImpl(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos otherPos, BlockState otherState, RandomSource rand)
 	{
-		return super.updateShape(state, direction, otherState, level, pos, otherPos);
+		return super.updateShape(state, level, tickAccess, pos, direction, otherPos, otherState, rand);
 	}
 }

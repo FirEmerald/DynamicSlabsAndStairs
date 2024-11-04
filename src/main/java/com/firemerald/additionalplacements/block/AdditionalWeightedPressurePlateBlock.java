@@ -5,11 +5,13 @@ import com.firemerald.additionalplacements.block.interfaces.IAdditionalBeaconBea
 import com.firemerald.additionalplacements.block.interfaces.IWeightedPressurePlateBlock;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BeaconBeamBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WeightedPressurePlateBlock;
 import net.minecraft.world.phys.AABB;
 
@@ -17,22 +19,22 @@ public class AdditionalWeightedPressurePlateBlock extends AdditionalBasePressure
 {
 	static final ResourceLocation WEIGHTED_PRESSURE_PLATE_BLOCKSTATES = ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "blockstate_templates/weighted_pressure_plate.json");
 	
-	public static AdditionalWeightedPressurePlateBlock of(WeightedPressurePlateBlock plate)
+	public static AdditionalWeightedPressurePlateBlock of(WeightedPressurePlateBlock plate, ResourceKey<Block> id)
 	{
-		return plate instanceof BeaconBeamBlock ? new AdditionalBeaconBeamWeightedPressurePlateBlock(plate) : new AdditionalWeightedPressurePlateBlock(plate);
+		return plate instanceof BeaconBeamBlock ? new AdditionalBeaconBeamWeightedPressurePlateBlock(plate, id) : new AdditionalWeightedPressurePlateBlock(plate, id);
 	}
 
 	private static class AdditionalBeaconBeamWeightedPressurePlateBlock extends AdditionalWeightedPressurePlateBlock implements IAdditionalBeaconBeamBlock<WeightedPressurePlateBlock>
 	{
-		AdditionalBeaconBeamWeightedPressurePlateBlock(WeightedPressurePlateBlock plate)
+		AdditionalBeaconBeamWeightedPressurePlateBlock(WeightedPressurePlateBlock plate, ResourceKey<Block> id)
 		{
-			super(plate);
+			super(plate, id);
 		}
 	}
 
-	private AdditionalWeightedPressurePlateBlock(WeightedPressurePlateBlock plate)
+	private AdditionalWeightedPressurePlateBlock(WeightedPressurePlateBlock plate, ResourceKey<Block> id)
 	{
-		super(plate);
+		super(plate, id);
 	}
 
 	@Override

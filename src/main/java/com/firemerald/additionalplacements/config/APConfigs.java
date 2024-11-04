@@ -72,8 +72,8 @@ public class APConfigs {
     	else if (config.getSpec() == serverSpec) sendConfigEvent(GenerationType::onServerConfigReloaded);
     	else if (config.getSpec() == clientSpec) sendConfigEvent(GenerationType::onClientConfigReloaded);
     }
-    
-    protected static void sendConfigEvent(Consumer<GenerationType<?, ?>> action) {
-    	Registration.forEach((name, type) -> action.accept(type));
+
+    public static void sendConfigEvent(Consumer<? super GenerationType<?, ?>> action) {
+    	Registration.forEach(action);
     }
 }

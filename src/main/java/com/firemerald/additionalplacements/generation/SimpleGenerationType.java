@@ -1,17 +1,18 @@
 package com.firemerald.additionalplacements.generation;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
 public class SimpleGenerationType<T extends Block, U extends AdditionalPlacementBlock<T>> extends GenerationType<T, U> {
 	protected abstract static class BuilderBase<T extends Block, U extends AdditionalPlacementBlock<T>, V extends SimpleGenerationType<T, U>, W extends BuilderBase<T, U, V, W>> extends GenerationType.BuilderBase<T, U, V, W> {
-		protected Function<? super T, ? extends U> constructor;
+		protected BiFunction<? super T, ResourceKey<Block>, ? extends U> constructor;
 		
-		public W constructor(Function<? super T, ? extends U> constructor) {
+		public W constructor(BiFunction<? super T, ResourceKey<Block>, ? extends U> constructor) {
 			this.constructor = constructor;
 			return me();
 		}
@@ -24,7 +25,7 @@ public class SimpleGenerationType<T extends Block, U extends AdditionalPlacement
 		}
 	}
 	
-	private final Function<? super T, ? extends U> constructor;
+	private final BiFunction<? super T, ResourceKey<Block>, ? extends U> constructor;
 
 	protected SimpleGenerationType(ResourceLocation name, String description, BuilderBase<T, U, ?, ?> builder) {
 		super(name, description, builder);
@@ -32,8 +33,8 @@ public class SimpleGenerationType<T extends Block, U extends AdditionalPlacement
 	}
 
 	@Override
-	public U construct(T block, ResourceLocation blockId) {
-		return constructor.apply(block);
+	public U construct(T block, ResourceKey<Block> key, ResourceLocation blockId) {
+		return constructor.apply(block, key);
 	}
 
 }

@@ -2,6 +2,7 @@ package com.firemerald.additionalplacements.generation;
 
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
@@ -11,6 +12,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 
 import net.fabricmc.loader.impl.FabricLoaderImpl;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -24,10 +26,10 @@ public class Registration {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T extends Block, U extends AdditionalPlacementBlock<T>> void tryApply(Block block, ResourceLocation blockId, BiConsumer<ResourceLocation, AdditionalPlacementBlock<?>> action) {
+	public static <T extends Block, U extends AdditionalPlacementBlock<T>> void tryApply(Block block, ResourceLocation blockId, BiConsumer<ResourceKey<Block>, AdditionalPlacementBlock<?>> action) {
 		if (block instanceof IPlacementBlock placement && placement.canGenerateAdditionalStates()) {
 			GenerationType<T, U> type = (GenerationType<T, U>) getType(block);
-			if (type != null) type.apply((T) block, blockId, (BiConsumer<ResourceLocation, U>) action);
+			if (type != null) type.apply((T) block, blockId, (BiConsumer<ResourceKey<Block>, U>) action);
 		}
 	}
 
@@ -56,8 +58,12 @@ public class Registration {
 		return type;
 	}
 	
-	public static void forEach(@SuppressWarnings("rawtypes") BiConsumer<? super ResourceLocation, ? super GenerationType> action) {
+	public static void forEach(BiConsumer<? super ResourceLocation, ? super GenerationType<?, ?>> action) {
 		TYPES.forEach(action);
+	}
+	
+	public static void forEach(Consumer<? super GenerationType<?, ?>> action) {
+		TYPES.values().forEach(action);
 	}
 	
 	public static void buildConfig(ModConfigSpec.Builder builder, BiConsumer<GenerationType<?, ?>, ModConfigSpec.Builder> build) {

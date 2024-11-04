@@ -5,19 +5,20 @@ import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock
 import com.firemerald.additionalplacements.util.BlockRotation;
 
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 public abstract class AdditionalFloorBlock<T extends Block> extends AdditionalPlacementBlock<T> implements IFloorBlock<T>, ISimpleRotationBlock
 {
 	private boolean rotateLogic = true, rotateTex = true, rotateModel = true;
-	public static final DirectionProperty PLACING = AdditionalBlockStateProperties.HORIZONTAL_OR_UP_FACING;
+	public static final EnumProperty<Direction> PLACING = AdditionalBlockStateProperties.HORIZONTAL_OR_UP_FACING;
 
-	public AdditionalFloorBlock(T block)
+	public AdditionalFloorBlock(T block, ResourceKey<Block> id)
 	{
-		super(block);
+		super(block, id);
 	}
 
 	@Override
