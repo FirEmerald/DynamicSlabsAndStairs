@@ -148,8 +148,8 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 		}
 	}
 	
-	public void onBootupConfigLoaded() {
-		super.onBootupConfigLoaded();
+	public void onStartupConfigLoaded() {
+		super.onStartupConfigLoaded();
 		vertcialConnectionsBlacklist.loadListsFromConfig();
 		mixedConnectionsBlacklist.loadListsFromConfig();
 	}
