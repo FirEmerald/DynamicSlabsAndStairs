@@ -22,7 +22,6 @@ public class CheckDataServerPacket extends ServerPlayPacket
 {
 	private final Map<ResourceLocation, Pair<CompoundTag, List<MessageTree>>> serverData;
 	
-	@SuppressWarnings("unchecked")
 	public CheckDataServerPacket(Map<ResourceLocation, CompoundTag> serverData) {
 		this.serverData = new HashMap<>();
 		Registration.forEach((id, type) -> {
@@ -52,7 +51,6 @@ public class CheckDataServerPacket extends ServerPlayPacket
 		});
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void handleServer(CustomPayloadEvent.Context context)
 	{
