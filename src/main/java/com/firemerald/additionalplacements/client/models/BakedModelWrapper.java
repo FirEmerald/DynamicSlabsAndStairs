@@ -21,7 +21,7 @@ public abstract class BakedModelWrapper extends ForwardingBakedModel
 
 	@Override
 	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
-		VanillaModelEncoder.emitBlockQuads(this, state, randomSupplier, context, context.getEmitter());
+		VanillaModelEncoder.emitBlockQuads(this, state, randomSupplier, context);
 	}
 
 	@Override

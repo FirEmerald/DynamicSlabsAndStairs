@@ -11,19 +11,18 @@ import com.mojang.realmsclient.RealmsMainScreen;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking.Context;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
-import net.minecraft.client.multiplayer.ClientConfigurationPacketListenerImpl;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class ConfigurationCheckFailedPacket extends ClientConfigurationPacket
 {
-	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "configuration_check_failed");
+	public static final Type<ConfigurationCheckFailedPacket> TYPE = new Type<>(ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "configuration_check_failed"));
 	
 	private final List<Triple<ResourceLocation, List<MessageTree>, List<MessageTree>>> compiledErrors;
 	
@@ -42,9 +41,9 @@ public class ConfigurationCheckFailedPacket extends ClientConfigurationPacket
 	}
 
 	@Override
-	public ResourceLocation getID()
+	public Type<ConfigurationCheckFailedPacket> type()
 	{
-		return ID;
+		return TYPE;
 	}
 
 	@Override
@@ -59,7 +58,7 @@ public class ConfigurationCheckFailedPacket extends ClientConfigurationPacket
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void handleClient(Minecraft client, ClientConfigurationPacketListenerImpl handler, PacketSender responseSender) {
+	public void handleClient(Context context) {
 		MessageTree rootError = new MessageTree(Component.translatable("msg.additionalplacements.errors.type"));
 		compiledErrors.forEach(data -> {
 			MessageTree typeError = new MessageTree(Component.literal(data.getLeft().toString())); //TODO friendly name?
@@ -77,6 +76,7 @@ public class ConfigurationCheckFailedPacket extends ClientConfigurationPacket
 		});
 		rootError.output(AdditionalPlacementsMod.LOGGER::warn);
 		//TODO move disconnect to a point that works?
+		Minecraft client = context.client();
 		client.execute(() -> {
 			Screen desScreen = new TitleScreen();
 			if (!client.isLocalServer()) {

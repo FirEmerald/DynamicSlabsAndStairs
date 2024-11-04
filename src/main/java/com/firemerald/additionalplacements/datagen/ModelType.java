@@ -5,10 +5,10 @@ import java.util.function.Function;
 
 import org.apache.http.util.Asserts;
 
+import io.github.fabricators_of_create.porting_lib.models.generators.BlockModelBuilder;
+import io.github.fabricators_of_create.porting_lib.models.generators.BlockModelProvider;
+import io.github.fabricators_of_create.porting_lib.models.generators.BlockStateProvider;
 import io.github.fabricators_of_create.porting_lib.models.generators.ConfiguredModel;
-import io.github.fabricators_of_create.porting_lib.models.generators.block.BlockModelBuilder;
-import io.github.fabricators_of_create.porting_lib.models.generators.block.BlockModelProvider;
-import io.github.fabricators_of_create.porting_lib.models.generators.block.BlockStateProvider;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -69,7 +69,7 @@ public class ModelType<T extends Block>
 			BlockModelProvider modelProvider = stateProvider.models();
 			Function<String, BlockModelBuilder> startModel;
 			if (parentMod == null || parentFolder == null) startModel = model -> modelProvider.getBuilder(folder + model);
-			else startModel = model -> modelProvider.withExistingParent(folder + model, new ResourceLocation(parentMod, parentFolder + model));
+			else startModel = model -> modelProvider.withExistingParent(folder + model, ResourceLocation.tryBuild(parentMod, parentFolder + model));
 			if (actions == null) actions = (builder, model) -> {};
 			for (String model : models) actions.accept(startModel.apply(model), model);
 			if (block != null)

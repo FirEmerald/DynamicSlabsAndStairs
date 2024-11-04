@@ -12,17 +12,15 @@ import com.firemerald.additionalplacements.network.CheckDataConfigurationTask;
 import com.firemerald.additionalplacements.network.client.ConfigurationCheckFailedPacket;
 import com.firemerald.additionalplacements.util.MessageTree;
 
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking.Context;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
 
 public class CheckDataServerPacket extends ServerConfigurationPacket
 {
-	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "check_data_server");
+	public static final Type<CheckDataServerPacket> TYPE = new Type<>(ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "check_data_server"));
 	
 	private final Map<ResourceLocation, Pair<CompoundTag, List<MessageTree>>> serverData;
 	
@@ -48,9 +46,9 @@ public class CheckDataServerPacket extends ServerConfigurationPacket
 	}
 
 	@Override
-	public ResourceLocation getID()
+	public Type<CheckDataServerPacket> type()
 	{
-		return ID;
+		return TYPE;
 	}
 
 	@Override
@@ -64,7 +62,7 @@ public class CheckDataServerPacket extends ServerConfigurationPacket
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void handleServer(MinecraftServer server, ServerConfigurationPacketListenerImpl handler, PacketSender responseSender) {
+	public void handleServer(Context context) {
 		List<Triple<ResourceLocation, List<MessageTree>, List<MessageTree>>> compiledErrors = new ArrayList<>();
 		Registration.forEach((id, type) -> {
 			Pair<CompoundTag, List<MessageTree>> clientData = this.serverData.get(id);
@@ -82,10 +80,10 @@ public class CheckDataServerPacket extends ServerConfigurationPacket
 			if (!clientErrors.isEmpty() || !serverErrors.isEmpty()) compiledErrors.add(Triple.of(id, clientErrors, serverErrors));
 		});
 		if (!compiledErrors.isEmpty()) {
-			new ConfigurationCheckFailedPacket(compiledErrors).send(responseSender);
+			new ConfigurationCheckFailedPacket(compiledErrors).send(context.responseSender());
 			//if it turns out this CAN prevent the above packet from being sent, move disconnect to client-side. It did not prevent it in testing.
-			handler.disconnect(Component.translatableWithFallback("msg.additionalplacements.disconnected", "Additional Placements configuration conflict"));
+			context.networkHandler().disconnect(Component.translatableWithFallback("msg.additionalplacements.disconnected", "Additional Placements configuration conflict"));
 		}
-		handler.completeTask(CheckDataConfigurationTask.TYPE); //finish task, very important!
+		context.networkHandler().completeTask(CheckDataConfigurationTask.TYPE); //finish task, very important!
 	}
 }

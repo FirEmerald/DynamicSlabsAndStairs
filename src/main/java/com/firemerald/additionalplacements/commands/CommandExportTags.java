@@ -30,7 +30,7 @@ public class CommandExportTags
 {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	public static final String PACK_FOLDER_NAME = "additional_placements_generated_tags";
-	public static final ResourceLocation PACK_META_LOC = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "generated_datapack_meta.mcmeta");
+	public static final ResourceLocation PACK_META_LOC = ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "generated_datapack_meta.mcmeta");
 
 	public static void optionalMakeDirectory(Path path) throws IOException
 	{
@@ -104,7 +104,7 @@ public class CommandExportTags
 				tagMap.forEach((tag, blocks) -> {
 					try
 					{
-						Path tagPath = dataPath.resolve(tag.location().getNamespace() + "/tags/blocks/" + tag.location().getPath() + ".json");
+						Path tagPath = dataPath.resolve(tag.location().getNamespace() + "/tags/block/" + tag.location().getPath() + ".json");
 						optionalMakeDirectories(tagPath.getParent());
 						JsonObject obj = new JsonObject();
 						obj.addProperty("replace", false);

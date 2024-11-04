@@ -8,16 +8,14 @@ import com.firemerald.additionalplacements.network.server.CheckDataServerPacket;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientConfigurationPacketListenerImpl;
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking.Context;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 public class CheckDataClientPacket extends ClientConfigurationPacket
 {
-	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "check_data_client");
+	public static final Type<CheckDataClientPacket> TYPE = new Type<>(ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "check_data_client"));
 	
 	private final Map<ResourceLocation, CompoundTag> data;
 	
@@ -31,24 +29,24 @@ public class CheckDataClientPacket extends ClientConfigurationPacket
 
 	public CheckDataClientPacket(FriendlyByteBuf buf)
 	{
-		data = buf.readMap(FriendlyByteBuf::readResourceLocation, FriendlyByteBuf::readNbt);
+		data = buf.readMap(buffer -> buffer.readResourceLocation(), buffer -> buffer.readNbt());
 	}
 
 	@Override
-	public ResourceLocation getID()
+	public Type<CheckDataClientPacket> type()
 	{
-		return ID;
+		return TYPE;
 	}
 
 	@Override
 	public void write(FriendlyByteBuf buf)
 	{
-		buf.writeMap(data, FriendlyByteBuf::writeResourceLocation, FriendlyByteBuf::writeNbt);
+		buf.writeMap(data, (buffer, id) -> buffer.writeResourceLocation(id), (buffer, tag) -> buffer.writeNbt(tag));
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void handleClient(Minecraft client, ClientConfigurationPacketListenerImpl handler, PacketSender responseSender) {
-		new CheckDataServerPacket(data).send(responseSender);
+	public void handleClient(Context context) {
+		new CheckDataServerPacket(data).send(context.responseSender());
 	}
 }

@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 import com.firemerald.additionalplacements.generation.APGenerationTypes;
@@ -18,11 +16,13 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -200,7 +200,7 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 	
 	@Override
 	@Environment(EnvType.CLIENT)
-	public default void renderPlacementPreview(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial) {
+	public default void renderPlacementPreview(PoseStack poseStack, VertexConsumer vertexConsumer, Player player, BlockHitResult result, DeltaTracker delta) {
 		ComplexFacing facing = getFacing(result.getDirection(), 
 				(float) (result.getLocation().x - result.getBlockPos().getX() - .5), 
 				(float) (result.getLocation().y - result.getBlockPos().getY() - .5), 
@@ -208,36 +208,35 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 		//z is up
 		//y is forward
 		//x is right
-		pose.pushPose();
-		pose.mulPoseMatrix(new Matrix4f(
+		poseStack.pushPose();
+		poseStack.mulPose(new Matrix4f(
 				facing.right  .getStepX(), facing.right  .getStepY(), facing.right  .getStepZ(), 0,
 				facing.forward.getStepX(), facing.forward.getStepY(), facing.forward.getStepZ(), 0,
 				facing.up     .getStepX(), facing.up     .getStepY(), facing.up     .getStepZ(), 0,
 				0, 0, 0, 1
 				));
-		Matrix4f poseMat = pose.last().pose();
-		Matrix3f normMat = pose.last().normal();
-		vertexConsumer.vertex(poseMat,  0          ,  ARROW_OUTER, ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  ARROW_OUTER,  0          , ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		PoseStack.Pose pose = poseStack.last();
+		vertexConsumer.addVertex(pose,  0          ,  ARROW_OUTER, ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose,  ARROW_OUTER,  0          , ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
 		
-		vertexConsumer.vertex(poseMat,  ARROW_OUTER,  0          , ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  ARROW_INNER,  0          , ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose,  ARROW_OUTER,  0          , ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose,  ARROW_INNER,  0          , ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
 
-		vertexConsumer.vertex(poseMat,  ARROW_INNER,  0          , ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  ARROW_INNER, -ARROW_OUTER, ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose,  ARROW_INNER,  0          , ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose,  ARROW_INNER, -ARROW_OUTER, ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
 
-		vertexConsumer.vertex(poseMat,  ARROW_INNER, -ARROW_OUTER, ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -ARROW_INNER, -ARROW_OUTER, ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose,  ARROW_INNER, -ARROW_OUTER, ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -ARROW_INNER, -ARROW_OUTER, ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
 
-		vertexConsumer.vertex(poseMat, -ARROW_INNER, -ARROW_OUTER, ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -ARROW_INNER,  0          , ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose, -ARROW_INNER, -ARROW_OUTER, ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -ARROW_INNER,  0          , ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
 
-		vertexConsumer.vertex(poseMat, -ARROW_INNER,  0          , ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -ARROW_OUTER,  0          , ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose, -ARROW_INNER,  0          , ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -ARROW_OUTER,  0          , ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
 		
-		vertexConsumer.vertex(poseMat, -ARROW_OUTER,  0          , ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  0          ,  ARROW_OUTER, ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		pose.popPose();
+		vertexConsumer.addVertex(pose, -ARROW_OUTER,  0          , ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose,  0          ,  ARROW_OUTER, ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
+		poseStack.popPose();
 	}
 
 	static final float OUTER_EDGE = .5f;
@@ -245,68 +244,67 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public default void renderPlacementHighlight(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial)
+	public default void renderPlacementHighlight(PoseStack poseStack, VertexConsumer vertexConsumer, Player player, BlockHitResult result, DeltaTracker delta)
 	{
-		Matrix4f poseMat = pose.last().pose();
-		Matrix3f normMat = pose.last().normal();
+		PoseStack.Pose pose = poseStack.last();
 		
 		//outer box
-		vertexConsumer.vertex(poseMat, -OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose, -OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose,  OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
-		vertexConsumer.vertex(poseMat,  OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose,  OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose,  OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
-		vertexConsumer.vertex(poseMat,  OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose,  OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
-		vertexConsumer.vertex(poseMat, -OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose, -OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
 		//inner box
-		vertexConsumer.vertex(poseMat, -INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose, -INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose,  INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
-		vertexConsumer.vertex(poseMat,  INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose,  INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose,  INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
-		vertexConsumer.vertex(poseMat,  INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose,  INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
-		vertexConsumer.vertex(poseMat, -INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose, -INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
 		//middle cross
-		vertexConsumer.vertex(poseMat, -OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose, -OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose,  OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
-		vertexConsumer.vertex(poseMat, -OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose, -OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose,  OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
 		//corners
-		vertexConsumer.vertex(poseMat, -OUTER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose, -OUTER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
-		vertexConsumer.vertex(poseMat, -INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -INNER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose, -INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -INNER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
-		vertexConsumer.vertex(poseMat,  OUTER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose,  OUTER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose,  INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
-		vertexConsumer.vertex(poseMat,  INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  INNER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose,  INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose,  INNER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
-		vertexConsumer.vertex(poseMat, -OUTER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose, -OUTER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
-		vertexConsumer.vertex(poseMat, -INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -INNER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose, -INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose, -INNER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
-		vertexConsumer.vertex(poseMat,  OUTER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose,  OUTER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose,  INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 		
-		vertexConsumer.vertex(poseMat,  INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  INNER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		vertexConsumer.addVertex(pose,  INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		vertexConsumer.addVertex(pose,  INNER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
 	}
     
 	@Override
@@ -381,7 +379,7 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 	}
 
     @Override
-	public default void addPlacementTooltip(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag)
+    public default void addPlacementTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag)
 	{
 		tooltip.add(Component.translatable("tooltip.additionalplacements.vertical_placement"));
 		tooltip.add(Component.translatable(allowedConnections().translationKey));

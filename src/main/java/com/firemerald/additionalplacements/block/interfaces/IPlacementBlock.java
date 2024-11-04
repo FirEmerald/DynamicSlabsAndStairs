@@ -15,15 +15,16 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -54,12 +55,12 @@ public interface IPlacementBlock<T extends Block> extends ItemLike, IGenerationC
 
 	public BlockState updateShapeImpl(BlockState state, Direction direction, BlockState otherState, LevelAccessor level, BlockPos pos, BlockPos otherPos);
 
-	public default void appendHoverTextImpl(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag)
+	public default void appendHoverTextImpl(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag)
 	{
-		if (APConfigs.common().showTooltip.get() && getGenerationType().placementEnabled()) addPlacementTooltip(stack, level, tooltip, flag);
+		if (APConfigs.common().showTooltip.get() && getGenerationType().placementEnabled()) addPlacementTooltip(stack, context, tooltip, flag);
 	}
 
-	public void addPlacementTooltip(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag);
+	public void addPlacementTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag);
 
 	public boolean hasAdditionalStates();
 
@@ -81,7 +82,7 @@ public interface IPlacementBlock<T extends Block> extends ItemLike, IGenerationC
 	};
 
 	@Environment(EnvType.CLIENT)
-	public default void renderHighlight(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, Camera camera, float partial)
+	public default void renderHighlight(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, Camera camera, DeltaTracker delta)
 	{
 		BlockPos hit = result.getBlockPos();
 		if (enablePlacement(hit, player.level(), result.getDirection(), player)) {
@@ -113,18 +114,18 @@ public interface IPlacementBlock<T extends Block> extends ItemLike, IGenerationC
 			}
 			Vec3 pos = camera.getPosition();
 			pose.translate(hitX - pos.x + .5, hitY - pos.y + .5, hitZ - pos.z + .5);
-			renderPlacementPreview(pose, vertexConsumer, player, result, partial);
+			renderPlacementPreview(pose, vertexConsumer, player, result, delta);
 			pose.mulPose(DIRECTION_TRANSFORMS[result.getDirection().ordinal()]);
-			renderPlacementHighlight(pose, vertexConsumer, player, result, partial);
+			renderPlacementHighlight(pose, vertexConsumer, player, result, delta);
 			pose.popPose();
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
-	public default void renderPlacementPreview(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial) {}
+	public default void renderPlacementPreview(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, DeltaTracker delta) {}
 
 	@Environment(EnvType.CLIENT)
-	public void renderPlacementHighlight(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial);
+	public void renderPlacementHighlight(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, DeltaTracker delta);
 
 	public default boolean enablePlacement(@Nullable Player player) {
 		return getGenerationType().placementEnabled() && (!(player instanceof IAPPlayer) || ((IAPPlayer) player).isPlacementEnabled());

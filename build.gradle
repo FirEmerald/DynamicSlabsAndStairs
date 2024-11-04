@@ -78,19 +78,17 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.20.4:2024.04.14@zip")
+        parchment("org.parchmentmc.data:parchment-1.21:2024.07.28@zip")
     }
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 	
 	//modApi("com.simibubi.create:create-fabric-1.20.1:0.5.1-d-build.1161+mc1.20.1")
-    modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:20.4.3"
+    modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.0.8"
    	modApi("io.github.fabricators_of_create.Porting-Lib:core:${project.porting_lib_version}")
    	modApi("io.github.fabricators_of_create.Porting-Lib:data:${project.porting_lib_version}")
-   	modApi("io.github.fabricators_of_create.Porting-Lib:model_generators:${project.porting_lib_version}")
-   	modApi("io.github.fabricators_of_create.Porting-Lib:model_materials:${project.porting_lib_version}")
-   	modApi("io.github.fabricators_of_create.Porting-Lib:utility:${project.porting_lib_version}")
+   	modApi("io.github.fabricators_of_create.Porting-Lib:models:${project.porting_lib_version}")
 }
 
 processResources {
@@ -102,7 +100,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 17
+	it.options.release = 21
 }
 
 java {
@@ -111,8 +109,8 @@ java {
 	// If you remove this line, sources will not be generated.
 	// withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {

@@ -20,9 +20,9 @@ public class PlacementBlockModel
 
 	public BakedModel bake(
 			BlockModel context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter,
-			ModelState modelState, ItemOverrides overrides, ResourceLocation modelLocation, boolean isGui3d)
+			ModelState modelState, ItemOverrides overrides, boolean isGui3d)
 	{
-		return new BakedPlacementBlockModel(unbaked.bake(baker, spriteGetter, modelState, model)); //TODO make better
+		return new BakedPlacementBlockModel(unbaked.bake(baker, spriteGetter, modelState)); //TODO make better
 	}
 
 	public void resolveParents(Function<ResourceLocation, UnbakedModel> modelGetter, BlockModel context)

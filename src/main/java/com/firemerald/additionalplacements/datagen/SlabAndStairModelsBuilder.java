@@ -10,8 +10,8 @@ import com.firemerald.additionalplacements.block.interfaces.IStairBlock;
 import com.firemerald.additionalplacements.util.stairs.CompressedStairFacing;
 import com.firemerald.additionalplacements.util.stairs.CompressedStairShape;
 
-import io.github.fabricators_of_create.porting_lib.models.generators.block.BlockModelBuilder;
-import io.github.fabricators_of_create.porting_lib.models.generators.block.BlockStateProvider;
+import io.github.fabricators_of_create.porting_lib.models.generators.BlockModelBuilder;
+import io.github.fabricators_of_create.porting_lib.models.generators.BlockStateProvider;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.SlabBlock;

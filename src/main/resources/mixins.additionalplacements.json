@@ -18,8 +18,7 @@
 		"MixinBlockModelShaper",
 		"MixinLocalPlayer",
 		"MixinBlockModel",
-		"MixinBlockModelDeserializer",
-		"MixinVertexFormat"
+		"MixinBlockModelDeserializer"
 	],
 	"minVersion": "0.8"
 }

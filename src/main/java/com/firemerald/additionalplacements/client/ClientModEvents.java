@@ -1,9 +1,12 @@
 package com.firemerald.additionalplacements.client;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
 import com.firemerald.additionalplacements.common.CommonModEvents;
@@ -21,21 +24,27 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.PackSelectionConfig;
+import net.minecraft.server.packs.repository.KnownPack;
 import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.repository.Pack.Info;
+import net.minecraft.server.packs.repository.Pack.Metadata;
+import net.minecraft.server.packs.repository.Pack.Position;
 import net.minecraft.server.packs.repository.Pack.ResourcesSupplier;
 import net.minecraft.server.packs.repository.PackCompatibility;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Block;
@@ -46,29 +55,37 @@ import net.minecraft.world.phys.HitResult;
 @Environment(EnvType.CLIENT)
 public class ClientModEvents implements ClientModInitializer
 {
-	public static final Pack GENERATED_RESOURCES_PACK = Pack.create(
-			"Additional Placements blockstate redirection pack",
-			Component.literal("title"),
-			true,
-			new ResourcesSupplier() { //TODO
-
+	public static final Pack GENERATED_RESOURCES_PACK = new Pack(
+			new PackLocationInfo(
+					"Additional Placements blockstate redirection pack", 
+					Component.literal("title"), 
+					PackSource.BUILT_IN, 
+					Optional.of(new KnownPack(
+							AdditionalPlacementsMod.MOD_ID, 
+							"Additional Placements blockstate redirection pack", 
+							SharedConstants.getCurrentVersion().getId()))),
+			new ResourcesSupplier() {
 				@Override
-				public PackResources openPrimary(String p_298664_)
-				{
-					return new BlockstatesPackResources();
+				public PackResources openPrimary(PackLocationInfo info) {
+					return new BlockstatesPackResources(info);
 				}
 
 				@Override
-				public PackResources openFull(String p_251717_, Info p_298253_)
-				{
-					return new BlockstatesPackResources();
+				public PackResources openFull(PackLocationInfo info, Metadata meta) {
+					return new BlockstatesPackResources(info);
 				}
-
 			},
-			new Pack.Info(Component.literal("description"), PackCompatibility.COMPATIBLE, FeatureFlagSet.of(), List.of()),
-			Pack.Position.BOTTOM,
-			true,
-			PackSource.BUILT_IN
+			new Metadata(
+					Component.literal("Additional Placements blockstate redirection pack"),
+					PackCompatibility.COMPATIBLE,
+					FeatureFlagSet.of(),
+					Collections.emptyList()
+					),
+			new PackSelectionConfig(
+					true,
+					Position.BOTTOM,
+					true
+					)
 			);
 
 	@Override
@@ -102,7 +119,7 @@ public class ClientModEvents implements ClientModInitializer
 		}
 	}
 
-	public static void onItemTooltip(ItemStack stack, TooltipFlag context, List<Component> lines)
+	public static void onItemTooltip(ItemStack stack, Item.TooltipContext context, TooltipFlag tooltipType, List<Component> lines)
 	{
 		if (stack.getItem() instanceof BlockItem)
 		{
@@ -110,7 +127,7 @@ public class ClientModEvents implements ClientModInitializer
 			if (block instanceof IPlacementBlock)
 			{
 				IPlacementBlock<?> verticalBlock = ((IPlacementBlock<?>) block);
-				if (verticalBlock.hasAdditionalStates()) verticalBlock.appendHoverTextImpl(stack, null, lines, context);
+				if (verticalBlock.hasAdditionalStates()) verticalBlock.appendHoverTextImpl(stack, context, lines, tooltipType);
 			}
 		}
 	}
@@ -129,7 +146,7 @@ public class ClientModEvents implements ClientModInitializer
 				if (block instanceof IPlacementBlock)
 				{
 					IPlacementBlock<?> verticalBlock = ((IPlacementBlock<?>) block);
-					if (verticalBlock.hasAdditionalStates()) verticalBlock.renderHighlight(context.matrixStack(), context.consumers().getBuffer(RenderType.LINES), player, (BlockHitResult) hitResult, context.camera(), context.tickDelta());
+					if (verticalBlock.hasAdditionalStates()) verticalBlock.renderHighlight(context.matrixStack(), context.consumers().getBuffer(RenderType.LINES), player, (BlockHitResult) hitResult, context.camera(), context.tickCounter());
 				}
 			}
 		}

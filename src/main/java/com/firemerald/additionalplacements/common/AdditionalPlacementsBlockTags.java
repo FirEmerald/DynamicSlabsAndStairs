@@ -10,8 +10,8 @@ import java.util.stream.Stream;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
@@ -43,6 +43,10 @@ public class AdditionalPlacementsBlockTags
 		if ((begin > 0 //check char before
 				&& !SEPERATOR.test(path.charAt(begin - 1))) || (begin + typeName.length() < path.length() //check char after
 				&& !SEPERATOR.test(path.charAt(begin + typeName.length())))) return tag;
-		return BlockTags.create(AdditionalPlacementsMod.MOD_ID + ":" + loc.getNamespace() + "/" + path.substring(0, begin) + "vertical_" + path.substring(begin));
+		return create(loc.getNamespace() + "/" + path.substring(0, begin) + "vertical_" + path.substring(begin));
+	}
+
+	public static TagKey<Block> create(String name) {
+		return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(AdditionalPlacementsMod.MOD_ID, name));
 	}
 }

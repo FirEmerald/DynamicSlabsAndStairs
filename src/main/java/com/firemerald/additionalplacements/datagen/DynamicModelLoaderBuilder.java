@@ -15,7 +15,7 @@ public class DynamicModelLoaderBuilder<T extends ModelBuilder<T>> extends Custom
 {
 	public DynamicModelLoaderBuilder(T parent, ExistingFileHelper existingFileHelper)
 	{
-		super(PlacementBlockModelLoader.ID, parent, existingFileHelper);
+		super(PlacementBlockModelLoader.ID, parent, existingFileHelper, false);
 	}
 
     private ResourceLocation model = null;

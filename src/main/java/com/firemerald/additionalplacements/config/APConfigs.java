@@ -10,7 +10,6 @@ import com.firemerald.additionalplacements.generation.Registration;
 
 import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeConfigRegistry;
 import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeModConfigEvents;
-import net.fabricmc.loader.api.FabricLoader;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
@@ -29,8 +28,7 @@ public class APConfigs {
     	NeoForgeModConfigEvents.reloading(AdditionalPlacementsMod.MOD_ID).register(APConfigs::onModConfigReloaded);
         final Pair<StartupConfig, ModConfigSpec> startupSpecPair = new ModConfigSpec.Builder().configure(StartupConfig::new);
         startup = startupSpecPair.getLeft();
-        startupSpec = startupSpecPair.getRight();
-		startup.loadConfig(FabricLoader.getInstance().getConfigDir().resolve("additionalplacements-startup.toml"), startupSpec);
+        NeoForgeConfigRegistry.INSTANCE.register(AdditionalPlacementsMod.MOD_ID, ModConfig.Type.STARTUP, startupSpec = startupSpecPair.getRight());
         final Pair<CommonConfig, ModConfigSpec> commonSpecPair = new ModConfigSpec.Builder().configure(CommonConfig::new);
         common = commonSpecPair.getLeft();
         NeoForgeConfigRegistry.INSTANCE.register(AdditionalPlacementsMod.MOD_ID, ModConfig.Type.COMMON, commonSpec = commonSpecPair.getRight());
@@ -63,7 +61,8 @@ public class APConfigs {
     }
     
     private static void onModConfigLoaded(ModConfig config) {
-    	if (config.getSpec() == commonSpec) sendConfigEvent(GenerationType::onCommonConfigLoaded);
+    	if (config.getSpec() == startupSpec) sendConfigEvent(GenerationType::onStartupConfigLoaded);
+    	else if (config.getSpec() == commonSpec) sendConfigEvent(GenerationType::onCommonConfigLoaded);
     	else if (config.getSpec() == serverSpec) sendConfigEvent(GenerationType::onServerConfigLoaded);
     	else if (config.getSpec() == clientSpec) sendConfigEvent(GenerationType::onClientConfigLoaded);
     }

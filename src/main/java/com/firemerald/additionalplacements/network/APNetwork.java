@@ -19,24 +19,19 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.fabric.api.networking.v1.*;
 import net.fabricmc.fabric.impl.networking.server.ServerConfigurationNetworkAddon;
 import net.fabricmc.fabric.impl.networking.server.ServerNetworkingImpl;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientConfigurationPacketListenerImpl;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
 public class APNetwork
 {
     public static void register()
     {
-        registerServerPlayPacket(SetPlacementTogglePacket.ID, SetPlacementTogglePacket::new);
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) registerClientConfigurationPacket(CheckDataClientPacket.ID, CheckDataClientPacket::new);
-        registerServerConfigurationPacket(CheckDataServerPacket.ID, CheckDataServerPacket::new);
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) registerClientConfigurationPacket(ConfigurationCheckFailedPacket.ID, ConfigurationCheckFailedPacket::new);
+        registerServerPlayPacket(SetPlacementTogglePacket.TYPE, SetPlacementTogglePacket::new);
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) registerClientConfigurationPacket(CheckDataClientPacket.TYPE, CheckDataClientPacket::new);
+        registerServerConfigurationPacket(CheckDataServerPacket.TYPE, CheckDataServerPacket::new);
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) registerClientConfigurationPacket(ConfigurationCheckFailedPacket.TYPE, ConfigurationCheckFailedPacket::new);
         
 		ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) -> {
 			final ServerConfigurationNetworkAddon addon = ServerNetworkingImpl.getAddon(handler);
@@ -44,39 +39,43 @@ public class APNetwork
 		});
     }
 
-    public static <T extends ClientPlayPacket> void registerClientPlayPacket(ResourceLocation id, Function<FriendlyByteBuf, T> fromBuffer)
+    public static <T extends ClientPlayPacket> void registerClientPlayPacket(Type<T> type, Function<RegistryFriendlyByteBuf, T> fromBuffer)
     {
-    	ClientPlayNetworking.registerGlobalReceiver(id, (Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender responseSender) -> fromBuffer.apply(buf).handleClient(client, handler, responseSender));
+    	PayloadTypeRegistry.playS2C().register(type, new APStreamCodec<>(fromBuffer));
+    	ClientPlayNetworking.registerGlobalReceiver(type, ClientPlayPacket::handleClient);
     }
 
-    public static <T extends ServerPlayPacket> void registerServerPlayPacket(ResourceLocation id, Function<FriendlyByteBuf, T> fromBuffer)
+    public static <T extends ServerPlayPacket> void registerServerPlayPacket(Type<T> type, Function<RegistryFriendlyByteBuf, T> fromBuffer)
     {
-    	ServerPlayNetworking.registerGlobalReceiver(id, (MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) -> fromBuffer.apply(buf).handleServer(server, player, handler, responseSender));
+    	PayloadTypeRegistry.playC2S().register(type, new APStreamCodec<>(fromBuffer));
+    	ServerPlayNetworking.registerGlobalReceiver(type, ServerPlayPacket::handleServer);
     }
 
     @Environment(EnvType.CLIENT)
-    public static <T extends ClientConfigurationPacket> void registerClientConfigurationPacket(ResourceLocation id, Function<FriendlyByteBuf, T> fromBuffer)
+    public static <T extends ClientConfigurationPacket> void registerClientConfigurationPacket(Type<T> type, Function<FriendlyByteBuf, T> fromBuffer)
     {
-    	ClientConfigurationNetworking.registerGlobalReceiver(id, (Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) -> fromBuffer.apply(buf).handleClient(client, handler, responseSender));
+    	PayloadTypeRegistry.configurationS2C().register(type, new APStreamCodec<>(fromBuffer));
+    	ClientConfigurationNetworking.registerGlobalReceiver(type, ClientConfigurationPacket::handleClient);
     }
 
-    public static <T extends ServerConfigurationPacket> void registerServerConfigurationPacket(ResourceLocation id, Function<FriendlyByteBuf, T> fromBuffer)
+    public static <T extends ServerConfigurationPacket> void registerServerConfigurationPacket(Type<T> type, Function<FriendlyByteBuf, T> fromBuffer)
     {
-    	ServerConfigurationNetworking.registerGlobalReceiver(id, (MinecraftServer server, ServerConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) -> fromBuffer.apply(buf).handleServer(server, handler, responseSender));
+    	PayloadTypeRegistry.configurationC2S().register(type, new APStreamCodec<>(fromBuffer));
+    	ServerConfigurationNetworking.registerGlobalReceiver(type, ServerConfigurationPacket::handleServer);
     }
 
-    public static <T extends APPacket> void send(T packet, PacketSender sender)
+    public static <T extends APPacket<?>> void send(T packet, PacketSender sender)
     {
-    	sender.sendPacket(packet.getID(), packet.getBuf());
+    	sender.sendPacket(packet);
     }
 
     public static <T extends ServerPlayPacket> void sendToServer(T packet)
     {
-    	ClientPlayNetworking.send(packet.getID(), packet.getBuf());
+    	ClientPlayNetworking.send(packet);
     }
 
     public static <T extends ClientPlayPacket> void sendToClient(T packet, ServerPlayer player)
     {
-    	ServerPlayNetworking.send(player, packet.getID(), packet.getBuf());
+    	ServerPlayNetworking.send(player, packet);
     }
 }

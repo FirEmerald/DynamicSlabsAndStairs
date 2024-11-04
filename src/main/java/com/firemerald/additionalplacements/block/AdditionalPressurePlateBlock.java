@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.PressurePlateBlock;
 
 public class AdditionalPressurePlateBlock extends AdditionalBasePressurePlateBlock<PressurePlateBlock> implements IPressurePlateBlock<PressurePlateBlock>
 {
-	static final ResourceLocation PRESSURE_PLATE_BLOCKSTATES = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "blockstate_templates/pressure_plate.json");
+	static final ResourceLocation PRESSURE_PLATE_BLOCKSTATES = ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "blockstate_templates/pressure_plate.json");
 	
 	public static AdditionalPressurePlateBlock of(PressurePlateBlock plate)
 	{
