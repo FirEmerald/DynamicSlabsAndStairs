@@ -20,7 +20,7 @@ public class StartupConfig {
 	}
 	
 	public void loadValues() {
-		APConfigs.sendConfigEvent(GenerationType::onBootupConfigLoaded);
+		APConfigs.sendConfigEvent(GenerationType::onStartupConfigLoaded);
 	}
 	
 	public void loadConfig(Path configPath, ForgeConfigSpec spec) {
