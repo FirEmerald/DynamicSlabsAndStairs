@@ -37,12 +37,20 @@ public class APConfigs {
         ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.CLIENT, clientSpec = clientSpecPair.getRight());
     }
     
-    public static StartupConfig bootup() {
+    public static StartupConfig startup() {
     	return startup;
+    }
+    
+    public static boolean startupLoaded() {
+    	return startupSpec.isLoaded();
     }
     
     public static CommonConfig common() {
     	return common;
+    }
+    
+    public static boolean commonLoaded() {
+    	return commonSpec.isLoaded();
     }
     
     public static ServerConfig server() {
@@ -55,6 +63,10 @@ public class APConfigs {
     
     public static ClientConfig client() {
     	return client;
+    }
+    
+    public static boolean clientLoaded() {
+    	return clientSpec.isLoaded();
     }
     
     public static void onModConfigsLoaded(ModConfigEvent.Loading event) {
