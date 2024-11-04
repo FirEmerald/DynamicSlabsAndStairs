@@ -69,6 +69,7 @@ public class BlockModelUtils
 				jsonBakedQuad.getDirection(),
 				newSprite,
 				jsonBakedQuad.isShade(),
+				jsonBakedQuad.getLightEmission(),
 				jsonBakedQuad.hasAmbientOcclusion()
 				);
 	}
@@ -232,6 +233,7 @@ public class BlockModelUtils
     				rotation.apply(originalQuad.getDirection()), 
     				originalQuad.getSprite(), 
     				originalQuad.isShade(), 
+    				originalQuad.getLightEmission(), 
     				originalQuad.hasAmbientOcclusion()
     				));
 		}

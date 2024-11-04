@@ -6,6 +6,7 @@ import com.firemerald.additionalplacements.commands.CommandGenerateStairsDebugge
 import com.firemerald.additionalplacements.config.APConfigs;
 
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -75,7 +76,7 @@ public class CommonEventHandler
 	@SubscribeEvent
 	public static void onPlayerLogin(PlayerLoggedInEvent event)
 	{
-		if (misMatchedTags && TagMismatchChecker.canGenerateTags(event.getEntity())) event.getEntity().sendSystemMessage(autoGenerateFailed ? TagMismatchChecker.FAILED : TagMismatchChecker.MESSAGE);
+		if (misMatchedTags && TagMismatchChecker.canGenerateTags(event.getEntity())) ((ServerPlayer) event.getEntity()).sendSystemMessage(autoGenerateFailed ? TagMismatchChecker.FAILED : TagMismatchChecker.MESSAGE);
 	}
 
 	@SubscribeEvent

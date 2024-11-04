@@ -12,7 +12,9 @@ import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.config.GenerationBlacklist;
 import com.firemerald.additionalplacements.util.MessageTree;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -164,15 +166,16 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 		} else return false;
 	}
 	
-	public final void apply(T block, ResourceLocation blockId, BiConsumer<ResourceLocation, U> action) {
+	public final void apply(T block, ResourceLocation blockId, BiConsumer<ResourceKey<Block>, U> action) {
 		if (enabledForBlock(block, blockId)) {
-			U created = construct(block, blockId);
+			ResourceKey<Block> key = ResourceKey.create(BuiltInRegistries.BLOCK.key(), ResourceLocation.tryBuild(name.getNamespace(), blockId.getNamespace() + "." + blockId.getPath()));
+			U created = construct(block, key, blockId);
 			this.created.add(Pair.of(blockId, created));
-			action.accept(ResourceLocation.tryBuild(name.getNamespace(), blockId.getNamespace() + "." + blockId.getPath()), created);
+			action.accept(key, created);
 		}
 	}
 	
-	public abstract U construct(T block, ResourceLocation blockId);
+	public abstract U construct(T block, ResourceKey<Block> key, ResourceLocation blockId);
 	
 	protected void forEachCreated(BiConsumer<? super ResourceLocation, ? super U> action) {
 		created.forEach(p -> action.accept(p.getLeft(), p.getRight()));

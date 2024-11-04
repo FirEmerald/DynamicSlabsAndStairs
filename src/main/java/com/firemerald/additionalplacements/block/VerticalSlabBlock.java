@@ -10,10 +10,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,17 +31,17 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 	static final ResourceLocation SLAB_BLOCKSTATES = ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "blockstate_templates/slab.json");
 	public static final EnumProperty<Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
-	public static VerticalSlabBlock of(SlabBlock slab)
+	public static VerticalSlabBlock of(SlabBlock slab, ResourceKey<Block> id)
 	{
-		return new VerticalSlabBlock(slab);
+		return new VerticalSlabBlock(slab, id);
 	}
 	
 	public boolean rotateLogic = true, rotateModel = true, rotateTex = true;
 
 	@SuppressWarnings("deprecation")
-	private VerticalSlabBlock(SlabBlock slab)
+	private VerticalSlabBlock(SlabBlock slab, ResourceKey<Block> id)
 	{
-		super(slab);
+		super(slab, id);
 		this.registerDefaultState(copyProperties(getModelState(), this.stateDefinition.any()).setValue(AXIS, Axis.Z));
 		((IVanillaSlabBlock) slab).setOtherBlock(this);
 	}
@@ -99,7 +102,7 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 	}
 
 	@Override
-	public BlockState updateShapeImpl(BlockState state, Direction direction, BlockState otherState, LevelAccessor level, BlockPos pos, BlockPos otherPos)
+	public BlockState updateShapeImpl(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos otherPos, BlockState otherState, RandomSource rand)
 	{
 		return state;
 	}

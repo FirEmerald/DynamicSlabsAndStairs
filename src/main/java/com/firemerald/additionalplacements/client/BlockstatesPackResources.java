@@ -3,12 +3,14 @@ package com.firemerald.additionalplacements.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.*;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackLocationInfo;
@@ -44,9 +46,12 @@ public class BlockstatesPackResources implements PackResources
 		else if (resource.getPath().startsWith("blockstates/")) //blockstate json
 		{
 			String blockName = resource.getPath().substring(12, resource.getPath().length() - 5);
-			Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, blockName));
-			IoSupplier<InputStream> ioResource = getResourceFor(block);
-			if (ioResource != null) return ioResource;
+			Optional<Reference<Block>> optionalBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, blockName));
+			if (optionalBlock.isPresent()) {
+				IoSupplier<InputStream> ioResource = getResourceFor(optionalBlock.get().value());
+				if (ioResource != null) return ioResource;
+				else return null;
+			}
 			else return null;
 		}
 		else return null;

@@ -4,25 +4,27 @@ import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.interfaces.IPressurePlateBlock;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BasePressurePlateBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PressurePlateBlock;
 
 public class AdditionalPressurePlateBlock extends AdditionalBasePressurePlateBlock<PressurePlateBlock> implements IPressurePlateBlock<PressurePlateBlock>
 {
 	static final ResourceLocation PRESSURE_PLATE_BLOCKSTATES = ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "blockstate_templates/pressure_plate.json");
 	
-	public static AdditionalPressurePlateBlock of(PressurePlateBlock plate)
+	public static AdditionalPressurePlateBlock of(PressurePlateBlock plate, ResourceKey<Block> id)
 	{
-		return new AdditionalPressurePlateBlock(plate);
+		return new AdditionalPressurePlateBlock(plate, id);
 	}
 
-	private AdditionalPressurePlateBlock(PressurePlateBlock plate)
+	private AdditionalPressurePlateBlock(PressurePlateBlock plate, ResourceKey<Block> id)
 	{
-		super(plate);
+		super(plate, id);
 	}
 
 	@Override

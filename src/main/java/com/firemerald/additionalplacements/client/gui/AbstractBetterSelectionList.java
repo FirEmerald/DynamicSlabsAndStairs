@@ -9,7 +9,6 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,7 +28,10 @@ import net.minecraft.util.Mth;
 
 public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelectionList.Entry<E>> extends AbstractContainerWidget {
 	protected static final int SCROLLBAR_WIDTH = 6;
-	private static final ResourceLocation SCROLLER_SPRITE = ResourceLocation.withDefaultNamespace("widget/scroller");
+    private static final ResourceLocation SCROLLER_SPRITE = ResourceLocation.withDefaultNamespace("widget/scroller");
+    private static final ResourceLocation SCROLLER_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("widget/scroller_background");
+    private static final ResourceLocation MENU_LIST_BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/menu_list_background.png");
+    private static final ResourceLocation INWORLD_MENU_LIST_BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/inworld_menu_list_background.png");
 	protected final Minecraft minecraft;
 	protected final int normalItemHeight;
 	private final List<E> children = new TrackedList();
@@ -40,7 +42,6 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 	private boolean scrolling;
 	@Nullable
 	private E selected;
-	private boolean renderBackground = true;
 	@Nullable
 	private E hovered;
 
@@ -74,10 +75,6 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 
 	public E getFirstElement() {
 		return this.children.get(0);
-	}
-
-	public void setRenderBackground(boolean renderBackground) {
-		this.renderBackground = renderBackground;
 	}
 
 	/**
@@ -174,48 +171,62 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 	protected void renderDecorations(GuiGraphics guiGraphics, int mouseX, int mouseY) {
 	}
 
-	@Override
-	public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-		this.hovered = this.isMouseOver(mouseX, mouseY) ? this.getEntryAtPosition(mouseX, mouseY) : null;
-		if (this.renderBackground) {
-			guiGraphics.setColor(0.125F, 0.125F, 0.125F, 1.0F);
-			int texSize = 32;
-			guiGraphics.blit(Screen.MENU_BACKGROUND, this.getX(), this.getY(), this.getRight(), this.getBottom() + (int) this.getScrollAmount(), this.width, this.height, texSize, texSize);
-			guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-		}
+    @Override
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        this.hovered = this.isMouseOver(mouseX, mouseY) ? this.getEntryAtPosition(mouseX, mouseY) : null;
+        this.renderListBackground(guiGraphics);
+        this.enableScissor(guiGraphics);
+        if (this.renderHeader) {
+            int x = this.getRowLeft();
+            int y = this.getY() + 4 - (int)this.getScrollAmount();
+            this.renderHeader(guiGraphics, x, y);
+        }
 
-		this.enableScissor(guiGraphics);
-		if (this.renderHeader) {
-			int x = this.getRowLeft();
-			int y = this.getY() + 4 - (int) this.getScrollAmount();
-			this.renderHeader(guiGraphics, x, y);
-		}
+        this.renderListItems(guiGraphics, mouseX, mouseY, partialTick);
+        guiGraphics.disableScissor();
+        this.renderListSeparators(guiGraphics);
+        if (this.scrollbarVisible()) {
+            int scrollPos = this.getScrollbarPosition();
+            int scrollSize = (int)((float)(this.height * this.height) / (float)this.getMaxPosition());
+            scrollSize = Mth.clamp(scrollSize, 32, this.height - 8);
+            int scrollY = (int)this.getScrollAmount() * (this.height - scrollSize) / this.getMaxScroll() + this.getY();
+            if (scrollY < this.getY()) {
+                scrollY = this.getY();
+            }
 
-		this.renderList(guiGraphics, mouseX, mouseY, partialTick);
-		guiGraphics.disableScissor();
-		if (this.renderBackground) {
-			int margin = 4;
-			guiGraphics.fillGradient(RenderType.guiOverlay(), this.getX(), this.getY(), this.getRight(), this.getY() + margin, -16777216, 0, 0);
-			guiGraphics.fillGradient(RenderType.guiOverlay(), this.getX(), this.getBottom() - margin, this.getRight(), this.getBottom(), 0, -16777216, 0);
-		}
+            guiGraphics.blitSprite(RenderType::guiTextured, SCROLLER_BACKGROUND_SPRITE, scrollPos, this.getY(), 6, this.getHeight());
+            guiGraphics.blitSprite(RenderType::guiTextured, SCROLLER_SPRITE, scrollPos, scrollY, 6, scrollSize);
+        }
 
-		int maxScroll = this.getMaxScroll();
-		if (maxScroll > 0) {
-			int scrollPos = this.getScrollbarPosition();
-			int scrollSize = (int) ((float) (this.height * this.height) / (float) this.getMaxPosition());
-			scrollSize = Mth.clamp(scrollSize, 32, this.height - 8);
-			int scrollY = (int) this.getScrollAmount() * (this.height - scrollSize) / maxScroll + this.getY();
-			if (scrollY < this.getY()) {
-				scrollY = this.getY();
-			}
+        this.renderDecorations(guiGraphics, mouseX, mouseY);
+    }
 
-			guiGraphics.fill(scrollPos, this.getY(), scrollPos + 6, this.getBottom(), -16777216);
-			guiGraphics.blitSprite(SCROLLER_SPRITE, scrollPos, scrollY, 6, scrollSize);
-		}
+    protected boolean scrollbarVisible() {
+        return this.getMaxScroll() > 0;
+    }
 
-		this.renderDecorations(guiGraphics, mouseX, mouseY);
-		RenderSystem.disableBlend();
-	}
+    protected void renderListSeparators(GuiGraphics pGuiGraphics) {
+        ResourceLocation headerSeparator = this.minecraft.level == null ? Screen.HEADER_SEPARATOR : Screen.INWORLD_HEADER_SEPARATOR;
+        ResourceLocation footerSeparator = this.minecraft.level == null ? Screen.FOOTER_SEPARATOR : Screen.INWORLD_FOOTER_SEPARATOR;
+        pGuiGraphics.blit(RenderType::guiTextured, headerSeparator, this.getX(), this.getY() - 2, 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
+        pGuiGraphics.blit(RenderType::guiTextured, footerSeparator, this.getX(), this.getBottom(), 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
+    }
+
+    protected void renderListBackground(GuiGraphics pGuiGraphics) {
+        ResourceLocation resourcelocation = this.minecraft.level == null ? MENU_LIST_BACKGROUND : INWORLD_MENU_LIST_BACKGROUND;
+        pGuiGraphics.blit(
+            RenderType::guiTextured,
+            resourcelocation,
+            this.getX(),
+            this.getY(),
+            (float)this.getRight(),
+            (float)(this.getBottom() + (int)this.getScrollAmount()),
+            this.getWidth(),
+            this.getHeight(),
+            32,
+            32
+        );
+    }
 
 	protected void enableScissor(GuiGraphics guiGraphics) {
 		guiGraphics.enableScissor(this.getX(), this.getY(), this.getRight(), this.getBottom());
@@ -455,7 +466,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 		return mouseY >= this.getY() && mouseY <= this.getBottom() && mouseX >= this.getX() && mouseX <= this.getRight();
 	}
 
-	protected void renderList(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+	protected void renderListItems(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
 		int left = this.getRowLeft();
 		int width = this.getRowWidth();
 		int top = this.getY() + this.headerHeight - (int) this.scrollAmount;

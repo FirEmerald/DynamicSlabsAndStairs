@@ -6,11 +6,15 @@ import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.LiquidBlockContainer;
@@ -20,9 +24,9 @@ import net.minecraft.world.level.material.FluidState;
 
 public abstract class AdditionalPlacementLiquidBlock<T extends Block & BucketPickup & LiquidBlockContainer> extends AdditionalPlacementBlock<T> implements BucketPickup, LiquidBlockContainer
 {
-	public AdditionalPlacementLiquidBlock(T parentBlock)
+	public AdditionalPlacementLiquidBlock(T parentBlock, ResourceKey<Block> id)
 	{
-		super(parentBlock);
+		super(parentBlock, id);
 	}
 
 	@Override
@@ -62,10 +66,10 @@ public abstract class AdditionalPlacementLiquidBlock<T extends Block & BucketPic
 
 	@Override
 	@Deprecated
-	public BlockState updateShape(BlockState state, Direction direction, BlockState otherState, LevelAccessor level, BlockPos pos, BlockPos otherPos)
+	public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos otherPos, BlockState otherState, RandomSource rand)
 	{
 		FluidState fluid = level.getFluidState(pos);
-		if (!fluid.isEmpty()) level.scheduleTick(pos, fluid.getType(), fluid.getType().getTickDelay(level));
-		return super.updateShape(state, direction, otherState, level, pos, otherPos);
+		if (!fluid.isEmpty()) tickAccess.scheduleTick(pos, fluid.getType(), fluid.getType().getTickDelay(level));
+		return super.updateShape(state, level, tickAccess, pos, direction, otherPos, otherState, rand);
 	}
 }

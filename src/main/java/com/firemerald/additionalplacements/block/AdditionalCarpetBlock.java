@@ -5,10 +5,12 @@ import com.firemerald.additionalplacements.block.interfaces.ICarpetBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CarpetBlock;
@@ -27,15 +29,15 @@ public class AdditionalCarpetBlock extends AdditionalFloorBlock<CarpetBlock> imp
 			Block.box(15, 0, 0, 16, 16, 16)
 	};
 
-	public static AdditionalCarpetBlock of(CarpetBlock carpet)
+	public static AdditionalCarpetBlock of(CarpetBlock carpet, ResourceKey<Block> id)
 	{
-		return new AdditionalCarpetBlock(carpet);
+		return new AdditionalCarpetBlock(carpet, id);
 	}
 
 	@SuppressWarnings("deprecation")
-	private AdditionalCarpetBlock(CarpetBlock carpet)
+	private AdditionalCarpetBlock(CarpetBlock carpet, ResourceKey<Block> id)
 	{
-		super(carpet);
+		super(carpet, id);
 		this.registerDefaultState(copyProperties(getModelState(), this.stateDefinition.any()).setValue(PLACING, Direction.NORTH));
 		((IVanillaCarpetBlock) carpet).setOtherBlock(this);
 	}
@@ -59,9 +61,9 @@ public class AdditionalCarpetBlock extends AdditionalFloorBlock<CarpetBlock> imp
 	}
 
 	@Override
-	public BlockState updateShapeImpl(BlockState thisState, Direction updatedDirection, BlockState otherState, LevelAccessor level, BlockPos thisPos, BlockPos otherPos)
+	public BlockState updateShapeImpl(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos otherPos, BlockState otherState, RandomSource rand)
 	{
-		return !thisState.canSurvive(level, thisPos) ? Blocks.AIR.defaultBlockState() : thisState;
+		return !state.canSurvive(level, pos) ? Blocks.AIR.defaultBlockState() : state;
 	}
 
 	@Override

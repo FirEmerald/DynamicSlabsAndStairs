@@ -16,6 +16,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.*;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -47,11 +48,11 @@ public class CommonModEventHandler
 	{
 		if (event.getRegistry() == BuiltInRegistries.BLOCK)
 		{
-			List<Pair<ResourceLocation, Block>> created = new ArrayList<>();
+			List<Pair<ResourceKey<Block>, Block>> created = new ArrayList<>();
 			BuiltInRegistries.BLOCK.entrySet().forEach(entry -> {
 				ResourceLocation name = entry.getKey().location();
 				Block block = entry.getValue();
-				Registration.tryApply(block, name, (id, obj) -> created.add(Pair.of(id, obj)));
+				Registration.tryApply(block, name, (key, obj) -> created.add(Pair.of(key, obj)));
 			});
 			created.forEach(pair -> Registry.register(BuiltInRegistries.BLOCK, pair.getLeft(), pair.getRight()));
 			AdditionalPlacementsMod.dynamicRegistration = true;

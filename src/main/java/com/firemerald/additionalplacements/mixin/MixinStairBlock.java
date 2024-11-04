@@ -13,8 +13,10 @@ import com.firemerald.additionalplacements.util.stairs.StairConnections;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.StairBlock;
@@ -88,9 +90,9 @@ public abstract class MixinStairBlock implements IVanillaStairBlock
 	}
 
 	@Inject(method = "updateShape", at = @At("HEAD"), cancellable = true)
-	private void updateShape(BlockState state, Direction direction, BlockState otherState, LevelAccessor level, BlockPos pos, BlockPos otherPos, CallbackInfoReturnable<BlockState> ci)
+	private void updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos otherPos, BlockState otherState, RandomSource rand, CallbackInfoReturnable<BlockState> ci)
 	{
-		if (this.hasAdditionalStates()) ci.setReturnValue(updateShapeImpl(state, direction, otherState, level, pos, otherPos));
+		if (this.hasAdditionalStates()) ci.setReturnValue(updateShapeImpl(state, level, tickAccess, pos, direction, otherPos, otherState, rand));
 	}
 
 	@Override

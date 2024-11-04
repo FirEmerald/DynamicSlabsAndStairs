@@ -10,6 +10,7 @@ import com.firemerald.additionalplacements.generation.GenerationType.BuilderBase
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -31,10 +32,10 @@ public class Registration {
 	private static final Map<Class<?>, GenerationType<?, ?>> TYPES_BY_CLASS = new HashMap<>();
 	
 	@SuppressWarnings("unchecked")
-	public static <T extends Block, U extends AdditionalPlacementBlock<T>> void tryApply(Block block, ResourceLocation blockId, BiConsumer<ResourceLocation, AdditionalPlacementBlock<?>> action) {
+	public static <T extends Block, U extends AdditionalPlacementBlock<T>> void tryApply(Block block, ResourceLocation blockId, BiConsumer<ResourceKey<Block>, AdditionalPlacementBlock<?>> action) {
 		if (block instanceof IPlacementBlock placement && placement.canGenerateAdditionalStates()) {
 			GenerationType<T, U> type = (GenerationType<T, U>) getType(block);
-			if (type != null) type.apply((T) block, blockId, (BiConsumer<ResourceLocation, U>) action);
+			if (type != null) type.apply((T) block, blockId, (BiConsumer<ResourceKey<Block>, U>) action);
 		}
 	}
 

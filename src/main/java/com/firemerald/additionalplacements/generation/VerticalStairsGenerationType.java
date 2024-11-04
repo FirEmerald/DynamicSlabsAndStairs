@@ -1,8 +1,8 @@
 package com.firemerald.additionalplacements.generation;
 
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
@@ -16,7 +16,9 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.StairBlock;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
@@ -28,8 +30,8 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 		mixedConnectionsBlacklist = new GenerationBlacklist.Builder().build();
 
 		@Override
-		public W constructor(Function<? super T, ? extends U> constructor) {
-			throw new IllegalStateException("Function<? super T, ? extends U> constructor not supported");
+		public W constructor(BiFunction<? super T, ResourceKey<Block>, ? extends U> constructor) {
+			throw new IllegalStateException("BiFunction<? super T, ResourceKey<Block>, ? extends U> constructor not supported");
 		}
 		
 		public W constructor(Constructor<? super T, ? extends U> constructor) {
@@ -155,8 +157,8 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 	}
 
 	@Override
-	public U construct(T block, ResourceLocation blockId) {
-		return constructor.apply(block, 
+	public U construct(T block, ResourceKey<Block> key, ResourceLocation blockId) {
+		return constructor.apply(block, key, 
 				!vertcialConnectionsBlacklist.test(blockId) ? StairConnections.NO_VERTICAL : 
 					!mixedConnectionsBlacklist.test(blockId) ? StairConnections.NO_MIXED : 
 						StairConnections.ALL);
@@ -164,6 +166,6 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 	
 	@FunctionalInterface
 	public static interface Constructor<T extends StairBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock> {
-		public U apply(T block, StairConnections allowedConnections);
+		public U apply(T block, ResourceKey<Block> key, StairConnections allowedConnections);
 	}
 }

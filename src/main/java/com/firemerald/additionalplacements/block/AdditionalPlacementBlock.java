@@ -15,6 +15,7 @@ import com.firemerald.additionalplacements.util.BlockRotation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
@@ -48,9 +49,9 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	public final T parentBlock;
 	private final Property<?>[] copyProps;
 
-	public AdditionalPlacementBlock(T parentBlock)
+	public AdditionalPlacementBlock(T parentBlock, ResourceKey<Block> id)
 	{
-		super(theHack(parentBlock));
+		super(theHack(parentBlock, id));
 		this.copyProps = copyPropsStatic.toArray(Property[]::new);
 		copyPropsStatic.clear();
 		this.parentBlock = parentBlock;
@@ -62,10 +63,10 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 		return parentBlock;
 	}
 
-	public static Properties theHack(Block parentBlock)
+	public static Properties theHack(Block parentBlock, ResourceKey<Block> id)
 	{
 		copyPropsStatic.addAll(parentBlock.defaultBlockState().getProperties());
-		return BlockBehaviour.Properties.ofFullCopy(parentBlock);
+		return BlockBehaviour.Properties.ofFullCopy(parentBlock).setId(id);
 	}
 
 	public boolean hasCustomColors()
@@ -105,12 +106,6 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	public Item asItem()
 	{
 		return parentBlock.asItem();
-	}
-
-	@Override
-	public String getDescriptionId()
-	{
-		return parentBlock.getDescriptionId();
 	}
 
 	@Deprecated
@@ -166,9 +161,9 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
-	public void updateEntityAfterFallOn(BlockGetter level, Entity entity)
+	public void updateEntityMovementAfterFallOn(BlockGetter level, Entity entity)
 	{
-		getOtherBlock().updateEntityAfterFallOn(level, entity);
+		getOtherBlock().updateEntityMovementAfterFallOn(level, entity);
 	}
 
 	@Override
@@ -217,7 +212,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 		if (!state.is(oldState.getBlock()))
 		{
 			BlockState modelState = getModelState(state);
-			modelState.handleNeighborChanged(level, pos, Blocks.AIR, pos, isMoving);
+			modelState.handleNeighborChanged(level, pos, Blocks.AIR, null, isMoving);
 			modelState.onPlace(level, pos, oldState, isMoving);
 		}
 	}
@@ -292,7 +287,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
-	public void wasExploded(Level level, BlockPos pos, Explosion explosion)
+	public void wasExploded(ServerLevel level, BlockPos pos, Explosion explosion)
 	{
 		getOtherBlock().wasExploded(level, pos, explosion);
 	}
@@ -371,9 +366,9 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 
 	@Override
 	@Deprecated
-	public BlockState updateShape(BlockState state, Direction direction, BlockState otherState, LevelAccessor level, BlockPos pos, BlockPos otherPos)
+	public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos otherPos, BlockState otherState, RandomSource rand)
 	{
-		return updateShapeImpl(state, direction, otherState, level, pos, otherPos);
+		return updateShapeImpl(state, level, tickAccess, pos, direction, otherPos, otherState, rand);
 	}
 
 	@Override
@@ -391,9 +386,9 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos)
+	public boolean propagatesSkylightDown(BlockState state)
 	{
-		return this.getModelState(state).propagatesSkylightDown(level, pos);
+		return this.getModelState(state).propagatesSkylightDown();
 	}
 
 	@Override
