@@ -170,6 +170,7 @@ dependencies {
     
 	//implementation fg.deobf("curse.maven:double-slabs-350179:3873442")
 	//implementation fg.deobf("curse.maven:create-328085:4762216")
+	//implementation fg.deobf("curse.maven:ctm-267602:5410349") //Connected Textures Mod
 }
 
 eclipse.classpath.file {
