@@ -58,7 +58,7 @@ public class APConfigs {
     }
     
     public static void onModConfigsLoaded(ModConfigEvent.Loading event) {
-    	if (event.getConfig().getSpec() == startupSpec) sendConfigEvent(GenerationType::onBootupConfigLoaded);
+    	if (event.getConfig().getSpec() == startupSpec) sendConfigEvent(GenerationType::onStartupConfigLoaded);
     	else if (event.getConfig().getSpec() == commonSpec) sendConfigEvent(GenerationType::onCommonConfigLoaded);
     	else if (event.getConfig().getSpec() == serverSpec) sendConfigEvent(GenerationType::onServerConfigLoaded);
     	else if (event.getConfig().getSpec() == clientSpec) sendConfigEvent(GenerationType::onClientConfigLoaded);

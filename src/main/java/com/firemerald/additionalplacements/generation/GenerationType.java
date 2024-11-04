@@ -88,7 +88,7 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 		builder.pop();
 	}
 	
-	public void onBootupConfigLoaded() {
+	public void onStartupConfigLoaded() {
 		blacklist.loadListsFromConfig();
 	}
 	
