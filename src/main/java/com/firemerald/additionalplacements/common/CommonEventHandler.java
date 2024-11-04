@@ -4,6 +4,7 @@ import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
 import com.firemerald.additionalplacements.commands.CommandExportTags;
 import com.firemerald.additionalplacements.commands.CommandGenerateStairsDebugger;
 import com.firemerald.additionalplacements.config.APConfigs;
+import com.firemerald.additionalplacements.generation.Registration;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -51,6 +52,7 @@ public class CommonEventHandler
 	public static void onTagsUpdated(TagsUpdatedEvent event)
 	{
 		if (event.getUpdateCause() == UpdateCause.SERVER_DATA_LOAD) {
+			Registration.forEach(type -> type.onTagsUpdated(false));
 			boolean fromAutoGenerate;
 			if (reloadedFromChecker) {
 				reloadedFromChecker = false;
@@ -59,6 +61,7 @@ public class CommonEventHandler
 			MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 			if (server != null) possiblyCheckTags(server, fromAutoGenerate);
 		}
+		else Registration.forEach(type -> type.onTagsUpdated(true));
 	}
 	
 	@SubscribeEvent
