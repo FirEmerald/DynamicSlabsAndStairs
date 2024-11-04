@@ -13,7 +13,10 @@ public class PlacementBlockModelLoader implements IModelLoader<PlacementBlockMod
 	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "placement_block_loader");
 
 	@Override
-	public void onResourceManagerReload(ResourceManager pResourceManager) {}
+	public void onResourceManagerReload(ResourceManager pResourceManager) {
+		BakedRetexturedBlockModel.clearCache();
+		BakedRotatedBlockModel.clearCache();
+	}
 
 	@Override
 	public PlacementBlockModel read(JsonDeserializationContext deserializationContext, JsonObject modelContents)
