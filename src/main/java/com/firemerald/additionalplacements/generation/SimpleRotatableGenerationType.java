@@ -2,6 +2,7 @@ package com.firemerald.additionalplacements.generation;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
+import com.firemerald.additionalplacements.config.APConfigs;
 import com.firemerald.additionalplacements.config.BlockBlacklist;
 
 import net.minecraft.block.Block;
@@ -89,8 +90,8 @@ public class SimpleRotatableGenerationType<T extends Block, U extends Additional
 
 	@Override
 	public void onTagsUpdated() {
-		updateModelSettings();
-		updateLogicSettings();
+		if (APConfigs.clientLoaded()) updateModelSettings();
+		if (APConfigs.serverLoaded()) updateLogicSettings();
 	}
 	
 	public void updateModelSettings() {
