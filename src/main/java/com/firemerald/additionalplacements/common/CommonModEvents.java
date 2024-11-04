@@ -150,6 +150,7 @@ public class CommonModEvents implements ModInitializer
 	public static void onTagsUpdated(RegistryAccess registries, boolean client)
 	{
 		if (!client) {
+			Registration.forEach(type -> type.onTagsUpdated(false));
 			boolean fromAutoGenerate;
 			if (reloadedFromChecker) {
 				reloadedFromChecker = false;
@@ -157,6 +158,7 @@ public class CommonModEvents implements ModInitializer
 			} else fromAutoGenerate = false;
 			if (currentServer != null) possiblyCheckTags(fromAutoGenerate);
 		}
+		else Registration.forEach(type -> type.onTagsUpdated(true));
 	}
 	
 	private static void possiblyCheckTags(boolean fromAutoGenerate) {

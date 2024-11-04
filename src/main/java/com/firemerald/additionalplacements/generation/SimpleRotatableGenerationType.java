@@ -61,7 +61,7 @@ public class SimpleRotatableGenerationType<T extends Block, U extends Additional
 	public void onServerConfigLoaded() {
 		super.onServerConfigLoaded();
 		logicRotationBlackist.loadListsFromConfig();
-		forEachCreated((id, block) -> block.setLogicRotation(logicRotationBlackist.test(id, block)));
+		updateLogicSettings();
 	}
 
 	@Override
@@ -84,11 +84,20 @@ public class SimpleRotatableGenerationType<T extends Block, U extends Additional
 		super.onClientConfigLoaded();
 		textureRotationBlacklist.loadListsFromConfig();
 		modelRotationBlacklist.loadListsFromConfig();
-		forEachCreated((id, block) -> block.setModelRotation(textureRotationBlacklist.test(id, block), modelRotationBlacklist.test(id, block)));
+		updateModelSettings();
 	}
 
 	@Override
-	public void applyConfig(U block, ResourceLocation blockId) {
-		block.setModelRotation(textureRotationBlacklist.test(blockId, block), modelRotationBlacklist.test(blockId, block));
+	public void onTagsUpdated(boolean isClient) {
+		if (isClient) updateModelSettings();
+		updateLogicSettings();
+	}
+	
+	public void updateModelSettings() {
+		forEachCreated((id, block) -> block.setModelRotation(textureRotationBlacklist.test(id, block), modelRotationBlacklist.test(id, block)));
+	}
+	
+	public void updateLogicSettings() {
+		forEachCreated((id, block) -> block.setLogicRotation(logicRotationBlackist.test(id, block)));
 	}
 }
