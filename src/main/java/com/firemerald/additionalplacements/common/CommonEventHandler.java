@@ -4,6 +4,8 @@ import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.command.CommandExportTags;
 import com.firemerald.additionalplacements.command.CommandGenerateStairsDebugger;
 import com.firemerald.additionalplacements.config.APConfigs;
+import com.firemerald.additionalplacements.generation.GenerationType;
+import com.firemerald.additionalplacements.generation.Registration;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -37,6 +39,7 @@ public class CommonEventHandler
 	@SubscribeEvent
 	public static void onTagsUpdated(TagsUpdatedEvent.CustomTagTypes event)
 	{
+		Registration.forEach(GenerationType::onTagsUpdated);
 		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 		if (server == null || event.getTagManager() == server.getTags()) {
 			boolean fromAutoGenerate;

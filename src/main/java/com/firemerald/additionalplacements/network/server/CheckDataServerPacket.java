@@ -21,7 +21,6 @@ public class CheckDataServerPacket extends ServerLoginPacket
 {
 	private final Map<ResourceLocation, Pair<CompoundNBT, List<MessageTree>>> serverData;
 	
-	@SuppressWarnings("unchecked")
 	public CheckDataServerPacket(Map<ResourceLocation, CompoundNBT> serverData) {
 		this.serverData = new HashMap<>();
 		Registration.forEach((id, type) -> {
@@ -51,7 +50,6 @@ public class CheckDataServerPacket extends ServerLoginPacket
 		});
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void handleServer(NetworkEvent.Context context) {
 		context.setPacketHandled(true);

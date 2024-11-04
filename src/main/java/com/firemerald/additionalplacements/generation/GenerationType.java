@@ -120,6 +120,8 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 		onServerConfigLoaded();
 	}
 	
+	public void onTagsUpdated() {}
+	
 	/**
 	 * Data to check ON SERVER
 	 * 
