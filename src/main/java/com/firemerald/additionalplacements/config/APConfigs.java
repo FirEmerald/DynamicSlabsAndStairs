@@ -40,12 +40,20 @@ public class APConfigs {
         NeoForgeConfigRegistry.INSTANCE.register(AdditionalPlacementsMod.MOD_ID, ModConfig.Type.CLIENT, clientSpec = clientSpecPair.getRight());
     }
     
-    public static StartupConfig bootup() {
+    public static StartupConfig startup() {
     	return startup;
+    }
+    
+    public static boolean startupLoaded() {
+    	return startupSpec.isLoaded();
     }
     
     public static CommonConfig common() {
     	return common;
+    }
+    
+    public static boolean commonLoaded() {
+    	return commonSpec.isLoaded();
     }
     
     public static ServerConfig server() {
@@ -58,6 +66,10 @@ public class APConfigs {
     
     public static ClientConfig client() {
     	return client;
+    }
+    
+    public static boolean clientLoaded() {
+    	return clientSpec.isLoaded();
     }
     
     private static void onModConfigLoaded(ModConfig config) {
