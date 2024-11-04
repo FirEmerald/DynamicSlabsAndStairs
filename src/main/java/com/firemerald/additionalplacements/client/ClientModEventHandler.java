@@ -3,6 +3,8 @@ package com.firemerald.additionalplacements.client;
 import java.util.List;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
+import com.firemerald.additionalplacements.client.models.BakedRetexturedBlockModel;
+import com.firemerald.additionalplacements.client.models.BakedRotatedBlockModel;
 import com.firemerald.additionalplacements.client.models.PlacementBlockModelLoader;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -12,6 +14,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.Pack.Info;
 import net.minecraft.server.packs.repository.Pack.ResourcesSupplier;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.server.packs.repository.PackCompatibility;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.flag.FeatureFlagSet;
@@ -22,6 +25,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.ModelEvent.RegisterGeometryLoaders;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
@@ -81,5 +85,13 @@ public class ClientModEventHandler
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event)
     {
     	event.register(APClientData.AP_PLACEMENT_KEY);
+    }
+    
+    @SubscribeEvent
+    public static void onRegisterClientReloadListeners(RegisterClientReloadListenersEvent event) {
+    	event.registerReloadListener((ResourceManagerReloadListener) resourceManager -> {
+    		BakedRetexturedBlockModel.clearCache();
+    		BakedRotatedBlockModel.clearCache();
+    	});
     }
 }
