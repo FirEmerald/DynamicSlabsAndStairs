@@ -46,8 +46,16 @@ public class APConfigs {
     	return startup;
     }
     
+    public static boolean startupLoaded() {
+    	return startupSpec.isLoaded();
+    }
+    
     public static CommonConfig common() {
     	return common;
+    }
+    
+    public static boolean commonLoaded() {
+    	return commonSpec.isLoaded();
     }
     
     public static ServerConfig server() {
@@ -60,6 +68,10 @@ public class APConfigs {
     
     public static ClientConfig client() {
     	return client;
+    }
+    
+    public static boolean clientLoaded() {
+    	return clientSpec.isLoaded();
     }
     
     private static void onModConfigLoaded(ModConfig config) {
