@@ -26,7 +26,6 @@ public class CheckDataServerPacket extends ServerConfigurationPacket
 	
 	private final Map<ResourceLocation, Pair<CompoundTag, List<MessageTree>>> serverData;
 	
-	@SuppressWarnings("unchecked")
 	public CheckDataServerPacket(Map<ResourceLocation, CompoundTag> serverData) {
 		this.serverData = new HashMap<>();
 		Registration.forEach((id, type) -> {
@@ -62,7 +61,6 @@ public class CheckDataServerPacket extends ServerConfigurationPacket
 		});
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void handleServer(MinecraftServer server, ServerConfigurationPacketListenerImpl handler, PacketSender responseSender) {
 		List<Triple<ResourceLocation, List<MessageTree>, List<MessageTree>>> compiledErrors = new ArrayList<>();
