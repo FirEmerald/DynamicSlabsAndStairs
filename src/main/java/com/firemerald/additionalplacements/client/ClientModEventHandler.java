@@ -3,6 +3,8 @@ package com.firemerald.additionalplacements.client;
 import java.util.List;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
+import com.firemerald.additionalplacements.client.models.BakedRetexturedBlockModel;
+import com.firemerald.additionalplacements.client.models.BakedRotatedBlockModel;
 import com.firemerald.additionalplacements.client.models.PlacementBlockModelLoader;
 
 import net.minecraft.network.chat.Component;
@@ -11,6 +13,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.Pack.Info;
 import net.minecraft.server.packs.repository.Pack.ResourcesSupplier;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.server.packs.repository.PackCompatibility;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.flag.FeatureFlagSet;
@@ -18,6 +21,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent.RegisterGeometryLoaders;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.event.AddPackFindersEvent;
@@ -81,5 +85,13 @@ public class ClientModEventHandler
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event)
     {
     	event.register(APClientData.AP_PLACEMENT_KEY);
+    }
+    
+    @SubscribeEvent
+    public static void onRegisterClientReloadListeners(RegisterClientReloadListenersEvent event) {
+    	event.registerReloadListener((ResourceManagerReloadListener) resourceManager -> {
+    		BakedRetexturedBlockModel.clearCache();
+    		BakedRotatedBlockModel.clearCache();
+    	});
     }
 }
