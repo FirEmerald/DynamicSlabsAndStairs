@@ -15,6 +15,7 @@ import net.minecraftforge.fml.loading.FMLPaths;
 
 public class APConfigs {
     private static StartupConfig startup;
+    private static ForgeConfigSpec startupSpec;
     private static CommonConfig common;
     private static ForgeConfigSpec commonSpec;
     private static ServerConfig server;
@@ -25,6 +26,7 @@ public class APConfigs {
     public static void init() {
         final Pair<StartupConfig, ForgeConfigSpec> startupSpecPair = new ForgeConfigSpec.Builder().configure(StartupConfig::new);
         startup = startupSpecPair.getLeft();
+        startupSpec = startupSpecPair.getRight();
         final Pair<CommonConfig, ForgeConfigSpec> commonSpecPair = new ForgeConfigSpec.Builder().configure(CommonConfig::new);
         common = commonSpecPair.getLeft();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, commonSpec = commonSpecPair.getRight());
@@ -38,12 +40,20 @@ public class APConfigs {
 		startup.loadConfig(FMLPaths.CONFIGDIR.get().resolve("additionalplacements-startup.toml"), startupSpecPair.getRight());
     }
     
-    public static StartupConfig bootup() {
+    public static StartupConfig startup() {
     	return startup;
+    }
+    
+    public static boolean startupLoaded() {
+    	return startupSpec.isLoaded();
     }
     
     public static CommonConfig common() {
     	return common;
+    }
+    
+    public static boolean commonLoaded() {
+    	return commonSpec.isLoaded();
     }
     
     public static ServerConfig server() {
@@ -56,6 +66,10 @@ public class APConfigs {
     
     public static ClientConfig client() {
     	return client;
+    }
+    
+    public static boolean clientLoaded() {
+    	return clientSpec.isLoaded();
     }
     
     public static void onModConfigsLoaded(ModConfigEvent.Loading event) {
