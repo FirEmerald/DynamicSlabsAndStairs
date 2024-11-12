@@ -6,10 +6,10 @@ import javax.annotation.Nonnull;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.client.BlockModelUtils;
+import com.firemerald.additionalplacements.util.BlockRotation;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,64 +17,53 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.ChunkRenderTypeSet;
-import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.ModelData;
 
-public class BakedPlacementBlockModel extends BakedModelWrapper<BakedModel>
+public class BakedPlacementBlockModel extends PlacementModelWrapper
 {
-	public BakedPlacementBlockModel(BakedModel model)
+	private final AdditionalPlacementBlock<?> block;
+	private final BakedModel ourModel;
+	private final BlockRotation modelRotation;
+	
+	public BakedPlacementBlockModel(AdditionalPlacementBlock<?> block, BakedModel ourModel, BakedModel theirModel, BlockRotation modelRotation)
 	{
-		super(model);
+		super(theirModel);
+		this.block = block;
+		this.ourModel = ourModel;
+		this.modelRotation = modelRotation;
 	}
 
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand, ModelData extraData, RenderType renderType)
 	{
-		BlockState modelState = extraData.get(BlockModelUtils.MODEL_STATE);
-		if (modelState == null) modelState = BlockModelUtils.getModeledState(state);
-		if (state.getBlock() instanceof AdditionalPlacementBlock) {
-			AdditionalPlacementBlock<?> block = (AdditionalPlacementBlock<?>) state.getBlock();
-			if (block.rotatesModel(state)) return BlockModelUtils.rotatedQuads(modelState, BlockModelUtils::getBakedModel, block.getRotation(state), block.rotatesTexture(state), side, rand, extraData, renderType);
-		}
-		return BlockModelUtils.retexturedQuads(state, modelState, BlockModelUtils::getBakedModel, originalModel, side, rand, extraData, renderType);
+		BlockState modelState = block.getModelState(state);
+		if (block.rotatesModel(state))
+			return BlockModelUtils.rotatedQuads(modelState, unused -> originalModel, modelRotation, block.rotatesTexture(state), side, rand, extraData, renderType);
+		else
+			return BlockModelUtils.retexturedQuads(state, modelState, unused -> originalModel, ourModel, side, rand, extraData, renderType);
 	}
 
     @Override
     public boolean useAmbientOcclusion(BlockState state)
     {
-    	BlockState modelState = BlockModelUtils.getModeledState(state);
-        return BlockModelUtils.getBakedModel(modelState).useAmbientOcclusion(modelState);
+    	return originalModel.useAmbientOcclusion(state == null ? null : block.getModelState(state));
     }
 
     @Override
     public boolean useAmbientOcclusion(BlockState state, RenderType renderType)
     {
-    	BlockState modelState = BlockModelUtils.getModeledState(state);
-        return BlockModelUtils.getBakedModel(modelState).useAmbientOcclusion(modelState, renderType);
+    	return originalModel.useAmbientOcclusion(state == null ? null : block.getModelState(state), renderType);
     }
-
-	@Override
-	public TextureAtlasSprite getParticleIcon(ModelData extraData)
-	{
-		BlockState modelState = extraData.get(BlockModelUtils.MODEL_STATE);
-		if (modelState != null) return BlockModelUtils.getBakedModel(modelState).getParticleIcon(BlockModelUtils.getModelData(modelState, extraData));
-		else return getParticleIcon();
-	}
 
 	@Override
 	public @Nonnull ModelData getModelData(@Nonnull BlockAndTintGetter level, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull ModelData modelData)
     {
-		return ModelData.builder().with(BlockModelUtils.MODEL_STATE, BlockModelUtils.getModeledState(state)).build();
+		return originalModel.getModelData(level, pos, block.getModelState(state), modelData);
     }
 
 	@Override
 	public ChunkRenderTypeSet getRenderTypes(BlockState state, RandomSource rand, ModelData extraData)
 	{
-    	BlockState modelState = BlockModelUtils.getModeledState(state);
-		return BlockModelUtils.getBakedModel(modelState).getRenderTypes(modelState, rand, BlockModelUtils.getModelData(modelState, extraData));
-	}
-	
-	public BakedModel originalModel() {
-		return originalModel;
+		return originalModel.getRenderTypes(state == null ? null : block.getModelState(state), rand, extraData);
 	}
 }

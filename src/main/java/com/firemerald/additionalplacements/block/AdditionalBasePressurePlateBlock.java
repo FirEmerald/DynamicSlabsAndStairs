@@ -4,9 +4,11 @@ import javax.annotation.Nullable;
 
 import com.firemerald.additionalplacements.block.interfaces.IBasePressurePlateBlock;
 import com.firemerald.additionalplacements.block.interfaces.IBasePressurePlateBlockExtensions;
+import com.firemerald.additionalplacements.client.models.definitions.PressurePlateModels;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -23,6 +25,8 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class AdditionalBasePressurePlateBlock<T extends BasePressurePlateBlock> extends AdditionalFloorBlock<T> implements IBasePressurePlateBlock<T>
 {
@@ -50,11 +54,11 @@ public abstract class AdditionalBasePressurePlateBlock<T extends BasePressurePla
 
 	public final IBasePressurePlateBlockExtensions plateMethods;
 
-	@SuppressWarnings({ "deprecation", "unchecked" })
+	@SuppressWarnings("unchecked")
 	public AdditionalBasePressurePlateBlock(T plate)
 	{
 		super(plate);
-		this.registerDefaultState(copyProperties(getModelState(), this.stateDefinition.any()).setValue(PLACING, Direction.NORTH));
+		this.registerDefaultState(copyProperties(getOtherBlockState(), this.stateDefinition.any()).setValue(PLACING, Direction.NORTH));
 		((IVanillaBasePressurePlateBlock<AdditionalBasePressurePlateBlock<T>>) plate).setOtherBlock(this);
 		plateMethods = (IBasePressurePlateBlockExtensions) plate;
 	}
@@ -173,5 +177,11 @@ public abstract class AdditionalBasePressurePlateBlock<T extends BasePressurePla
 	public int getDirectSignal(BlockState state, BlockGetter level, BlockPos pos, Direction dir)
 	{
 		return dir == state.getValue(PLACING).getOpposite() ? plateMethods.getSignalForStatePublic(state) : 0;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public ResourceLocation getModelPrefix() {
+		return PressurePlateModels.BASE_MODEL_FOLDER;
 	}
 }

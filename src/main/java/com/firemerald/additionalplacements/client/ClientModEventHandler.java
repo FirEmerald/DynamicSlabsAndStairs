@@ -1,9 +1,9 @@
 package com.firemerald.additionalplacements.client;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
-import com.firemerald.additionalplacements.client.models.BakedRetexturedBlockModel;
-import com.firemerald.additionalplacements.client.models.BakedRotatedBlockModel;
+import com.firemerald.additionalplacements.client.models.PlacementBlockModel;
 import com.firemerald.additionalplacements.client.models.PlacementBlockModelLoader;
+import com.firemerald.additionalplacements.client.resources.APDynamicResources;
 
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.LiteralContents;
@@ -32,7 +32,7 @@ public class ClientModEventHandler
 	public static final Pack GENERATED_RESOURCES_PACK = new Pack(
 			"Additional Placements blockstate redirection pack",
 			true,
-			BlockstatesPackResources::new,
+			APDynamicResources::new,
 			MutableComponent.create(new LiteralContents("title")),
 			MutableComponent.create(new LiteralContents("description")),
 			PackCompatibility.COMPATIBLE,
@@ -59,7 +59,7 @@ public class ClientModEventHandler
     @SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void onRegisterBlockColorHandlers(RegisterColorHandlersEvent.Block event)
     {
-		event.register(new AdditionalBlockColor(), ForgeRegistries.BLOCKS.getValues().stream().filter(block -> block instanceof AdditionalPlacementBlock && !((AdditionalPlacementBlock<?>) block).hasCustomColors()).toArray(Block[]::new));
+		event.register(new AdditionalBlockColor(), ForgeRegistries.BLOCKS.getValues().stream().filter(block -> block instanceof AdditionalPlacementBlock placement && !placement.hasCustomColors()).toArray(Block[]::new));
     }
 
     @SubscribeEvent
@@ -71,8 +71,7 @@ public class ClientModEventHandler
     @SubscribeEvent
     public static void onRegisterClientReloadListeners(RegisterClientReloadListenersEvent event) {
     	event.registerReloadListener((ResourceManagerReloadListener) resourceManager -> {
-    		BakedRetexturedBlockModel.clearCache();
-    		BakedRotatedBlockModel.clearCache();
+    		PlacementBlockModel.clearCache();
     	});
     }
 }
