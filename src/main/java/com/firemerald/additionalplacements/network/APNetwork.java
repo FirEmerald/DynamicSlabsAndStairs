@@ -34,9 +34,9 @@ public class APNetwork
     public static void register()
     {
         registerServerPlayPacket(SetPlacementTogglePacket.ID, SetPlacementTogglePacket::new);
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) registerClientConfigurationPacket(CheckDataClientPacket.ID, CheckDataClientPacket::new);
+        registerClientConfigurationPacket(CheckDataClientPacket.ID, CheckDataClientPacket::new);
         registerServerConfigurationPacket(CheckDataServerPacket.ID, CheckDataServerPacket::new);
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) registerClientConfigurationPacket(ConfigurationCheckFailedPacket.ID, ConfigurationCheckFailedPacket::new);
+        registerClientConfigurationPacket(ConfigurationCheckFailedPacket.ID, ConfigurationCheckFailedPacket::new);
         
 		ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) -> {
 			final ServerConfigurationNetworkAddon addon = ServerNetworkingImpl.getAddon(handler);
@@ -54,7 +54,6 @@ public class APNetwork
     	ServerPlayNetworking.registerGlobalReceiver(id, (MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) -> fromBuffer.apply(buf).handleServer(server, player, handler, responseSender));
     }
 
-    @Environment(EnvType.CLIENT)
     public static <T extends ClientConfigurationPacket> void registerClientConfigurationPacket(ResourceLocation id, Function<FriendlyByteBuf, T> fromBuffer)
     {
     	ClientConfigurationNetworking.registerGlobalReceiver(id, (Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) -> fromBuffer.apply(buf).handleClient(client, handler, responseSender));
