@@ -1,7 +1,12 @@
 package com.firemerald.additionalplacements.client.models;
 
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
+
+import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
+import com.firemerald.additionalplacements.client.IModelBakerExtensions;
+import com.firemerald.additionalplacements.util.BlockRotation;
+import com.mojang.math.Transformation;
 
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverride;
@@ -11,14 +16,76 @@ import net.minecraft.resources.ResourceLocation;
 
 public class PlacementBlockModel
 {
-	public final ResourceLocation model;
+	private static final List<Function<BakedModel, BakedModel>> UNWRAPPERS = new ArrayList<>();
+	
+	public static void registerUnwrapper(Function<BakedModel, BakedModel> unwrapper) {
+		UNWRAPPERS.add(unwrapper);
+	}
+	
+	private static BakedModel unwrap(BakedModel model) {
+		Optional<BakedModel> next;
+		while ((next = unwrapSingle(model)).isPresent()) model = next.get();
+		return model;
+	}
+	
+	private static Optional<BakedModel> unwrapSingle(BakedModel model) {
+		return UNWRAPPERS.stream().map(uw -> uw.apply(model)).filter(bm -> bm != null).findFirst();
+	}
+	
+	public final AdditionalPlacementBlock<?> block;
+	public final ResourceLocation ourModelLocation;
+	public final ModelResourceLocation theirModelLocation;
+	public final BlockRotation modelRotation;
+	private UnbakedModel ourModel;
 
-	public PlacementBlockModel(ResourceLocation model)
+	public PlacementBlockModel(AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, ModelResourceLocation theirModelLocation, BlockRotation modelRotation)
 	{
-		this.model = model;
+		this.block = block;
+		this.ourModelLocation = ourModelLocation;
+		this.theirModelLocation = theirModelLocation;
+		this.modelRotation = modelRotation;
 	}
 
-	public BakedModel bake(BlockModel context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, List<ItemOverride> overrides) {
-		return new BakedPlacementBlockModel(baker.bake(model, modelState)); //TODO make better
+	public void resolveDependencies(UnbakedModel.Resolver modelGetter, BlockModel context)
+	{
+		ourModel = modelGetter.resolve(ourModelLocation);
+	}
+
+	public BakedModel bake(BlockModel context, ModelBaker bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, List<ItemOverride> overrides)
+	{
+		UnbakedModel theirModel = ((IModelBakerExtensions) bakery).apGetTopLevelModel(theirModelLocation);	
+		return bake(block, 
+				bake(this.ourModel, bakery, spriteGetter, modelTransform), 
+				bake(theirModel, bakery, spriteGetter),
+				modelRotation);
+	}
+	
+	private static record OurModelKey(UnbakedModel model, Transformation rotation, boolean uvLocked) {}
+	
+	private static final Map<OurModelKey, BakedModel> OUR_MODEL_CACHE = new HashMap<>();
+	
+	private static BakedModel bake(UnbakedModel model, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform) {
+		return OUR_MODEL_CACHE.computeIfAbsent(new OurModelKey(model, modelTransform.getRotation(), modelTransform.isUvLocked()), key -> unwrap(model.bake(baker, spriteGetter, modelTransform)));	}
+	
+	private static record TheirModelKey(UnbakedModel model) {}
+	
+	private static final Map<TheirModelKey, BakedModel> THEIR_MODEL_CACHE = new HashMap<>();
+	
+	private static BakedModel bake(UnbakedModel model, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter) {
+		return THEIR_MODEL_CACHE.computeIfAbsent(new TheirModelKey(model), key -> unwrap(model.bake(baker, spriteGetter, BlockModelRotation.X0_Y0)));
+	}
+	
+	private static record ModelKey(AdditionalPlacementBlock<?> block, BakedModel ourModel, BakedModel theirModel, BlockRotation modelRotation) {}
+	
+	private static final Map<ModelKey, BakedPlacementBlockModel> MODEL_CACHE = new HashMap<>();
+	
+	private static BakedPlacementBlockModel bake(AdditionalPlacementBlock<?> block, BakedModel ourModel, BakedModel theirModel, BlockRotation modelRotation) {
+		return MODEL_CACHE.computeIfAbsent(new ModelKey(block, ourModel, theirModel, modelRotation), key -> new BakedPlacementBlockModel(block, ourModel, theirModel, modelRotation));
+	}
+	
+	public static void clearCache() {
+		OUR_MODEL_CACHE.clear();
+		THEIR_MODEL_CACHE.clear();
+		MODEL_CACHE.clear();
 	}
 }

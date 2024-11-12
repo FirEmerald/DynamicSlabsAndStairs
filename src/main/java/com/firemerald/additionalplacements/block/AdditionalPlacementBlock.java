@@ -8,9 +8,12 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.Nullable;
 
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
+import com.firemerald.additionalplacements.client.models.definitions.StateModelDefinition;
 import com.firemerald.additionalplacements.common.AdditionalPlacementsBlockTags;
 import com.firemerald.additionalplacements.util.BlockRotation;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -105,20 +108,14 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 		return parentBlock.asItem();
 	}
 
-	@Deprecated
-	public BlockState getModelState()
+	public BlockState getOtherBlockState()
 	{
 		return getOtherBlock().defaultBlockState();
 	}
 
 	public BlockState getModelState(BlockState worldState)
 	{
-		return copyProperties(worldState, getModelState());
-	}
-
-	public BlockState getUnrotatedModelState(BlockState worldState)
-	{
-		return withUnrotatedPlacement(worldState, getModelState(worldState));
+		return withUnrotatedPlacement(worldState, copyProperties(worldState, getOtherBlockState()));
 	}
 	
 	public abstract BlockState withUnrotatedPlacement(BlockState worldState, BlockState modelState);
@@ -225,7 +222,6 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
-	@Deprecated
 	public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand)
 	{
 		BlockState modelState = getModelState(state);
@@ -234,7 +230,6 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
-	@Deprecated
 	public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand)
 	{
 		BlockState modelState = getModelState(state);
@@ -357,21 +352,18 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
-	@Deprecated
 	public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos otherPos, BlockState otherState, RandomSource rand)
 	{
 		return updateShapeImpl(state, level, tickAccess, pos, direction, otherPos, otherState, rand);
 	}
 
 	@Override
-	@Deprecated
 	public FluidState getFluidState(BlockState state)
 	{
 		return this.getModelState(state).getFluidState();
 	}
 
 	@Override
-	@Deprecated
 	public boolean skipRendering(BlockState thisState, BlockState adjacentState, Direction dir)
 	{
 		return this.getModelState(thisState).skipRendering(adjacentState, dir);
@@ -410,17 +402,21 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
 	{
 		if (rotatesModel(state))
-			return getRotation(state).applyBlockSpace(getUnrotatedModelState(state).getShape(level, pos, context));
+			return getRotation(state).applyBlockSpace(getModelState(state).getShape(level, pos, context));
 		else
 			return getShapeInternal(state, level, pos, context);
 	}
 
 	public abstract VoxelShape getShapeInternal(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context);
 
-	public abstract ResourceLocation getDynamicBlockstateJson();
-	
 	@Override
 	public boolean canGenerateAdditionalStates() {
 		return false;
 	}
+
+	@Environment(EnvType.CLIENT)
+	public abstract ResourceLocation getModelPrefix();
+
+	@Environment(EnvType.CLIENT)
+	public abstract StateModelDefinition getModelDefinition(BlockState state);
 }

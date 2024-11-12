@@ -1,12 +1,15 @@
 package com.firemerald.additionalplacements.block;
 
-import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.interfaces.IAdditionalBeaconBeamBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISlabBlock;
+import com.firemerald.additionalplacements.client.models.definitions.SlabModels;
+import com.firemerald.additionalplacements.client.models.definitions.StateModelDefinition;
 import com.firemerald.additionalplacements.util.BlockRotation;
 import com.firemerald.additionalplacements.util.VoxelShapes;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -30,7 +33,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock> implements ISlabBlock<SlabBlock>, ISimpleRotationBlock
 {
-	static final ResourceLocation SLAB_BLOCKSTATES = ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "blockstate_templates/slab.json");
 	public static final EnumProperty<Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
 	public static VerticalSlabBlock of(SlabBlock slab, ResourceKey<Block> id)
@@ -48,11 +50,10 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 	
 	public boolean rotateLogic = true, rotateModel = true, rotateTex = true;
 
-	@SuppressWarnings("deprecation")
 	private VerticalSlabBlock(SlabBlock slab, ResourceKey<Block> id)
 	{
 		super(slab, id);
-		this.registerDefaultState(copyProperties(getModelState(), this.stateDefinition.any()).setValue(AXIS, Axis.Z));
+		this.registerDefaultState(copyProperties(getOtherBlockState(), this.stateDefinition.any()).setValue(AXIS, Axis.Z));
 		((IVanillaSlabBlock) slab).setOtherBlock(this);
 	}
 
@@ -111,7 +112,7 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 		return "slabs";
 	}
 
-	@Override	
+	@Override
 	public BlockState updateShapeImpl(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos otherPos, BlockState otherState, RandomSource rand)
 	{
 		return state;
@@ -156,7 +157,14 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 	}
 
 	@Override
-	public ResourceLocation getDynamicBlockstateJson() {
-		return SLAB_BLOCKSTATES;
+	@Environment(EnvType.CLIENT)
+	public ResourceLocation getModelPrefix() {
+		return SlabModels.BASE_MODEL_FOLDER;
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public StateModelDefinition getModelDefinition(BlockState state) {
+		return SlabModels.getModel(state);
 	}
 }

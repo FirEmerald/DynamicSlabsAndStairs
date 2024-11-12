@@ -156,7 +156,6 @@ public class CommonModEvents implements ModInitializer
 
 	public static void onTagsUpdated(RegistryAccess registries, boolean client)
 	{
-		Registration.forEach((id, type) -> type.onTagsReloaded());
 		if (!client) {
 			Registration.forEach(type -> type.onTagsUpdated(false));
 			boolean fromAutoGenerate;

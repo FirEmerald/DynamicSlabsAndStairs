@@ -6,3 +6,4 @@ accessible field  net/minecraft/commands/CommandSourceStack                  sou
 accessible method net/minecraft/tags/BlockTags                               create           (Ljava/lang/String;)Lnet/minecraft/tags/TagKey;
 mutable    field  net/minecraft/world/item/HoneycombItem                     WAXABLES         Ljava/util/function/Supplier;
 mutable    field  net/minecraft/world/item/HoneycombItem                     WAX_OFF_BY_BLOCK Ljava/util/function/Supplier;
+accessible field  net/minecraft/client/resources/model/ModelBakery           topModels        Ljava/util/Map;

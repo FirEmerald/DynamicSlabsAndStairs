@@ -89,6 +89,8 @@ dependencies {
    	modCompileOnly("io.github.fabricators_of_create.Porting-Lib:core:${project.porting_lib_version}")
    	modCompileOnly("io.github.fabricators_of_create.Porting-Lib:data:${project.porting_lib_version}")
    	modCompileOnly("io.github.fabricators_of_create.Porting-Lib:models:${project.porting_lib_version}")
+   	modCompileOnly("io.github.fabricators_of_create.Porting-Lib:models:${project.porting_lib_version}")
+	modCompileOnly("curse.maven:continuity-531351:5425853") //Continuity
 }
 
 processResources {
