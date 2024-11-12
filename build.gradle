@@ -136,9 +136,9 @@ repositories {
     // ForgeGradle automatically adds the Forge maven and Maven Central for you
 
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
-    // flatDir {
-    //     dir 'libs'
-    // }
+    flatDir {
+        dir 'libs'
+    }
     maven {
         url "https://cursemaven.com"
         content {
@@ -170,6 +170,8 @@ dependencies {
     
 	//implementation fg.deobf("curse.maven:double-slabs-350179:3873442")
 	//implementation fg.deobf("curse.maven:create-328085:4762216")
+	compileOnly fg.deobf("curse.maven:continuity-531351:5344959") //Fabric mods don't properly deobfuscate, but this works well enough for what we need from it
+	compileOnly fg.deobf("local:fabric-renderer-api-v1:3.2.1") // Jar extracted from forgified-fabric, META-INF/mods.toml removed to prevent it from being loaded as a mod
 }
 
 eclipse.classpath.file {
