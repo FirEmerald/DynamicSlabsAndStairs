@@ -9,9 +9,12 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
+import com.firemerald.additionalplacements.client.models.definitions.StateModelDefinition;
 import com.firemerald.additionalplacements.common.AdditionalPlacementsBlockTags;
 import com.firemerald.additionalplacements.util.BlockRotation;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -113,20 +116,14 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 		return parentBlock.getDescriptionId();
 	}
 
-	@Deprecated
-	public BlockState getModelState()
+	public BlockState getOtherBlockState()
 	{
 		return getOtherBlock().defaultBlockState();
 	}
 
 	public BlockState getModelState(BlockState worldState)
 	{
-		return copyProperties(worldState, getModelState());
-	}
-
-	public BlockState getUnrotatedModelState(BlockState worldState)
-	{
-		return withUnrotatedPlacement(worldState, getModelState(worldState));
+		return withUnrotatedPlacement(worldState, copyProperties(worldState, getOtherBlockState()));
 	}
 	
 	public abstract BlockState withUnrotatedPlacement(BlockState worldState, BlockState modelState);
@@ -213,7 +210,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 		{
 			BlockState modelState = getModelState(state);
 			modelState.neighborChanged(level, pos, Blocks.AIR, pos, isMoving);
-			modelState.getBlock().onPlace(modelState, level, pos, oldState, isMoving);
+			modelState.onPlace(level, pos, oldState, isMoving);
 		}
 	}
 
@@ -229,15 +226,14 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	@Override
 	public boolean isRandomlyTicking(BlockState state)
 	{
-		return getOtherBlock().isRandomlyTicking(getModelState(state));
+		return getModelState(state).isRandomlyTicking();
 	}
 
 	@Override
-	@Deprecated
 	public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand)
 	{
 		BlockState modelState = getModelState(state);
-		modelState.getBlock().randomTick(modelState, level, pos, rand);
+		modelState.randomTick(level, pos, rand);
 		applyChanges(state, modelState, level, pos);
 	}
 
@@ -246,7 +242,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand)
 	{
 		BlockState modelState = getModelState(state);
-		modelState.getBlock().tick(modelState, level, pos, rand);
+		modelState.tick(level, pos, rand);
 		applyChanges(state, modelState, level, pos);
 	}
 
@@ -254,7 +250,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
 	{
 		BlockState modelState = getModelState(state);
-		InteractionResult res = getModelState(state).use(level, player, hand, hitResult);
+		InteractionResult res = modelState.use(level, player, hand, hitResult);
 		applyChanges(state, modelState, level, pos);
 		return res;
 	}
@@ -425,17 +421,21 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
 	{
 		if (rotatesModel(state))
-			return getRotation(state).applyBlockSpace(getUnrotatedModelState(state).getShape(level, pos, context));
+			return getRotation(state).applyBlockSpace(getModelState(state).getShape(level, pos, context));
 		else
 			return getShapeInternal(state, level, pos, context);
 	}
 
 	public abstract VoxelShape getShapeInternal(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context);
 
-	public abstract ResourceLocation getDynamicBlockstateJson();
-	
 	@Override
 	public boolean canGenerateAdditionalStates() {
 		return false;
 	}
+
+	@Environment(EnvType.CLIENT)
+	public abstract ResourceLocation getModelPrefix();
+
+	@Environment(EnvType.CLIENT)
+	public abstract StateModelDefinition getModelDefinition(BlockState state);
 }
