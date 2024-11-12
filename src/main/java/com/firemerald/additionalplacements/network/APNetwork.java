@@ -11,11 +11,8 @@ import com.firemerald.additionalplacements.network.server.ServerConfigurationPac
 import com.firemerald.additionalplacements.network.server.ServerPlayPacket;
 import com.firemerald.additionalplacements.network.server.SetPlacementTogglePacket;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.fabric.api.networking.v1.*;
 import net.fabricmc.fabric.impl.networking.server.ServerConfigurationNetworkAddon;
 import net.fabricmc.fabric.impl.networking.server.ServerNetworkingImpl;
@@ -29,9 +26,9 @@ public class APNetwork
     public static void register()
     {
         registerServerPlayPacket(SetPlacementTogglePacket.TYPE, SetPlacementTogglePacket::new);
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) registerClientConfigurationPacket(CheckDataClientPacket.TYPE, CheckDataClientPacket::new);
+        registerClientConfigurationPacket(CheckDataClientPacket.TYPE, CheckDataClientPacket::new);
         registerServerConfigurationPacket(CheckDataServerPacket.TYPE, CheckDataServerPacket::new);
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) registerClientConfigurationPacket(ConfigurationCheckFailedPacket.TYPE, ConfigurationCheckFailedPacket::new);
+        registerClientConfigurationPacket(ConfigurationCheckFailedPacket.TYPE, ConfigurationCheckFailedPacket::new);
         
 		ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) -> {
 			final ServerConfigurationNetworkAddon addon = ServerNetworkingImpl.getAddon(handler);
@@ -51,7 +48,6 @@ public class APNetwork
     	ServerPlayNetworking.registerGlobalReceiver(type, ServerPlayPacket::handleServer);
     }
 
-    @Environment(EnvType.CLIENT)
     public static <T extends ClientConfigurationPacket> void registerClientConfigurationPacket(Type<T> type, Function<FriendlyByteBuf, T> fromBuffer)
     {
     	PayloadTypeRegistry.configurationS2C().register(type, new APStreamCodec<>(fromBuffer));
