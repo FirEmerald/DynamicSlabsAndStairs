@@ -11,6 +11,15 @@ group = mod_group_id
 
 repositories {
     mavenLocal()
+    flatDir {
+        dir 'libs'
+    }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 base {
@@ -101,6 +110,9 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+	compileOnly "curse.maven:ctm-267602:5410349" //Connected Textures Mod
+	compileOnly "curse.maven:continuity-531351:5344959" //Fabric mods don't properly deobfuscate, but this works well enough for what we need from it
+	compileOnly "local:fabric-renderer-api-v1:3.2.1" // Jar extracted from forgified-fabric, META-INF/mods.toml removed to prevent it from being loaded as a mod
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

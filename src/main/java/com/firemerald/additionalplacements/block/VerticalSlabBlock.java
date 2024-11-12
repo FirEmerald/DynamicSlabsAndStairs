@@ -1,8 +1,9 @@
 package com.firemerald.additionalplacements.block;
 
-import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISlabBlock;
+import com.firemerald.additionalplacements.client.models.definitions.SlabModels;
+import com.firemerald.additionalplacements.client.models.definitions.StateModelDefinition;
 import com.firemerald.additionalplacements.util.BlockRotation;
 import com.firemerald.additionalplacements.util.VoxelShapes;
 
@@ -22,10 +23,11 @@ import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock> implements ISlabBlock<SlabBlock>, ISimpleRotationBlock
 {
-	static final ResourceLocation SLAB_BLOCKSTATES = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "blockstate_templates/slab.json");
 	public static final EnumProperty<Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
 	public static VerticalSlabBlock of(SlabBlock slab)
@@ -35,11 +37,10 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 	
 	public boolean rotateLogic = true, rotateModel = true, rotateTex = true;
 
-	@SuppressWarnings("deprecation")
 	private VerticalSlabBlock(SlabBlock slab)
 	{
 		super(slab);
-		this.registerDefaultState(copyProperties(getModelState(), this.stateDefinition.any()).setValue(AXIS, Axis.Z));
+		this.registerDefaultState(copyProperties(getOtherBlockState(), this.stateDefinition.any()).setValue(AXIS, Axis.Z));
 		((IVanillaSlabBlock) slab).setOtherBlock(this);
 	}
 
@@ -143,7 +144,14 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 	}
 
 	@Override
-	public ResourceLocation getDynamicBlockstateJson() {
-		return SLAB_BLOCKSTATES;
+	@OnlyIn(Dist.CLIENT)
+	public ResourceLocation getModelPrefix() {
+		return SlabModels.BASE_MODEL_FOLDER;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public StateModelDefinition getModelDefinition(BlockState state) {
+		return SlabModels.getModel(state);
 	}
 }

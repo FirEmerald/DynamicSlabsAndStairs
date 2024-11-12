@@ -2,11 +2,7 @@ package com.firemerald.additionalplacements.util.stairs;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import com.firemerald.additionalplacements.AdditionalPlacementsMod;
-
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 public enum StairConnections {
@@ -27,30 +23,26 @@ public enum StairConnections {
 
 	public final String name, shortName, translationKey;
 	public final boolean allowVertical, allowMixed;
-	public final ResourceLocation dynamicBlockstateJson;
 	public final EnumProperty<CompressedStairShape> shapeProperty;
-	public final StairShape[] shapes;
 	
 	StairConnections(String name, String shortName, boolean allowVertical, boolean allowMixed, CompressedStairShape... validShapes) {
-		this(name, shortName, allowVertical, allowMixed, new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "blockstate_templates/stairs/" + name + ".json"), EnumProperty.create("shape", CompressedStairShape.class, validShapes));
+		this(name, shortName, allowVertical, allowMixed, EnumProperty.create("shape", CompressedStairShape.class, validShapes));
 	}
 	
-	StairConnections(String name, String shortName, boolean allowVertical, boolean allowMixed, ResourceLocation dynamicBlockstateJson, EnumProperty<CompressedStairShape> shapeProperty) {
-		this(name, shortName, "tooltip.additionalplacements.stair_connections." + name, allowVertical, allowMixed, dynamicBlockstateJson, shapeProperty);
+	StairConnections(String name, String shortName, boolean allowVertical, boolean allowMixed, EnumProperty<CompressedStairShape> shapeProperty) {
+		this(name, shortName, "tooltip.additionalplacements.stair_connections." + name, allowVertical, allowMixed, shapeProperty);
 	}
 	
 	StairConnections(String name, String shortName, String translationKey, boolean allowVertical, boolean allowMixed, CompressedStairShape... validShapes) {
-		this(name, shortName, translationKey, allowVertical, allowMixed, new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "blockstate_templates/stairs/" + name + ".json"), EnumProperty.create("shape", CompressedStairShape.class, validShapes));
+		this(name, shortName, translationKey, allowVertical, allowMixed, EnumProperty.create("shape", CompressedStairShape.class, validShapes));
 	}
 	
-	StairConnections(String name, String shortName, String translationKey, boolean allowVertical, boolean allowMixed, ResourceLocation dynamicBlockstateJson, EnumProperty<CompressedStairShape> shapeProperty) {
+	StairConnections(String name, String shortName, String translationKey, boolean allowVertical, boolean allowMixed, EnumProperty<CompressedStairShape> shapeProperty) {
 		this.name = name;
 		this.shortName = shortName;
 		this.translationKey = translationKey;
 		this.allowVertical = allowVertical;
 		this.allowMixed = allowMixed;
-		this.dynamicBlockstateJson = dynamicBlockstateJson;
 		this.shapeProperty = shapeProperty;
-		this.shapes = shapeProperty.getAllValues().map(shape -> shape.value().shape).collect(Collectors.toSet()).toArray(StairShape[]::new);
 	}
 }
