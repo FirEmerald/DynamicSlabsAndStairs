@@ -3,6 +3,7 @@ package com.firemerald.additionalplacements.generation;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
@@ -11,7 +12,7 @@ import com.firemerald.additionalplacements.generation.GenerationType.BuilderBase
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 
-import net.fabricmc.loader.impl.FabricLoaderImpl;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -21,7 +22,7 @@ public class Registration {
 	private static final Map<Class<?>, GenerationType<?, ?>> TYPES_BY_CLASS = new HashMap<>();
 	
 	public static void gatherTypes() { 
-		FabricLoaderImpl.INSTANCE.invokeEntrypoints("additional-placements-generators", RegistrationInitializer.class, instance -> instance.onInitializeRegistration(Registration::registerType));
+		FabricLoader.getInstance().invokeEntrypoints("additional-placements-generators", RegistrationInitializer.class, instance -> instance.onInitializeRegistration(Registration::registerType));
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -63,6 +64,10 @@ public class Registration {
 	
 	public static void forEach(Consumer<? super GenerationType<?, ?>> action) {
 		TYPES.values().forEach(action);
+	}
+
+	public static Stream<GenerationType<?, ?>> types() {
+		return TYPES.values().stream();
 	}
 	
 	public static void buildConfig(ForgeConfigSpec.Builder builder, BiConsumer<GenerationType<?, ?>, ForgeConfigSpec.Builder> build) {

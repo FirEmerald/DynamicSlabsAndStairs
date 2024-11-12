@@ -12,9 +12,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class BakedModelWrapper extends ForwardingBakedModel
+public abstract class PlacementModelWrapper extends ForwardingBakedModel
 {
-	protected BakedModelWrapper(BakedModel originalModel)
+	protected PlacementModelWrapper(BakedModel originalModel)
 	{
 		this.wrapped = originalModel;
 	}
