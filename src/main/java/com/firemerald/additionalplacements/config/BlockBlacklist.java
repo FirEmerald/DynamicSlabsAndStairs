@@ -2,6 +2,8 @@ package com.firemerald.additionalplacements.config;
 
 import java.util.*;
 
+import com.firemerald.additionalplacements.generation.CreatedBlockEntry;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -113,6 +115,13 @@ public class BlockBlacklist extends GenerationBlacklist {
 		tagWhitelist = new HashSet<>(tagWhitelistConfig.get());
 	}
 	
+	public boolean testOriginal(CreatedBlockEntry<?, ?> entry) {
+		return test(entry.originalId(), entry.originalBlock());
+	}
+	
+	public boolean testCreated(CreatedBlockEntry<?, ?> entry) {
+		return test(entry.newId(), entry.newBlock());
+	}
 	
 	public boolean test(ResourceLocation id, Block block) {
 		boolean flag = defaultState.get();

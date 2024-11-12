@@ -35,6 +35,12 @@ repositories {
 	maven { url = "https://maven.jamieswhiteshirt.com/libs-release" } // Reach Entity Attributes
 	maven { url = "https://jitpack.io/" } // Mixin Extras, Fabric ASM
 	maven { url = "https://maven.tterrag.com/" } // Flywheel
+    maven { //curse maven
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
@@ -57,6 +63,7 @@ dependencies {
    	//modApi("io.github.fabricators_of_create.Porting-Lib:model_generators:${project.porting_lib_version}")
    	//modApi("io.github.fabricators_of_create.Porting-Lib:model_materials:${project.porting_lib_version}")
    	//modApi("io.github.fabricators_of_create.Porting-Lib:utility:${project.porting_lib_version}")
+	 modApi "curse.maven:continuity-531351:4441029" //Continuity
 }
 
 processResources {

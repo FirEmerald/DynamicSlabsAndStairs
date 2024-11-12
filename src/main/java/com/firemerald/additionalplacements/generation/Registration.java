@@ -3,6 +3,7 @@ package com.firemerald.additionalplacements.generation;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
@@ -63,6 +64,10 @@ public class Registration {
 	
 	public static void forEach(Consumer<? super GenerationType<?, ?>> action) {
 		TYPES.values().forEach(action);
+	}
+
+	public static Stream<GenerationType<?, ?>> types() {
+		return TYPES.values().stream();
 	}
 	
 	public static void buildConfig(ForgeConfigSpec.Builder builder, BiConsumer<GenerationType<?, ?>, ForgeConfigSpec.Builder> build) {
