@@ -4,8 +4,7 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.tuple.Pair;
+import java.util.stream.Stream;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
@@ -64,7 +63,7 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 	private final GenerationBlacklist blacklist;
 	private final boolean defaultPlacementEnabled;
 	private BooleanValue placementEnabled;
-	private List<Pair<ResourceLocation, U>> created = new ArrayList<>();
+	private List<CreatedBlockEntry<T, U>> created = new ArrayList<>();
 
 	protected GenerationType(ResourceLocation name, String description, BuilderBase<T, U, ?, ?> builder) {
 		this.name = name;
@@ -168,8 +167,9 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 	
 	public final void apply(T block, ResourceLocation blockId, BiConsumer<ResourceLocation, U> action) {
 		if (enabledForBlock(block, blockId)) {
+			ResourceLocation newId = ResourceLocation.tryBuild(name.getNamespace(), blockId.getNamespace() + "." + blockId.getPath());
 			U created = construct(block, blockId);
-			this.created.add(Pair.of(blockId, created));
+			this.created.add(new CreatedBlockEntry<>(blockId, block, newId, created));
 			action.accept(ResourceLocation.tryBuild(name.getNamespace(), blockId.getNamespace() + "." + blockId.getPath()), created);
 			applyConfig(created, blockId);
 		}
@@ -178,8 +178,12 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 	public abstract U construct(T block, ResourceLocation blockId);
 	
 	public void applyConfig(U block, ResourceLocation blockId) {}
-	
-	protected void forEachCreated(BiConsumer<? super ResourceLocation, ? super U> action) {
-		created.forEach(p -> action.accept(p.getLeft(), p.getRight()));
+
+	public void forEachCreated(Consumer<? super CreatedBlockEntry<T, U>> action) {
+		created.forEach(action);
+	}
+
+	public Stream<CreatedBlockEntry<T, U>> created() {
+		return created.stream();
 	}
 }
