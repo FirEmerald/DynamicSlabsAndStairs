@@ -2,21 +2,22 @@ package com.firemerald.additionalplacements.block;
 
 import java.util.List;
 
-import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.interfaces.IPressurePlateBlock;
+import com.firemerald.additionalplacements.client.models.definitions.PressurePlateModels;
+import com.firemerald.additionalplacements.client.models.definitions.StateModelDefinition;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class AdditionalPressurePlateBlock extends AdditionalBasePressurePlateBlock<PressurePlateBlock> implements IPressurePlateBlock<PressurePlateBlock>
 {
-	static final ResourceLocation PRESSURE_PLATE_BLOCKSTATES = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "blockstate_templates/pressure_plate.json");
-	
 	public static AdditionalPressurePlateBlock of(PressurePlateBlock plate)
 	{
 		return new AdditionalPressurePlateBlock(plate);
@@ -48,7 +49,8 @@ public class AdditionalPressurePlateBlock extends AdditionalBasePressurePlateBlo
 	}
 
 	@Override
-	public ResourceLocation getDynamicBlockstateJson() {
-		return PRESSURE_PLATE_BLOCKSTATES;
+	@OnlyIn(Dist.CLIENT)
+	public StateModelDefinition getModelDefinition(BlockState state) {
+		return PressurePlateModels.getPressurePlateModel(state);
 	}
 }

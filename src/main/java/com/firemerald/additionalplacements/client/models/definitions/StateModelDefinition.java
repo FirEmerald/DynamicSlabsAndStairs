@@ -1,4 +1,6 @@
-package com.firemerald.additionalplacements.datagen;
+package com.firemerald.additionalplacements.client.models.definitions;
+
+import net.minecraft.util.ResourceLocation;
 
 public class StateModelDefinition
 {
@@ -20,6 +22,10 @@ public class StateModelDefinition
 	public StateModelDefinition(String model)
 	{
 		this(model, 0, 0);
+	}
+	
+	public ResourceLocation location(ResourceLocation prefix) {
+		return new ResourceLocation(prefix.getNamespace(), prefix.getPath() + model);
 	}
 
 	@Override

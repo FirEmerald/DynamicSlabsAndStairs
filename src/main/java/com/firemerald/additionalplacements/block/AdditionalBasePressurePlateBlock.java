@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.firemerald.additionalplacements.block.interfaces.IBasePressurePlateBlock;
 import com.firemerald.additionalplacements.block.interfaces.IBasePressurePlateBlockExtensions;
+import com.firemerald.additionalplacements.client.models.definitions.PressurePlateModels;
 
 import net.minecraft.block.AbstractPressurePlateBlock;
 import net.minecraft.block.Block;
@@ -14,6 +15,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockVoxelShape;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -23,6 +25,8 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class AdditionalBasePressurePlateBlock<T extends AbstractPressurePlateBlock> extends AdditionalFloorBlock<T> implements IBasePressurePlateBlock<T>
 {
@@ -50,11 +54,11 @@ public abstract class AdditionalBasePressurePlateBlock<T extends AbstractPressur
 
 	public final IBasePressurePlateBlockExtensions plateMethods;
 
-	@SuppressWarnings({ "deprecation", "unchecked" })
+	@SuppressWarnings("unchecked")
 	public AdditionalBasePressurePlateBlock(T plate)
 	{
 		super(plate);
-		this.registerDefaultState(copyProperties(getModelState(), this.stateDefinition.any()).setValue(PLACING, Direction.NORTH));
+		this.registerDefaultState(copyProperties(getOtherBlockState(), this.stateDefinition.any()).setValue(PLACING, Direction.NORTH));
 		((IVanillaBasePressurePlateBlock<AdditionalBasePressurePlateBlock<T>>) plate).setOtherBlock(this);
 		plateMethods = (IBasePressurePlateBlockExtensions) plate;
 	}
@@ -173,5 +177,11 @@ public abstract class AdditionalBasePressurePlateBlock<T extends AbstractPressur
 	public int getDirectSignal(BlockState state, IBlockReader level, BlockPos pos, Direction dir)
 	{
 		return dir == state.getValue(PLACING).getOpposite() ? plateMethods.getSignalForStatePublic(state) : 0;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public ResourceLocation getModelPrefix() {
+		return PressurePlateModels.BASE_MODEL_FOLDER;
 	}
 }

@@ -21,8 +21,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-public class VerticalStairsGenerationType<T extends StairsBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock> extends SimpleRotatableGenerationType<T, U> {
-	protected abstract static class BuilderBase<T extends StairsBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock, V extends SimpleRotatableGenerationType<T, U>, W extends BuilderBase<T, U, V, W>> extends SimpleRotatableGenerationType.BuilderBase<T, U, V, W> {
+public class VerticalStairsGenerationType<T extends StairsBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock & IStairBlock<T>> extends SimpleRotatableGenerationType<T, U> {
+	protected abstract static class BuilderBase<T extends StairsBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock & IStairBlock<T>, V extends SimpleRotatableGenerationType<T, U>, W extends BuilderBase<T, U, V, W>> extends SimpleRotatableGenerationType.BuilderBase<T, U, V, W> {
 		protected Constructor<? super T, ? extends U> constructor;
 		protected GenerationBlacklist 
 		vertcialConnectionsBlacklist = new GenerationBlacklist.Builder().build(),
@@ -49,7 +49,7 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 		}
 	}
 	
-	public static class Builder<T extends StairsBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock> extends BuilderBase<T, U, VerticalStairsGenerationType<T, U>, Builder<T, U>> {
+	public static class Builder<T extends StairsBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock & IStairBlock<T>> extends BuilderBase<T, U, VerticalStairsGenerationType<T, U>, Builder<T, U>> {
 		@Override
 		public VerticalStairsGenerationType<T, U> construct(ResourceLocation name, String description) {
 			return new VerticalStairsGenerationType<>(name, description, this);
@@ -85,9 +85,10 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 	public CompoundNBT getClientCheckData() {
 		CompoundNBT tag = new CompoundNBT();
 		CompoundNBT connections = new CompoundNBT();
-		this.forEachCreated((id, block) -> {
-			StairConnections allowedConnections = ((IStairBlock<?>) block).allowedConnections();
+		this.forEachCreated(entry -> {
+			StairConnections allowedConnections = entry.newBlock.allowedConnections();
 			if (allowedConnections != StairConnections.ALL) {
+				ResourceLocation id = entry.originalId;
 				String typeName = allowedConnections.shortName;
 				CompoundNBT typeTag;
 				ListNBT modList;
@@ -128,10 +129,10 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 					}
 				});
 				Map<StairConnections, List<ResourceLocation>> mismatched = new HashMap<>();
-				this.forEachCreated((id, block) -> {
-					StairConnections targetType = connectionTypes.getOrDefault(id, StairConnections.ALL);
-					StairConnections actualType = ((IStairBlock<?>) block).allowedConnections();
-					if (targetType != actualType) mismatched.computeIfAbsent(targetType, u -> new ArrayList<>()).add(id);
+				this.forEachCreated(entry -> {
+					StairConnections targetType = connectionTypes.getOrDefault(entry.originalId, StairConnections.ALL);
+					StairConnections actualType = entry.newBlock.allowedConnections();
+					if (targetType != actualType) mismatched.computeIfAbsent(targetType, u -> new ArrayList<>()).add(entry.originalId);
 				});
 				if (!mismatched.isEmpty()) {
 					MessageTree errorListRoot = new MessageTree(new TranslationTextComponent("msg.additionalplacements.stairs.mismatched.header"));

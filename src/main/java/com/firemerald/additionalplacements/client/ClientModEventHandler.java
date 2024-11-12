@@ -2,6 +2,7 @@ package com.firemerald.additionalplacements.client;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.client.models.PlacementBlockModelLoader;
+import com.firemerald.additionalplacements.client.resources.APDynamicResources;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -30,7 +31,7 @@ public class ClientModEventHandler
 	public static final ResourcePackInfo GENERATED_RESOURCES_PACK = new ResourcePackInfo(
 			"Additional Placements blockstate redirection pack",
 			true,
-			BlockstatesPackResources::new,
+			APDynamicResources::new,
 			new StringTextComponent("title"),
 			new StringTextComponent("description"),
 			PackCompatibility.COMPATIBLE,
@@ -60,9 +61,8 @@ public class ClientModEventHandler
     	ForgeRegistries.BLOCKS.forEach(block -> {
     		if (block instanceof AdditionalPlacementBlock)
     		{
-    			@SuppressWarnings("deprecation")
-				BlockState modelState = ((AdditionalPlacementBlock<?>) block).getModelState();
-    			RenderTypeLookup.setRenderLayer(block, (layer) -> RenderTypeLookup.canRenderInLayer(modelState, layer));
+				BlockState otherState = ((AdditionalPlacementBlock<?>) block).getOtherBlockState();
+    			RenderTypeLookup.setRenderLayer(block, (layer) -> RenderTypeLookup.canRenderInLayer(otherState, layer));
     		}
     	});
     	Minecraft.getInstance().getBlockColors().register(new AdditionalBlockColor(), ForgeRegistries.BLOCKS.getValues().stream().filter(block -> block instanceof AdditionalPlacementBlock && !((AdditionalPlacementBlock<?>) block).hasCustomColors()).toArray(Block[]::new));

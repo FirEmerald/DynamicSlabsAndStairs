@@ -8,6 +8,7 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
+import com.firemerald.additionalplacements.client.models.definitions.StateModelDefinition;
 import com.firemerald.additionalplacements.common.AdditionalPlacementsBlockTags;
 import com.firemerald.additionalplacements.util.BlockRotation;
 
@@ -108,20 +109,14 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 		return parentBlock.getDescriptionId();
 	}
 
-	@Deprecated
-	public BlockState getModelState()
+	public BlockState getOtherBlockState()
 	{
 		return getOtherBlock().defaultBlockState();
 	}
 
 	public BlockState getModelState(BlockState worldState)
 	{
-		return copyProperties(worldState, getModelState());
-	}
-
-	public BlockState getUnrotatedModelState(BlockState worldState)
-	{
-		return withUnrotatedPlacement(worldState, getModelState(worldState));
+		return withUnrotatedPlacement(worldState, copyProperties(worldState, getOtherBlockState()));
 	}
 	
 	public abstract BlockState withUnrotatedPlacement(BlockState worldState, BlockState modelState);
@@ -256,7 +251,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	public ActionResultType use(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hitResult)
 	{
 		BlockState modelState = getModelState(state);
-		ActionResultType res = getModelState(state).use(level, player, hand, hitResult);
+		ActionResultType res = modelState.use(level, player, hand, hitResult);
 		applyChanges(state, modelState, level, pos);
 		return res;
 	}
@@ -432,17 +427,21 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	public VoxelShape getShape(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context)
 	{
 		if (rotatesModel(state))
-			return getRotation(state).applyBlockSpace(getUnrotatedModelState(state).getShape(level, pos, context));
+			return getRotation(state).applyBlockSpace(getModelState(state).getShape(level, pos, context));
 		else
 			return getShapeInternal(state, level, pos, context);
 	}
 
 	public abstract VoxelShape getShapeInternal(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context);
-
-	public abstract ResourceLocation getDynamicBlockstateJson();
 	
 	@Override
 	public boolean canGenerateAdditionalStates() {
 		return false;
 	}
+
+	@OnlyIn(Dist.CLIENT)
+	public abstract ResourceLocation getModelPrefix();
+
+	@OnlyIn(Dist.CLIENT)
+	public abstract StateModelDefinition getModelDefinition(BlockState state);
 }

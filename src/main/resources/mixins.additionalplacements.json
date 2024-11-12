@@ -17,8 +17,7 @@
 		"MixinChunkLoader"
 	],
 	"client": [
-		"MixinClientPlayerEntity",
-		"MixinBlockModelShapes"
+		"MixinClientPlayerEntity"
 	],
 	"minVersion": "0.8"
 }

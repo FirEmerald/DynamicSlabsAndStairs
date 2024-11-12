@@ -95,10 +95,10 @@ public class SimpleRotatableGenerationType<T extends Block, U extends Additional
 	}
 	
 	public void updateModelSettings() {
-		forEachCreated((id, block) -> block.setModelRotation(textureRotationBlacklist.test(id, block), modelRotationBlacklist.test(id, block)));
+		forEachCreated(entry -> entry.newBlock.setModelRotation(textureRotationBlacklist.testOriginal(entry), modelRotationBlacklist.testOriginal(entry)));
 	}
 	
 	public void updateLogicSettings() {
-		forEachCreated((id, block) -> block.setLogicRotation(logicRotationBlackist.test(id, block)));
+		forEachCreated(entry -> entry.newBlock.setLogicRotation(logicRotationBlackist.testOriginal(entry)));
 	}
 }
