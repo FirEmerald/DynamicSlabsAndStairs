@@ -1,10 +1,12 @@
 package com.firemerald.additionalplacements.client;
 
+import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
-import com.firemerald.additionalplacements.client.models.BakedRetexturedBlockModel;
-import com.firemerald.additionalplacements.client.models.BakedRotatedBlockModel;
-import com.firemerald.additionalplacements.client.models.PlacementBlockModelLoader;
+import com.firemerald.additionalplacements.client.models.*;
+import com.firemerald.additionalplacements.client.resources.APDynamicResources;
 
+import me.pepperbell.continuity.client.model.CtmBakedModel;
+import me.pepperbell.continuity.client.model.EmissiveBakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
@@ -21,7 +23,9 @@ import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -29,10 +33,10 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class ClientModEventHandler
 {
 	public static final Pack GENERATED_RESOURCES_PACK = Pack.create(
-			"Additional Placements blockstate redirection pack",
+			"Additional Placements dynamic resources",
 			Component.literal("title"),
 			true,
-			unknown -> new BlockstatesPackResources(),
+			unknown -> new APDynamicResources(),
 			new Pack.Info(Component.literal("description"), 9, 8, FeatureFlagSet.of(), true),
 			PackType.CLIENT_RESOURCES,
 			Pack.Position.BOTTOM,
@@ -69,8 +73,19 @@ public class ClientModEventHandler
     @SubscribeEvent
     public static void onRegisterClientReloadListeners(RegisterClientReloadListenersEvent event) {
     	event.registerReloadListener((ResourceManagerReloadListener) resourceManager -> {
-    		BakedRetexturedBlockModel.clearCache();
-    		BakedRotatedBlockModel.clearCache();
+    		PlacementBlockModel.clearCache();
     	});
+    }
+
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+    	if (ModList.get().isLoaded("continuity")) {
+    		AdditionalPlacementsMod.LOGGER.info("Continuity detected, registering continuity BakedModel unwrappers");
+    		PlacementBlockModel.registerUnwrapper(model -> {
+    			if (model instanceof CtmBakedModel ctm) return ctm.getWrappedModel();
+    			else if (model instanceof EmissiveBakedModel emm) return emm.getWrappedModel();
+    			else return null;
+    		});
+    	}
     }
 }

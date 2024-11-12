@@ -17,7 +17,6 @@
 		"MixinChunkStorage"
 	],
 	"client": [
-		"MixinBlockModelShaper",
 		"MixinLocalPlayer"
 	],
 	"minVersion": "0.8"
