@@ -11,11 +11,8 @@ import com.firemerald.additionalplacements.network.server.ServerConfigurationPac
 import com.firemerald.additionalplacements.network.server.ServerPlayPacket;
 import com.firemerald.additionalplacements.network.server.SetPlacementTogglePacket;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.fabric.api.networking.v1.*;
 import net.fabricmc.fabric.impl.networking.server.ServerConfigurationNetworkAddon;
 import net.fabricmc.fabric.impl.networking.server.ServerNetworkingImpl;
@@ -34,9 +31,9 @@ public class APNetwork
     public static void register()
     {
         registerServerPlayPacket(SetPlacementTogglePacket.ID, SetPlacementTogglePacket::new);
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) registerClientConfigurationPacket(CheckDataClientPacket.ID, CheckDataClientPacket::new);
+        registerClientConfigurationPacket(CheckDataClientPacket.ID, CheckDataClientPacket::new);
         registerServerConfigurationPacket(CheckDataServerPacket.ID, CheckDataServerPacket::new);
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) registerClientConfigurationPacket(ConfigurationCheckFailedPacket.ID, ConfigurationCheckFailedPacket::new);
+        registerClientConfigurationPacket(ConfigurationCheckFailedPacket.ID, ConfigurationCheckFailedPacket::new);
         
 		ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) -> {
 			final ServerConfigurationNetworkAddon addon = ServerNetworkingImpl.getAddon(handler);
@@ -54,7 +51,6 @@ public class APNetwork
     	ServerPlayNetworking.registerGlobalReceiver(id, (MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) -> fromBuffer.apply(buf).handleServer(server, player, handler, responseSender));
     }
 
-    @Environment(EnvType.CLIENT)
     public static <T extends ClientConfigurationPacket> void registerClientConfigurationPacket(ResourceLocation id, Function<FriendlyByteBuf, T> fromBuffer)
     {
     	ClientConfigurationNetworking.registerGlobalReceiver(id, (Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) -> fromBuffer.apply(buf).handleClient(client, handler, responseSender));

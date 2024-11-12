@@ -77,7 +77,21 @@ public class ConfigurationCheckFailedPacket extends ClientConfigurationPacket
 		});
 		rootError.output(AdditionalPlacementsMod.LOGGER::warn);
 		//TODO move disconnect to a point that works?
-		client.execute(() -> {
+		client.execute(new HandleErrors(client, rootError));
+	}
+
+	@Environment(EnvType.CLIENT)
+	static class HandleErrors implements Runnable {
+		MessageTree rootError;
+		Minecraft client;
+
+		HandleErrors(Minecraft client, MessageTree rootError) {
+			this.client = client;
+			this.rootError = rootError;
+		}
+		
+		@Override
+		public void run() {
 			Screen desScreen = new TitleScreen();
 			if (!client.isLocalServer()) {
 				if (client.getCurrentServer().isRealm()) {
@@ -87,6 +101,6 @@ public class ConfigurationCheckFailedPacket extends ClientConfigurationPacket
 				}
 			}
 			client.disconnect(new ConnectionErrorsScreen(rootError, desScreen));
-		});
+		}
 	}
 }
