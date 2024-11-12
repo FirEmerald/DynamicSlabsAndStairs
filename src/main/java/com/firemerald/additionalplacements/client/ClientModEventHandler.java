@@ -1,9 +1,9 @@
 package com.firemerald.additionalplacements.client;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
-import com.firemerald.additionalplacements.client.models.BakedRetexturedBlockModel;
-import com.firemerald.additionalplacements.client.models.BakedRotatedBlockModel;
+import com.firemerald.additionalplacements.client.models.PlacementBlockModel;
 import com.firemerald.additionalplacements.client.models.PlacementBlockModelLoader;
+import com.firemerald.additionalplacements.client.resources.APDynamicResources;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackType;
@@ -32,7 +32,7 @@ public class ClientModEventHandler
 			"Additional Placements blockstate redirection pack",
 			Component.literal("title"),
 			true,
-			unknown -> new BlockstatesPackResources(),
+			unknown -> new APDynamicResources(),
 			new Pack.Info(Component.literal("description"), 9, 8, FeatureFlagSet.of(), true),
 			PackType.CLIENT_RESOURCES,
 			Pack.Position.BOTTOM,
@@ -57,7 +57,7 @@ public class ClientModEventHandler
     @SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void onRegisterBlockColorHandlers(RegisterColorHandlersEvent.Block event)
     {
-		event.register(new AdditionalBlockColor(), ForgeRegistries.BLOCKS.getValues().stream().filter(block -> block instanceof AdditionalPlacementBlock && !((AdditionalPlacementBlock<?>) block).hasCustomColors()).toArray(Block[]::new));
+		event.register(new AdditionalBlockColor(), ForgeRegistries.BLOCKS.getValues().stream().filter(block -> block instanceof AdditionalPlacementBlock placement && !placement.hasCustomColors()).toArray(Block[]::new));
     }
 
     @SubscribeEvent
@@ -69,8 +69,7 @@ public class ClientModEventHandler
     @SubscribeEvent
     public static void onRegisterClientReloadListeners(RegisterClientReloadListenersEvent event) {
     	event.registerReloadListener((ResourceManagerReloadListener) resourceManager -> {
-    		BakedRetexturedBlockModel.clearCache();
-    		BakedRotatedBlockModel.clearCache();
+    		PlacementBlockModel.clearCache();
     	});
     }
 }
