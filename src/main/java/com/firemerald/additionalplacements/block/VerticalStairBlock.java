@@ -2,6 +2,8 @@ package com.firemerald.additionalplacements.block;
 
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
 import com.firemerald.additionalplacements.block.interfaces.IStairBlock;
+import com.firemerald.additionalplacements.client.models.definitions.StairModels;
+import com.firemerald.additionalplacements.client.models.definitions.StateModelDefinition;
 import com.firemerald.additionalplacements.util.*;
 import com.firemerald.additionalplacements.util.stairs.CompressedStairFacing;
 import com.firemerald.additionalplacements.util.stairs.CompressedStairShape;
@@ -20,6 +22,8 @@ import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class VerticalStairBlock extends AdditionalPlacementLiquidBlock<StairBlock> implements IStairBlock<StairBlock>, ISimpleRotationBlock
 {
@@ -38,11 +42,10 @@ public class VerticalStairBlock extends AdditionalPlacementLiquidBlock<StairBloc
 	public final StairConnections allowedConnections;
 	public boolean rotateLogic = false, rotateModel = false, rotateTex = false;
 
-	@SuppressWarnings("deprecation")
 	private VerticalStairBlock(StairBlock stairs, StairConnections allowedConnections)
 	{
 		super(stairs);
-		this.registerDefaultState(copyProperties(getModelState(), this.stateDefinition.any()).setValue(FACING, CompressedStairFacing.SOUTH_UP_EAST).setValue(allowedConnections.shapeProperty, CompressedStairShape.VERTICAL_STRAIGHT));
+		this.registerDefaultState(copyProperties(getOtherBlockState(), this.stateDefinition.any()).setValue(FACING, CompressedStairFacing.SOUTH_UP_EAST).setValue(allowedConnections.shapeProperty, CompressedStairShape.VERTICAL_STRAIGHT));
 		((IVanillaStairBlock) stairs).setOtherBlock(this);
 		this.allowedConnections = allowedConnections;
 	}
@@ -107,11 +110,7 @@ public class VerticalStairBlock extends AdditionalPlacementLiquidBlock<StairBloc
 	}
 	
 	public boolean canRotate(BlockState state) {
-		CompressedStairFacing compressedFacing = state.getValue(FACING);
-		CompressedStairShape compressedShape = state.getValue(allowedConnections.shapeProperty);
-		ComplexFacing facing = compressedShape.facingType.fromCompressedFacing(compressedFacing);
-		StairShape shape = compressedShape.shape;
-		return (facing.vanillaStairsHalf == Half.TOP ? shape.vanillaTopShape : shape.vanillaBottomShape) != null;
+		return state.getValue(allowedConnections.shapeProperty).shape.isRotatedModel;
 	}
 
 	@Override
@@ -153,7 +152,14 @@ public class VerticalStairBlock extends AdditionalPlacementLiquidBlock<StairBloc
 	}
 
 	@Override
-	public ResourceLocation getDynamicBlockstateJson() {
-		return allowedConnections.dynamicBlockstateJson;
+	@OnlyIn(Dist.CLIENT)
+	public ResourceLocation getModelPrefix() {
+		return StairModels.BASE_MODEL_FOLDER;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public StateModelDefinition getModelDefinition(BlockState state) {
+		return StairModels.getModelDefinition(state, allowedConnections);
 	}
 }
