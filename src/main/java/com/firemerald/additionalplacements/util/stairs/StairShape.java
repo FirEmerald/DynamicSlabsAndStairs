@@ -13,24 +13,24 @@ import net.minecraft.world.level.block.state.properties.StairsShape;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public enum StairShape implements StringRepresentable {
-	STRAIGHT("straight", VoxelShapes::getStraightStairs, StairsShape.STRAIGHT, StairsShape.STRAIGHT, false, false),
+	STRAIGHT("straight", VoxelShapes::getStraightStairs, StairsShape.STRAIGHT, StairsShape.STRAIGHT, false, false, true),
 
-	INNER_FRONT_LEFT("inner_front_left", VoxelShapes::getLeftInnerStairs, StairsShape.INNER_RIGHT, StairsShape.INNER_LEFT, false, false),
-	INNER_FRONT_RIGHT("inner_front_right", VoxelShapes::getRightInnerStairs, StairsShape.INNER_LEFT, StairsShape.INNER_RIGHT, false, false),
-	INNER_TOP_LEFT("inner_top_left", VoxelShapes::getLeftInnerStairs, true, false),
-	INNER_TOP_RIGHT("inner_top_right", VoxelShapes::getRightInnerStairs, true, false),
-	INNER_BOTH_LEFT("inner_both_left", VoxelShapes::getLeftInnerStairs, true, true),
-	INNER_BOTH_RIGHT("inner_both_right", VoxelShapes::getRightInnerStairs, true, true),
+	INNER_FRONT_LEFT("inner_front_left", VoxelShapes::getLeftInnerStairs, StairsShape.INNER_RIGHT, StairsShape.INNER_LEFT, false, false, true),
+	INNER_FRONT_RIGHT("inner_front_right", VoxelShapes::getRightInnerStairs, StairsShape.INNER_LEFT, StairsShape.INNER_RIGHT, false, false, true),
+	INNER_TOP_LEFT("inner_top_left", VoxelShapes::getLeftInnerStairs, StairsShape.INNER_RIGHT, StairsShape.INNER_LEFT, true, false, false),
+	INNER_TOP_RIGHT("inner_top_right", VoxelShapes::getRightInnerStairs, StairsShape.INNER_LEFT, StairsShape.INNER_RIGHT, true, false, false),
+	INNER_BOTH_LEFT("inner_both_left", VoxelShapes::getLeftInnerStairs, StairsShape.INNER_RIGHT, StairsShape.INNER_LEFT, true, true, false),
+	INNER_BOTH_RIGHT("inner_both_right", VoxelShapes::getRightInnerStairs, StairsShape.INNER_LEFT, StairsShape.INNER_RIGHT, true, true, false),
 	
-	OUTER_BACK_LEFT("outer_back_left", VoxelShapes::getLeftOuterBackFlatStairs, StairsShape.OUTER_RIGHT, StairsShape.OUTER_LEFT, false, false),
-	OUTER_BACK_RIGHT("outer_back_right", VoxelShapes::getRightOuterBackFlatStairs, StairsShape.OUTER_LEFT, StairsShape.OUTER_RIGHT, false, false),
-	OUTER_BOTTOM_LEFT("outer_bottom_left", VoxelShapes::getLeftOuterBottomFlatStairs, true, false),
-	OUTER_BOTTOM_RIGHT("outer_bottom_right", VoxelShapes::getRightOuterBottomFlatStairs, true, false),
-	OUTER_BOTH_LEFT("outer_both_left", VoxelShapes::getLeftOuterStairs, true, true),
-	OUTER_BOTH_RIGHT("outer_both_right", VoxelShapes::getRightOuterStairs, true, true),
+	OUTER_BACK_LEFT("outer_back_left", VoxelShapes::getLeftOuterBackFlatStairs, StairsShape.OUTER_RIGHT, StairsShape.OUTER_LEFT, false, false, true),
+	OUTER_BACK_RIGHT("outer_back_right", VoxelShapes::getRightOuterBackFlatStairs, StairsShape.OUTER_LEFT, StairsShape.OUTER_RIGHT, false, false, true),
+	OUTER_BOTTOM_LEFT("outer_bottom_left", VoxelShapes::getLeftOuterBottomFlatStairs, StairsShape.OUTER_RIGHT, StairsShape.OUTER_LEFT, true, false, false),
+	OUTER_BOTTOM_RIGHT("outer_bottom_right", VoxelShapes::getRightOuterBottomFlatStairs, StairsShape.OUTER_RIGHT, StairsShape.OUTER_LEFT, true, false, false),
+	OUTER_BOTH_LEFT("outer_both_left", VoxelShapes::getLeftOuterStairs, StairsShape.OUTER_RIGHT, StairsShape.OUTER_LEFT, true, true, false),
+	OUTER_BOTH_RIGHT("outer_both_right", VoxelShapes::getRightOuterStairs, StairsShape.OUTER_RIGHT, StairsShape.OUTER_LEFT, true, true, false),
 
-	OUTER_BACK_LEFT_BOTTOM_RIGHT("outer_back_left_bottom_right", VoxelShapes::getCounterClockwiseTwistStairs, true, true),
-	OUTER_BACK_RIGHT_BOTTOM_LEFT("outer_back_right_bottom_left", VoxelShapes::getClockwiseTwistStairs, true, true);
+	OUTER_BACK_LEFT_BOTTOM_RIGHT("outer_back_left_bottom_right", VoxelShapes::getCounterClockwiseTwistStairs, StairsShape.STRAIGHT, StairsShape.STRAIGHT, true, true, false),
+	OUTER_BACK_RIGHT_BOTTOM_LEFT("outer_back_right_bottom_left", VoxelShapes::getClockwiseTwistStairs, StairsShape.STRAIGHT, StairsShape.STRAIGHT, true, true, false);
 	
 	public static final StairShape[] ALL_SHAPES = values();
 	public static final StairShape[] NO_VERTICAL_CONNECTIONS;
@@ -82,20 +82,17 @@ public enum StairShape implements StringRepresentable {
 	public final String name;
 	public final Function<ComplexFacing, VoxelShape> getShape;
 	public final StairsShape vanillaTopShape, vanillaBottomShape;
-	public final boolean isVerticalConnection, isMixedConnection;
+	public final boolean isVerticalConnection, isMixedConnection, isRotatedModel;
 	private StairShape flipped;
 	
-	StairShape(String name, Function<ComplexFacing, VoxelShape> getShape, boolean isVerticalConnection, boolean isMixedConnection) {
-		this(name, getShape, null, null, isVerticalConnection, isMixedConnection);
-	}
-	
-	StairShape(String name, Function<ComplexFacing, VoxelShape> getShape, StairsShape vanillaTopShape, StairsShape vanillaBottomShape, boolean isVerticalConnection, boolean isMixedConnection) {
+	StairShape(String name, Function<ComplexFacing, VoxelShape> getShape, StairsShape vanillaTopShape, StairsShape vanillaBottomShape, boolean isVerticalConnection, boolean isMixedConnection, boolean isRotatedModel) {
 		this.name = name;
 		this.getShape = getShape;
 		this.vanillaTopShape = vanillaTopShape;
 		this.vanillaBottomShape = vanillaBottomShape;
 		this.isVerticalConnection = isVerticalConnection;
 		this.isMixedConnection = isMixedConnection;
+		this.isRotatedModel = isRotatedModel;
 	}
 	
 	public VoxelShape getVoxelShape(ComplexFacing facing) {
@@ -107,7 +104,7 @@ public enum StairShape implements StringRepresentable {
 	}
 	
 	public StairsShape getVanillaShape(ComplexFacing facing) {
-		return facing.vanillaStairsHalf == null ? null : getVanillaShape(facing.vanillaStairsHalf);
+		return isRotatedModel ? getVanillaShape(facing.vanillaStairsHalf) : null;
 	}
 	
 	public StairShape flipped() { 

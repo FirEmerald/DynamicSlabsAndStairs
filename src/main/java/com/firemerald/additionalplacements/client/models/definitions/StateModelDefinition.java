@@ -1,4 +1,6 @@
-package com.firemerald.additionalplacements.datagen;
+package com.firemerald.additionalplacements.client.models.definitions;
+
+import net.minecraft.resources.ResourceLocation;
 
 public record StateModelDefinition(String model, int xRotation, int yRotation)
 {
@@ -10,5 +12,9 @@ public record StateModelDefinition(String model, int xRotation, int yRotation)
 	public StateModelDefinition(String model)
 	{
 		this(model, 0, 0);
+	}
+	
+	public ResourceLocation location(ResourceLocation prefix) {
+		return prefix.withSuffix(model);
 	}
 }
