@@ -1,7 +1,8 @@
 package com.firemerald.additionalplacements.block;
 
-import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.interfaces.ICarpetBlock;
+import com.firemerald.additionalplacements.client.models.definitions.CarpetModels;
+import com.firemerald.additionalplacements.client.models.definitions.StateModelDefinition;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,10 +18,11 @@ import net.minecraft.world.level.block.CarpetBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class AdditionalCarpetBlock extends AdditionalFloorBlock<CarpetBlock> implements ICarpetBlock<CarpetBlock>
 {
-	static final ResourceLocation CARPET_BLOCKSTATES = ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "blockstate_templates/carpet.json");
 	public static final VoxelShape[] SHAPES = {
 			Block.box(0, 15, 0, 16, 16, 16),
 			Block.box(0, 0, 0, 16, 16, 1),
@@ -34,11 +36,10 @@ public class AdditionalCarpetBlock extends AdditionalFloorBlock<CarpetBlock> imp
 		return new AdditionalCarpetBlock(carpet, id);
 	}
 
-	@SuppressWarnings("deprecation")
 	private AdditionalCarpetBlock(CarpetBlock carpet, ResourceKey<Block> id)
 	{
 		super(carpet, id);
-		this.registerDefaultState(copyProperties(getModelState(), this.stateDefinition.any()).setValue(PLACING, Direction.NORTH));
+		this.registerDefaultState(copyProperties(getOtherBlockState(), this.stateDefinition.any()).setValue(PLACING, Direction.NORTH));
 		((IVanillaCarpetBlock) carpet).setOtherBlock(this);
 	}
 
@@ -74,7 +75,14 @@ public class AdditionalCarpetBlock extends AdditionalFloorBlock<CarpetBlock> imp
 	}
 
 	@Override
-	public ResourceLocation getDynamicBlockstateJson() {
-		return CARPET_BLOCKSTATES;
+	@OnlyIn(Dist.CLIENT)
+	public ResourceLocation getModelPrefix() {
+		return CarpetModels.BASE_MODEL_FOLDER;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public StateModelDefinition getModelDefinition(BlockState state) {
+		return CarpetModels.getModel(state);
 	}
 }

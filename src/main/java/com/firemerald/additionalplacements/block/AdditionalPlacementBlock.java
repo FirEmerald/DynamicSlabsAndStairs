@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
+import com.firemerald.additionalplacements.client.models.definitions.StateModelDefinition;
 import com.firemerald.additionalplacements.common.AdditionalPlacementsBlockTags;
 import com.firemerald.additionalplacements.util.BlockRotation;
 
@@ -42,6 +43,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public abstract class AdditionalPlacementBlock<T extends Block> extends Block implements IPlacementBlock<T>
 {
@@ -107,27 +110,19 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	{
 		return parentBlock.asItem();
 	}
-
-	@Deprecated
-	public BlockState getModelState()
-	{
+	
+	public BlockState getOtherBlockState() {
 		return getOtherBlock().defaultBlockState();
 	}
 
 	public BlockState getModelState(BlockState worldState)
 	{
-		return copyProperties(worldState, getModelState());
-	}
-
-	public BlockState getUnrotatedModelState(BlockState worldState)
-	{
-		return withUnrotatedPlacement(worldState, getModelState(worldState));
+		return withUnrotatedPlacement(worldState, copyProperties(worldState, getOtherBlockState()));
 	}
 	
 	public abstract BlockState withUnrotatedPlacement(BlockState worldState, BlockState modelState);
 
 	@Override
-	@Deprecated
 	public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder)
 	{
 		return getModelState(state).getDrops(builder);
@@ -136,7 +131,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	@Override
 	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player)
 	{
-		return parentBlock.getCloneItemStack(state, target, level, pos, player);
+		return getModelState(state).getCloneItemStack(target, level, pos, player);
 	}
 
 	@Override
@@ -254,7 +249,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult)
 	{
 		BlockState modelState = getModelState(state);
-		InteractionResult res = getModelState(state).useWithoutItem(level, player, hitResult);
+		InteractionResult res = modelState.useWithoutItem(level, player, hitResult);
 		applyChanges(state, modelState, level, pos);
 		return res;
 	}
@@ -365,21 +360,18 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
-	@Deprecated
 	public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos otherPos, BlockState otherState, RandomSource rand)
 	{
 		return updateShapeImpl(state, level, tickAccess, pos, direction, otherPos, otherState, rand);
 	}
 
 	@Override
-	@Deprecated
 	public FluidState getFluidState(BlockState state)
 	{
 		return this.getModelState(state).getFluidState();
 	}
 
 	@Override
-	@Deprecated
 	public boolean skipRendering(BlockState thisState, BlockState adjacentState, Direction dir)
 	{
 		return this.getModelState(thisState).skipRendering(adjacentState, dir);
@@ -430,17 +422,21 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
 	{
 		if (rotatesModel(state))
-			return getRotation(state).applyBlockSpace(getUnrotatedModelState(state).getShape(level, pos, context));
+			return getRotation(state).applyBlockSpace(getModelState(state).getShape(level, pos, context));
 		else
 			return getShapeInternal(state, level, pos, context);
 	}
 
 	public abstract VoxelShape getShapeInternal(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context);
 
-	public abstract ResourceLocation getDynamicBlockstateJson();
-	
 	@Override
 	public boolean canGenerateAdditionalStates() {
 		return false;
 	}
+
+	@OnlyIn(Dist.CLIENT)
+	public abstract ResourceLocation getModelPrefix();
+
+	@OnlyIn(Dist.CLIENT)
+	public abstract StateModelDefinition getModelDefinition(BlockState state);
 }

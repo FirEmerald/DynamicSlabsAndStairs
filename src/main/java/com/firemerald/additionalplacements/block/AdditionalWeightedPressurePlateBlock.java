@@ -1,22 +1,23 @@
 package com.firemerald.additionalplacements.block;
 
-import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.interfaces.IWeightedPressurePlateBlock;
+import com.firemerald.additionalplacements.client.models.definitions.PressurePlateModels;
+import com.firemerald.additionalplacements.client.models.definitions.StateModelDefinition;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WeightedPressurePlateBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class AdditionalWeightedPressurePlateBlock extends AdditionalBasePressurePlateBlock<WeightedPressurePlateBlock> implements IWeightedPressurePlateBlock<WeightedPressurePlateBlock>
 {
-	static final ResourceLocation WEIGHTED_PRESSURE_PLATE_BLOCKSTATES = ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "blockstate_templates/weighted_pressure_plate.json");
-	
 	public static AdditionalWeightedPressurePlateBlock of(WeightedPressurePlateBlock plate, ResourceKey<Block> id)
 	{
 		return new AdditionalWeightedPressurePlateBlock(plate, id);
@@ -37,7 +38,8 @@ public class AdditionalWeightedPressurePlateBlock extends AdditionalBasePressure
 	}
 
 	@Override
-	public ResourceLocation getDynamicBlockstateJson() {
-		return WEIGHTED_PRESSURE_PLATE_BLOCKSTATES;
+	@OnlyIn(Dist.CLIENT)
+	public StateModelDefinition getModelDefinition(BlockState state) {
+		return PressurePlateModels.getWeightedPressurePlateModel(state);
 	}
 }
