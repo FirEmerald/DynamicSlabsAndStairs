@@ -82,7 +82,22 @@ public class ConfigurationCheckFailedPacket extends ClientLoginPacket
 		});
 		rootError.output(AdditionalPlacementsMod.LOGGER::warn);
 		//TODO move disconnect to a point that works?
-		client.execute(() -> {
+		client.execute(new HandleErrors(client, rootError));
+		return CompletableFuture.completedFuture(null);
+	}
+
+	@Environment(EnvType.CLIENT)
+	static class HandleErrors implements Runnable {
+		MessageTree rootError;
+		Minecraft client;
+
+		HandleErrors(Minecraft client, MessageTree rootError) {
+			this.client = client;
+			this.rootError = rootError;
+		}
+		
+		@Override
+		public void run() {
 			Minecraft minecraft = Minecraft.getInstance();
 			Screen desScreen = new TitleScreen();
 			boolean wasSinglePlayer;
@@ -95,7 +110,6 @@ public class ConfigurationCheckFailedPacket extends ClientLoginPacket
 				}
 			} else wasSinglePlayer = true;
 			minecraft.clearLevel(new ConnectionErrorsScreen(rootError, desScreen, wasSinglePlayer));
-		});
-		return CompletableFuture.completedFuture(null);
+		}
 	}
 }

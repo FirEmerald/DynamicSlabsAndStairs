@@ -16,7 +16,6 @@ import com.firemerald.additionalplacements.network.server.SetPlacementTogglePack
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -41,7 +40,7 @@ public class APNetwork
     {
         registerServerPlayPacket(SetPlacementTogglePacket.ID, SetPlacementTogglePacket::new);
         registerLoginResponsePackets(CheckDataClientPacket.ID, CheckDataClientPacket::new, CheckDataServerPacket::new);
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) registerClientLoginPacket(ConfigurationCheckFailedPacket.ID, ConfigurationCheckFailedPacket::new);
+        registerClientLoginPacket(ConfigurationCheckFailedPacket.ID, ConfigurationCheckFailedPacket::new);
         ServerLoginConnectionEvents.QUERY_START.register(APNetwork::onLoginQuery);
     }
 
@@ -55,7 +54,6 @@ public class APNetwork
     	ServerPlayNetworking.registerGlobalReceiver(id, (MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) -> fromBuffer.apply(buf).handleServer(server, player, handler, responseSender));
     }
 
-    @Environment(EnvType.CLIENT)
     public static <T extends ClientLoginPacket> void registerClientLoginPacket(ResourceLocation id, Function<FriendlyByteBuf, T> fromBuffer)
     {
     	ClientLoginNetworking.registerGlobalReceiver(id, (Minecraft client, ClientHandshakePacketListenerImpl handler, FriendlyByteBuf buf, Consumer<GenericFutureListener<? extends Future<? super Void>>> listenerAdder) -> fromBuffer.apply(buf).handleClient(client, handler, listenerAdder));
