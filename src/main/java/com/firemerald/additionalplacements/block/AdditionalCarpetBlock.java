@@ -76,8 +76,14 @@ public class AdditionalCarpetBlock extends AdditionalFloorBlock<CarpetBlock> imp
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public ResourceLocation getModelPrefix() {
+	public ResourceLocation getBaseModelPrefix() {
 		return CarpetModels.BASE_MODEL_FOLDER;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public ResourceLocation getDynamicModelPrefix() {
+		return CarpetModels.DYNAMIC_MODEL_FOLDER;
 	}
 
 	@Override

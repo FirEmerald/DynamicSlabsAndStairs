@@ -6,6 +6,8 @@ import java.util.Optional;
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.client.models.*;
+import com.firemerald.additionalplacements.client.models.dynamic.DynamicModelLoader;
+import com.firemerald.additionalplacements.client.models.fixed.FixedModelLoader;
 import com.firemerald.additionalplacements.client.resources.APDynamicResources;
 
 import me.pepperbell.continuity.client.model.CtmBakedModel;
@@ -78,7 +80,6 @@ public class ClientModEventHandler
 					true
 					)
 			);
-	private static PlacementBlockModelLoader loader;
 
 	@SubscribeEvent
 	public static void onAddPackFinders(AddPackFindersEvent event)
@@ -89,8 +90,8 @@ public class ClientModEventHandler
 	@SubscribeEvent
 	public static void onModelRegistryEvent(RegisterGeometryLoaders event)
 	{
-		loader = new PlacementBlockModelLoader();
-		event.register(PlacementBlockModelLoader.ID, loader);
+		event.register(FixedModelLoader.ID, new FixedModelLoader());
+		event.register(DynamicModelLoader.ID, new DynamicModelLoader());
 	}
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -108,7 +109,7 @@ public class ClientModEventHandler
     @SubscribeEvent
     public static void onRegisterClientReloadListeners(RegisterClientReloadListenersEvent event) {
     	event.registerReloadListener((ResourceManagerReloadListener) resourceManager -> {
-    		PlacementBlockModel.clearCache();
+    		BlockModelCache.clearCache();
     	});
     }
 
@@ -116,7 +117,7 @@ public class ClientModEventHandler
     public static void onClientSetup(FMLClientSetupEvent event) {
     	if (ModList.get().isLoaded("continuity")) {
     		AdditionalPlacementsMod.LOGGER.info("Continuity detected, registering continuity BakedModel unwrappers");
-    		PlacementBlockModel.registerUnwrapper(model -> {
+    		BlockModelCache.registerUnwrapper(model -> {
     			if (model instanceof CtmBakedModel ctm) return ctm.getWrappedModel();
     			else if (model instanceof EmissiveBakedModel emm) return emm.getWrappedModel();
     			else return null;
@@ -124,7 +125,7 @@ public class ClientModEventHandler
     	}
     	if (ModList.get().isLoaded("ctm")) {
     		AdditionalPlacementsMod.LOGGER.info("Connected Textures Mod (ctm) detected, registering ctm BakedModel unwrappers");
-    		PlacementBlockModel.registerUnwrapper(model -> {
+    		BlockModelCache.registerUnwrapper(model -> {
     			if (model instanceof AbstractCTMBakedModel ctm) return ctm.getParent();
     			else return null;
     		});
