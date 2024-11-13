@@ -1,10 +1,12 @@
 package com.firemerald.additionalplacements.client.models.fixed;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
-import com.firemerald.additionalplacements.client.models.BlockModelCache;
+import com.firemerald.additionalplacements.client.models.Unwrapper;
 import com.firemerald.additionalplacements.util.BlockRotation;
 
 import net.minecraft.client.renderer.block.model.ItemOverride;
@@ -20,7 +22,6 @@ public class UnbakedFixedModel implements IUnbakedGeometry<UnbakedFixedModel>
 	public final ResourceLocation ourModelLocation;
 	public final ModelResourceLocation theirModelLocation;
 	public final BlockRotation modelRotation;
-	private UnbakedModel ourModel;
 
 	public UnbakedFixedModel(AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, ModelResourceLocation theirModelLocation, BlockRotation modelRotation)
 	{
@@ -33,16 +34,27 @@ public class UnbakedFixedModel implements IUnbakedGeometry<UnbakedFixedModel>
 	@Override
 	public void resolveDependencies(UnbakedModel.Resolver modelGetter, IGeometryBakingContext context)
     {
-		ourModel = modelGetter.resolve(ourModelLocation);
+		modelGetter.resolve(ourModelLocation);
     }
 
 	@Override
 	public BakedModel bake(IGeometryBakingContext context, ModelBaker bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, List<ItemOverride> overrides)
 	{
-		UnbakedModel theirModel = bakery.getTopLevelModel(theirModelLocation);		
-		return BlockModelCache.bake(block, 
-				BlockModelCache.bake(this.ourModel, bakery, spriteGetter, modelTransform), 
-				BlockModelCache.bake(theirModel, bakery, spriteGetter),
+		return get(block, 
+				Unwrapper.unwrap(bakery.bake(ourModelLocation, modelTransform, spriteGetter)), 
+				Unwrapper.unwrap(bakery.bakeUncached(bakery.getTopLevelModel(theirModelLocation), BlockModelRotation.X0_Y0, spriteGetter)),
 				modelRotation);
+	}
+	
+	private static record ModelKey(AdditionalPlacementBlock<?> block, BakedModel ourModel, BakedModel theirModel, BlockRotation modelRotation) {}
+	
+	private static final Map<ModelKey, BakedFixedModel> MODEL_CACHE = new HashMap<>();
+	
+	public static BakedFixedModel get(AdditionalPlacementBlock<?> block, BakedModel ourModel, BakedModel theirModel, BlockRotation modelRotation) {
+		return MODEL_CACHE.computeIfAbsent(new ModelKey(block, ourModel, theirModel, modelRotation), key -> new BakedFixedModel(block, ourModel, theirModel, modelRotation));
+	}
+	
+	public static void clearCache() {
+		MODEL_CACHE.clear();
 	}
 }
