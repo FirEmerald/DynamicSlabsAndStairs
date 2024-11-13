@@ -1,9 +1,9 @@
 package com.firemerald.additionalplacements.client;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
-import com.firemerald.additionalplacements.client.models.BlockModelCache;
 import com.firemerald.additionalplacements.client.models.dynamic.DynamicModelLoader;
 import com.firemerald.additionalplacements.client.models.fixed.FixedModelLoader;
+import com.firemerald.additionalplacements.client.models.fixed.UnbakedFixedModel;
 import com.firemerald.additionalplacements.client.resources.APDynamicResources;
 
 import net.minecraft.network.chat.Component;
@@ -69,7 +69,7 @@ public class ClientModEventHandler
     @SubscribeEvent
     public static void onRegisterClientReloadListeners(RegisterClientReloadListenersEvent event) {
     	event.registerReloadListener((ResourceManagerReloadListener) resourceManager -> {
-    		BlockModelCache.clearCache();
+    		UnbakedFixedModel.clearCache();
     	});
     }
 }
