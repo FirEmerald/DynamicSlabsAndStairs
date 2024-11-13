@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class PressurePlateModels {
 	public static final ResourceLocation BASE_MODEL_FOLDER = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "block/pressure_plates/base");
+	public static final ResourceLocation DYNAMIC_MODEL_FOLDER = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "block/pressure_plates/dynamic");
 	public static final ResourceLocation COLUMN_MODEL_FOLDER = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "block/pressure_plates/column");
 	public static final ResourceLocation SIDE_ALL_MODEL_FOLDER = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "block/pressure_plates/side_all");
 
