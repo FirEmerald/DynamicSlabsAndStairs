@@ -2,7 +2,7 @@ package com.firemerald.additionalplacements.client.models.dynamic;
 
 import java.util.function.Function;
 
-import com.firemerald.additionalplacements.client.models.BlockModelCache;
+import com.firemerald.additionalplacements.client.models.Unwrapper;
 
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -14,7 +14,6 @@ import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
 public class UnbakedDynamicModel implements IUnbakedGeometry<UnbakedDynamicModel>
 {
 	public final ResourceLocation ourModelLocation;
-	private UnbakedModel ourModel;
 
 	public UnbakedDynamicModel(ResourceLocation ourModelLocation)
 	{
@@ -24,12 +23,12 @@ public class UnbakedDynamicModel implements IUnbakedGeometry<UnbakedDynamicModel
 	@Override
 	public void resolveParents(Function<ResourceLocation, UnbakedModel> modelGetter, IGeometryBakingContext context)
     {
-		ourModel = modelGetter.apply(ourModelLocation);
+		modelGetter.apply(ourModelLocation);
     }
 
 	@Override
 	public BakedModel bake(IGeometryBakingContext context, ModelBaker bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation)
 	{
-		return new BakedDynamicModel(BlockModelCache.bake(this.ourModel, bakery, spriteGetter, modelTransform, ourModelLocation));
+		return new BakedDynamicModel(Unwrapper.unwrap(bakery.bake(ourModelLocation, modelTransform, spriteGetter)));
 	}
 }
