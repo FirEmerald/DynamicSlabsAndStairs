@@ -2,7 +2,6 @@ package com.firemerald.additionalplacements.client.models.fixed;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
-import com.firemerald.additionalplacements.client.models.BlockModelCache;
 import com.firemerald.additionalplacements.util.BlockRotation;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
@@ -19,7 +18,7 @@ public class FixedModelLoader implements IModelLoader<UnbakedFixedModel>
 
 	@Override
 	public void onResourceManagerReload(ResourceManager pResourceManager) {
-		BlockModelCache.clearCache();
+		UnbakedFixedModel.clearCache();
 	}
 
 	@Override
