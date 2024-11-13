@@ -1,4 +1,4 @@
-package com.firemerald.additionalplacements.client.models;
+package com.firemerald.additionalplacements.client.models.fixed;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
@@ -11,14 +11,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.geometry.IGeometryLoader;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class PlacementBlockModelLoader implements IGeometryLoader<PlacementBlockModel>
+public class FixedModelLoader implements IGeometryLoader<UnbakedFixedModel>
 {
-	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "placement_block_loader");
+	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "fixed");
 
 	@Override
-	public PlacementBlockModel read(JsonObject modelContents, JsonDeserializationContext deserializationContext)
+	public UnbakedFixedModel read(JsonObject modelContents, JsonDeserializationContext deserializationContext)
 	{
-		return new PlacementBlockModel(
+		return new UnbakedFixedModel(
 				(AdditionalPlacementBlock<?>) ForgeRegistries.BLOCKS.getValue(new ResourceLocation(modelContents.get("block").getAsString())),
 				new ResourceLocation(modelContents.get("ourModel").getAsString()),
 				new ModelResourceLocation(new ResourceLocation(modelContents.get("theirBlock").getAsString()), modelContents.get("theirState").getAsString()),
