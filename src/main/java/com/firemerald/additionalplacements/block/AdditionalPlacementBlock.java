@@ -382,7 +382,6 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
-	@Deprecated
 	public boolean isSignalSource(BlockState state)
 	{
 		return getModelState(state).isSignalSource();
@@ -398,7 +397,6 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 
 	
 	@Override
-	@Deprecated
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
 	{
 		if (rotatesModel(state))
@@ -415,7 +413,12 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Environment(EnvType.CLIENT)
-	public abstract ResourceLocation getModelPrefix();
+	public abstract ResourceLocation getBaseModelPrefix();
+
+	@Environment(EnvType.CLIENT)
+	public abstract ResourceLocation getDynamicModelPrefix();
+	
+	public abstract Property<?>[] dynamicModelProperties();
 
 	@Environment(EnvType.CLIENT)
 	public abstract StateModelDefinition getModelDefinition(BlockState state);

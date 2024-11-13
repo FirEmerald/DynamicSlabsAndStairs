@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.firemerald.additionalplacements.client.IBlockModelExtensions;
-import com.firemerald.additionalplacements.client.models.PlacementBlockModel;
+import com.firemerald.additionalplacements.client.models.IUnbakedGeometry;
 
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverride;
@@ -23,7 +23,7 @@ import net.minecraft.client.resources.model.UnbakedModel.Resolver;
 @Mixin(value = BlockModel.class, priority = 900)
 public abstract class MixinBlockModel implements IBlockModelExtensions {
 	@Unique
-	private PlacementBlockModel placementModel = null;
+	private IUnbakedGeometry<?> placementModel = null;
 	@Shadow
 	private List<ItemOverride> overrides;
 	
@@ -40,7 +40,7 @@ public abstract class MixinBlockModel implements IBlockModelExtensions {
 	}
 
 	@Override
-	public void setPlacementModel(PlacementBlockModel placementModel) {
+	public void setPlacementModel(IUnbakedGeometry<?> placementModel) {
 		this.placementModel = placementModel;
 	}
 }

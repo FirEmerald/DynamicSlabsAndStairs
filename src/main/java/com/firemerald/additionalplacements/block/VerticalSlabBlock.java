@@ -34,6 +34,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock> implements ISlabBlock<SlabBlock>, ISimpleRotationBlock
 {
 	public static final EnumProperty<Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
+	public static final Property<?>[] PLACEMENT_PROPERTIES = new Property[] {AXIS};
 
 	public static VerticalSlabBlock of(SlabBlock slab, ResourceKey<Block> id)
 	{
@@ -158,13 +159,24 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public ResourceLocation getModelPrefix() {
+	public ResourceLocation getBaseModelPrefix() {
 		return SlabModels.BASE_MODEL_FOLDER;
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public ResourceLocation getDynamicModelPrefix() {
+		return SlabModels.DYNAMIC_MODEL_FOLDER;
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
 	public StateModelDefinition getModelDefinition(BlockState state) {
 		return SlabModels.getModel(state);
+	}
+
+	@Override
+	public Property<?>[] dynamicModelProperties() {
+		return PLACEMENT_PROPERTIES;
 	}
 }
