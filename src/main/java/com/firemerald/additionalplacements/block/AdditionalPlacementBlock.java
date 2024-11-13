@@ -443,7 +443,12 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public abstract ResourceLocation getModelPrefix();
+	public abstract ResourceLocation getBaseModelPrefix();
+
+	@OnlyIn(Dist.CLIENT)
+	public abstract ResourceLocation getDynamicModelPrefix();
+	
+	public abstract Property<?>[] dynamicModelProperties();
 
 	@OnlyIn(Dist.CLIENT)
 	public abstract StateModelDefinition getModelDefinition(BlockState state);
