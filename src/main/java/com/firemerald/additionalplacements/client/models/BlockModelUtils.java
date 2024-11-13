@@ -1,4 +1,4 @@
-package com.firemerald.additionalplacements.client;
+package com.firemerald.additionalplacements.client.models;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,8 +50,19 @@ public class BlockModelUtils
 
 	public static final ModelData getModelData(BlockState blockState, ModelData defaultData)
 	{
-		return blockState.hasBlockEntity() ? ((EntityBlock) blockState.getBlock()).newBlockEntity(new BlockPos(0, 0, 0), blockState).getModelData() : defaultData;
-		//TODO merge model data
+		if (blockState.hasBlockEntity()) {
+			ModelData add = ((EntityBlock) blockState.getBlock()).newBlockEntity(new BlockPos(0, 0, 0), blockState).getModelData();
+			ModelData.Builder builder = add.derive();
+			defaultData.getProperties().forEach(prop -> set(builder, prop, defaultData));
+			return builder.build();
+		}
+		else return defaultData;
+	}
+	
+	private static <T> void set(ModelData.Builder builder, ModelProperty<?> prop, ModelData defaultData) {
+		@SuppressWarnings("unchecked")
+		ModelProperty<T> prop2 = (ModelProperty<T>) prop;
+		builder.with(prop2, defaultData.get(prop2));
 	}
 
 	public static final BakedQuad retexture(BakedQuad jsonBakedQuad, TextureAtlasSprite newSprite, int newTintIndex, int vertexSize, int uvOffset)

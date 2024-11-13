@@ -1,11 +1,12 @@
-package com.firemerald.additionalplacements.client.models;
+package com.firemerald.additionalplacements.client.models.fixed;
 
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
-import com.firemerald.additionalplacements.client.BlockModelUtils;
+import com.firemerald.additionalplacements.client.models.BlockModelUtils;
+import com.firemerald.additionalplacements.client.models.PlacementModelWrapper;
 import com.firemerald.additionalplacements.util.BlockRotation;
 
 import net.minecraft.client.renderer.RenderType;
@@ -19,13 +20,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.data.ModelData;
 
-public class BakedPlacementBlockModel extends PlacementModelWrapper
+public class BakedFixedModel extends PlacementModelWrapper
 {
 	private final AdditionalPlacementBlock<?> block;
 	private final BakedModel ourModel;
 	private final BlockRotation modelRotation;
 	
-	public BakedPlacementBlockModel(AdditionalPlacementBlock<?> block, BakedModel ourModel, BakedModel theirModel, BlockRotation modelRotation)
+	public BakedFixedModel(AdditionalPlacementBlock<?> block, BakedModel ourModel, BakedModel theirModel, BlockRotation modelRotation)
 	{
 		super(theirModel);
 		this.block = block;
