@@ -7,7 +7,8 @@ import org.jetbrains.annotations.Nullable;
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
-import com.firemerald.additionalplacements.client.models.BlockModelCache;
+import com.firemerald.additionalplacements.client.models.Unwrapper;
+import com.firemerald.additionalplacements.client.models.fixed.UnbakedFixedModel;
 import com.firemerald.additionalplacements.client.resources.APDynamicResources;
 import com.firemerald.additionalplacements.common.CommonModEvents;
 import com.firemerald.additionalplacements.config.APConfigs;
@@ -74,7 +75,7 @@ public class ClientModEvents implements ClientModInitializer
 		KeyBindingHelper.registerKeyBinding(APClientData.AP_PLACEMENT_KEY);
 		if (FabricLoader.getInstance().isModLoaded("continuity")) {
     		AdditionalPlacementsMod.LOGGER.info("Continuity detected, registering continuity BakedModel unwrappers");
-    		BlockModelCache.registerUnwrapper(model -> {
+    		Unwrapper.registerUnwrapper(model -> {
     			if (model instanceof CTMBakedModel ctm) return ctm.getWrappedModel();
     			else if (model instanceof EmissiveBakedModel emm) return emm.getWrappedModel();
     			else return null;
@@ -97,7 +98,7 @@ public class ClientModEvents implements ClientModInitializer
 	    	});
 	    	client.getBlockColors().register(new AdditionalBlockColor(), Registry.BLOCK.stream().filter(block -> block instanceof AdditionalPlacementBlock && !((AdditionalPlacementBlock<?>) block).hasCustomColors()).toArray(Block[]::new));
 	    	((ReloadableResourceManager) client.getResourceManager()).registerReloadListener((ResourceManagerReloadListener) resourceManager -> {
-	    		BlockModelCache.clearCache();
+	    		UnbakedFixedModel.clearCache();
 	    	});
 			hasInit = true;
 		}
