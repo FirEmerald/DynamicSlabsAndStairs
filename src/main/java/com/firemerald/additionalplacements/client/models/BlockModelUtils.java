@@ -1,4 +1,4 @@
-package com.firemerald.additionalplacements.client;
+package com.firemerald.additionalplacements.client.models;
 
 import java.util.*;
 import java.util.function.Function;
@@ -7,6 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
+import com.firemerald.additionalplacements.client.IVertexFormatExtensions;
 import com.firemerald.additionalplacements.util.BlockRotation;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;

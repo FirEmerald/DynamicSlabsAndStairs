@@ -8,7 +8,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.firemerald.additionalplacements.client.IBlockModelExtensions;
-import com.firemerald.additionalplacements.client.models.PlacementBlockModelLoader;
+import com.firemerald.additionalplacements.client.models.dynamic.DynamicModelLoader;
+import com.firemerald.additionalplacements.client.models.fixed.FixedModelLoader;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -24,9 +25,13 @@ public class MixinBlockModelDeserializer {
         JsonObject jsonObject = json.getAsJsonObject();
         if (jsonObject.has("loader")) {
 			String loader = GsonHelper.getAsString(jsonObject, "loader");
-			if (loader.equals(PlacementBlockModelLoader.ID.toString())) {
+			if (loader.equals(FixedModelLoader.ID.toString())) {
 				jsonObject.remove("loader"); //Prevent PortingLib from reading our loader
-				((IBlockModelExtensions) cli.getReturnValue()).setPlacementModel(PlacementBlockModelLoader.read(context, jsonObject));
+				((IBlockModelExtensions) cli.getReturnValue()).setPlacementModel(FixedModelLoader.read(context, jsonObject));
+			}
+			else if (loader.equals(DynamicModelLoader.ID.toString())) {
+				jsonObject.remove("loader"); //Prevent PortingLib from reading our loader
+				((IBlockModelExtensions) cli.getReturnValue()).setPlacementModel(DynamicModelLoader.read(context, jsonObject));
 			}
         }
 	}

@@ -182,7 +182,13 @@ public abstract class AdditionalBasePressurePlateBlock<T extends BasePressurePla
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public ResourceLocation getModelPrefix() {
+	public ResourceLocation getBaseModelPrefix() {
 		return PressurePlateModels.BASE_MODEL_FOLDER;
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public ResourceLocation getDynamicModelPrefix() {
+		return PressurePlateModels.DYNAMIC_MODEL_FOLDER;
 	}
 }

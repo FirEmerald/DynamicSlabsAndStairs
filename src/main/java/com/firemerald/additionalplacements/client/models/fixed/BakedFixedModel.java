@@ -1,10 +1,11 @@
-package com.firemerald.additionalplacements.client.models;
+package com.firemerald.additionalplacements.client.models.fixed;
 
 import java.util.List;
 import java.util.Random;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
-import com.firemerald.additionalplacements.client.BlockModelUtils;
+import com.firemerald.additionalplacements.client.models.BlockModelUtils;
+import com.firemerald.additionalplacements.client.models.PlacementModelWrapper;
 import com.firemerald.additionalplacements.util.BlockRotation;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -12,13 +13,13 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BakedPlacementBlockModel extends PlacementModelWrapper
+public class BakedFixedModel extends PlacementModelWrapper
 {
 	private final AdditionalPlacementBlock<?> block;
 	private final BakedModel ourModel;
 	private final BlockRotation modelRotation;
 	
-	public BakedPlacementBlockModel(AdditionalPlacementBlock<?> block, BakedModel ourModel, BakedModel theirModel, BlockRotation modelRotation)
+	public BakedFixedModel(AdditionalPlacementBlock<?> block, BakedModel ourModel, BakedModel theirModel, BlockRotation modelRotation)
 	{
 		super(theirModel);
 		this.block = block;
