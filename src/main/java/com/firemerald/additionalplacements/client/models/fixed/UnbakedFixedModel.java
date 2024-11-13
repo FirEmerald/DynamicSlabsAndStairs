@@ -2,10 +2,12 @@ package com.firemerald.additionalplacements.client.models.fixed;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
-import com.firemerald.additionalplacements.client.models.BlockModelCache;
+import com.firemerald.additionalplacements.client.models.Unwrapper;
 import com.firemerald.additionalplacements.util.BlockRotation;
+import com.google.common.collect.Streams;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -21,7 +23,6 @@ public class UnbakedFixedModel implements IUnbakedGeometry<UnbakedFixedModel>
 	public final ResourceLocation ourModelLocation;
 	public final ModelResourceLocation theirModelLocation;
 	public final BlockRotation modelRotation;
-	private UnbakedModel ourModel, theirModel;
 
 	public UnbakedFixedModel(AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, ModelResourceLocation theirModelLocation, BlockRotation modelRotation)
 	{
@@ -34,22 +35,30 @@ public class UnbakedFixedModel implements IUnbakedGeometry<UnbakedFixedModel>
 	@Override
 	public BakedModel bake(IGeometryBakingContext context, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation)
 	{
-		return BlockModelCache.bake(block, 
-				BlockModelCache.bake(this.ourModel, bakery, spriteGetter, modelTransform, ourModelLocation), 
-				BlockModelCache.bake(this.theirModel, bakery, spriteGetter, theirModelLocation),
+		return get(block, 
+				Unwrapper.unwrap(bakery.bake(ourModelLocation, modelTransform, spriteGetter)), 
+				Unwrapper.unwrap(bakery.bake(theirModelLocation, BlockModelRotation.X0_Y0, spriteGetter)),
 				modelRotation);
 	}
 
 	@Override
 	public Collection<Material> getMaterials(IGeometryBakingContext owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors)
 	{
-		ourModel = modelGetter.apply(ourModelLocation);
-		theirModel = modelGetter.apply(theirModelLocation);
-		Collection<Material> ourTextures = ourModel.getMaterials(modelGetter, missingTextureErrors);
-		Collection<Material> theirTextures = theirModel.getMaterials(modelGetter, missingTextureErrors);
-		List<Material> textures = new ArrayList<>(ourTextures.size() + theirTextures.size());
-		textures.addAll(ourTextures);
-		textures.addAll(theirTextures);
-		return textures;
+		return Streams.concat(
+				modelGetter.apply(ourModelLocation).getMaterials(modelGetter, missingTextureErrors).stream(),
+				modelGetter.apply(theirModelLocation).getMaterials(modelGetter, missingTextureErrors).stream()
+				).collect(Collectors.toSet());
+	}
+	
+	private static record ModelKey(AdditionalPlacementBlock<?> block, BakedModel ourModel, BakedModel theirModel, BlockRotation modelRotation) {}
+	
+	private static final Map<ModelKey, BakedFixedModel> MODEL_CACHE = new HashMap<>();
+	
+	public static BakedFixedModel get(AdditionalPlacementBlock<?> block, BakedModel ourModel, BakedModel theirModel, BlockRotation modelRotation) {
+		return MODEL_CACHE.computeIfAbsent(new ModelKey(block, ourModel, theirModel, modelRotation), key -> new BakedFixedModel(block, ourModel, theirModel, modelRotation));
+	}
+	
+	public static void clearCache() {
+		MODEL_CACHE.clear();
 	}
 }

@@ -3,7 +3,7 @@ package com.firemerald.additionalplacements.client.models.dynamic;
 import java.util.*;
 import java.util.function.Function;
 
-import com.firemerald.additionalplacements.client.models.BlockModelCache;
+import com.firemerald.additionalplacements.client.models.Unwrapper;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -16,7 +16,6 @@ import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
 public class UnbakedDynamicModel implements IUnbakedGeometry<UnbakedDynamicModel>
 {
 	public final ResourceLocation ourModelLocation;
-	private UnbakedModel ourModel;
 
 	public UnbakedDynamicModel(ResourceLocation ourModelLocation)
 	{
@@ -26,13 +25,12 @@ public class UnbakedDynamicModel implements IUnbakedGeometry<UnbakedDynamicModel
 	@Override
 	public BakedModel bake(IGeometryBakingContext context, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation)
 	{
-		return new BakedDynamicModel(BlockModelCache.bake(this.ourModel, bakery, spriteGetter, modelTransform, ourModelLocation));
+		return new BakedDynamicModel(Unwrapper.unwrap(bakery.bake(ourModelLocation, modelTransform, spriteGetter)));
 	}
 
 	@Override
 	public Collection<Material> getMaterials(IGeometryBakingContext owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors)
 	{
-		ourModel = modelGetter.apply(ourModelLocation);
-		return Collections.emptyList();
+		return modelGetter.apply(ourModelLocation).getMaterials(modelGetter, missingTextureErrors);
 	}
 }
