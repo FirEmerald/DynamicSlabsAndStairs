@@ -11,11 +11,8 @@ import com.firemerald.additionalplacements.network.server.ServerConfigurationPac
 import com.firemerald.additionalplacements.network.server.ServerPlayPacket;
 import com.firemerald.additionalplacements.network.server.SetPlacementTogglePacket;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.fabric.api.networking.v1.*;
 import net.fabricmc.fabric.impl.networking.server.ServerConfigurationNetworkAddon;
 import net.fabricmc.fabric.impl.networking.server.ServerNetworkingImpl;
