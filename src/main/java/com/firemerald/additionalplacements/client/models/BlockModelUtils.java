@@ -1,4 +1,4 @@
-package com.firemerald.additionalplacements.client;
+package com.firemerald.additionalplacements.client.models;
 
 import java.util.*;
 import java.util.function.Function;
@@ -46,7 +46,7 @@ public class BlockModelUtils
 	public static final IModelData getModelData(BlockState blockState, IModelData defaultData)
 	{
 		return blockState.hasBlockEntity() ? ((EntityBlock) blockState.getBlock()).newBlockEntity(new BlockPos(0, 0, 0), blockState).getModelData() : defaultData;
-		//TODO merge model data
+		//TODO find a way to merge data
 	}
 
 	public static final BakedQuad retexture(BakedQuad jsonBakedQuad, TextureAtlasSprite newSprite, int newTintIndex, int vertexSize, int uvOffset)
