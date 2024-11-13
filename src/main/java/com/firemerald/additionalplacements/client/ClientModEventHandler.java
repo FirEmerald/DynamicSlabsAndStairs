@@ -1,8 +1,9 @@
 package com.firemerald.additionalplacements.client;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
-import com.firemerald.additionalplacements.client.models.PlacementBlockModel;
-import com.firemerald.additionalplacements.client.models.PlacementBlockModelLoader;
+import com.firemerald.additionalplacements.client.models.BlockModelCache;
+import com.firemerald.additionalplacements.client.models.dynamic.DynamicModelLoader;
+import com.firemerald.additionalplacements.client.models.fixed.FixedModelLoader;
 import com.firemerald.additionalplacements.client.resources.APDynamicResources;
 
 import net.minecraft.network.chat.Component;
@@ -39,7 +40,6 @@ public class ClientModEventHandler
 			true,
 			PackSource.BUILT_IN
 			);
-	private static PlacementBlockModelLoader loader;
 
 	@SubscribeEvent
 	public static void onAddPackFinders(AddPackFindersEvent event)
@@ -50,8 +50,8 @@ public class ClientModEventHandler
 	@SubscribeEvent
 	public static void onModelRegistryEvent(RegisterGeometryLoaders event)
 	{
-		loader = new PlacementBlockModelLoader();
-		event.register(PlacementBlockModelLoader.ID.getPath(), loader);
+		event.register(FixedModelLoader.ID.getPath(), new FixedModelLoader());
+		event.register(DynamicModelLoader.ID.getPath(), new DynamicModelLoader());
 	}
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -69,7 +69,7 @@ public class ClientModEventHandler
     @SubscribeEvent
     public static void onRegisterClientReloadListeners(RegisterClientReloadListenersEvent event) {
     	event.registerReloadListener((ResourceManagerReloadListener) resourceManager -> {
-    		PlacementBlockModel.clearCache();
+    		BlockModelCache.clearCache();
     	});
     }
 }
