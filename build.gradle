@@ -91,11 +91,11 @@ dependencies {
 	
 	//modApi("com.simibubi.create:create-fabric-1.20.1:0.5.1-d-build.1161+mc1.20.1")
     modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:20.4.3"
-   	modCompileOnly("io.github.fabricators_of_create.Porting-Lib:core:${project.porting_lib_version}")
-   	modCompileOnly("io.github.fabricators_of_create.Porting-Lib:data:${project.porting_lib_version}")
-   	modCompileOnly("io.github.fabricators_of_create.Porting-Lib:model_generators:${project.porting_lib_version}")
-   	modCompileOnly("io.github.fabricators_of_create.Porting-Lib:model_materials:${project.porting_lib_version}")
-   	modCompileOnly("io.github.fabricators_of_create.Porting-Lib:utility:${project.porting_lib_version}")
+   	modImplementation("io.github.fabricators_of_create.Porting-Lib:core:${project.porting_lib_version}")
+   	modImplementation("io.github.fabricators_of_create.Porting-Lib:data:${project.porting_lib_version}")
+   	modImplementation("io.github.fabricators_of_create.Porting-Lib:model_generators:${project.porting_lib_version}")
+   	modImplementation("io.github.fabricators_of_create.Porting-Lib:model_materials:${project.porting_lib_version}")
+   	modImplementation("io.github.fabricators_of_create.Porting-Lib:utility:${project.porting_lib_version}")
 	modApi("curse.maven:continuity-531351:5344959") //Continuity
 }
 
