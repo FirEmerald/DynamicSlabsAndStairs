@@ -1,10 +1,12 @@
 package com.firemerald.additionalplacements.client.models.fixed;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.client.IModelBakerExtensions;
-import com.firemerald.additionalplacements.client.models.BlockModelCache;
+import com.firemerald.additionalplacements.client.models.Unwrapper;
 import com.firemerald.additionalplacements.client.models.IUnbakedGeometry;
 import com.firemerald.additionalplacements.util.BlockRotation;
 
@@ -20,7 +22,6 @@ public class UnbakedFixedModel implements IUnbakedGeometry<UnbakedFixedModel>
 	public final ResourceLocation ourModelLocation;
 	public final ModelResourceLocation theirModelLocation;
 	public final BlockRotation modelRotation;
-	private UnbakedModel ourModel;
 
 	public UnbakedFixedModel(AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, ModelResourceLocation theirModelLocation, BlockRotation modelRotation)
 	{
@@ -33,7 +34,7 @@ public class UnbakedFixedModel implements IUnbakedGeometry<UnbakedFixedModel>
 	@Override
 	public void resolveParents(Function<ResourceLocation, UnbakedModel> modelGetter, BlockModel context)
 	{
-		ourModel = modelGetter.apply(ourModelLocation);
+		modelGetter.apply(ourModelLocation);
 	}
 
 	@Override
@@ -41,10 +42,22 @@ public class UnbakedFixedModel implements IUnbakedGeometry<UnbakedFixedModel>
 			BlockModel context, ModelBaker bakery, Function<Material, TextureAtlasSprite> spriteGetter,
 			ModelState modelTransform, ItemOverrides overrides)
 	{
-		UnbakedModel theirModel = ((IModelBakerExtensions) bakery).apGetTopLevelModel(theirModelLocation);
-		return BlockModelCache.bake(block, 
-				BlockModelCache.bake(this.ourModel, bakery, spriteGetter, modelTransform), 
-				BlockModelCache.bake(theirModel, bakery, spriteGetter),
+		IModelBakerExtensions bakeryExt = (IModelBakerExtensions) bakery;
+		return get(block, 
+				Unwrapper.unwrap(bakery.bake(ourModelLocation, modelTransform)), 
+				Unwrapper.unwrap(bakeryExt.apBakeUncached(bakeryExt.apGetTopLevelModel(theirModelLocation), BlockModelRotation.X0_Y0)),
 				modelRotation);
+	}
+	
+	private static record ModelKey(AdditionalPlacementBlock<?> block, BakedModel ourModel, BakedModel theirModel, BlockRotation modelRotation) {}
+	
+	private static final Map<ModelKey, BakedFixedModel> MODEL_CACHE = new HashMap<>();
+	
+	public static BakedFixedModel get(AdditionalPlacementBlock<?> block, BakedModel ourModel, BakedModel theirModel, BlockRotation modelRotation) {
+		return MODEL_CACHE.computeIfAbsent(new ModelKey(block, ourModel, theirModel, modelRotation), key -> new BakedFixedModel(block, ourModel, theirModel, modelRotation));
+	}
+	
+	public static void clearCache() {
+		MODEL_CACHE.clear();
 	}
 }
