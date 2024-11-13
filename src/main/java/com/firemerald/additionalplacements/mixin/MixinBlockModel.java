@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.firemerald.additionalplacements.client.IBlockModelExtensions;
-import com.firemerald.additionalplacements.client.models.PlacementBlockModel;
+import com.firemerald.additionalplacements.client.models.IUnbakedGeometry;
 
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -22,7 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 @Mixin(value = BlockModel.class, priority = 900)
 public abstract class MixinBlockModel implements IBlockModelExtensions {
 	@Unique
-	private PlacementBlockModel placementModel = null;
+	private IUnbakedGeometry<?> placementModel = null;
 	@Shadow
 	protected abstract ItemOverrides getItemOverrides(ModelBaker baker, BlockModel model);
 	
@@ -30,7 +30,7 @@ public abstract class MixinBlockModel implements IBlockModelExtensions {
 			at = @At("HEAD"), cancellable = true)
 	private void bake(ModelBaker baker, BlockModel model, Function<Material, TextureAtlasSprite> spriteGetter, ModelState state, boolean guiLight3d, CallbackInfoReturnable<BakedModel> cli) {
 		if (placementModel != null)
-			cli.setReturnValue(placementModel.bake(model, baker, spriteGetter, state, getItemOverrides(baker, model), guiLight3d));
+			cli.setReturnValue(placementModel.bake(model, baker, spriteGetter, state, getItemOverrides(baker, model)));
 	}
 	
 	@Inject(method = "resolveParents", at = @At("HEAD"))
@@ -39,7 +39,7 @@ public abstract class MixinBlockModel implements IBlockModelExtensions {
 	}
 
 	@Override
-	public void setPlacementModel(PlacementBlockModel placementModel) {
+	public void setPlacementModel(IUnbakedGeometry<?> placementModel) {
 		this.placementModel = placementModel;
 	}
 }
