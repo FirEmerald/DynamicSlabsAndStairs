@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class CarpetModels {
 	public static final ResourceLocation BASE_MODEL_FOLDER = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "block/carpets/base");
+	public static final ResourceLocation DYNAMIC_MODEL_FOLDER = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "block/carpets/dynamic");
 	public static final ResourceLocation COLUMN_MODEL_FOLDER = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "block/carpets/column");
 	public static final ResourceLocation SIDE_ALL_MODEL_FOLDER = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "block/carpets/side_all");
 
