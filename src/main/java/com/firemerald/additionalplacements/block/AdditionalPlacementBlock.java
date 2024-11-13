@@ -238,7 +238,6 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
-	@Deprecated
 	public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand)
 	{
 		BlockState modelState = getModelState(state);
@@ -434,7 +433,12 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Environment(EnvType.CLIENT)
-	public abstract ResourceLocation getModelPrefix();
+	public abstract ResourceLocation getBaseModelPrefix();
+
+	@Environment(EnvType.CLIENT)
+	public abstract ResourceLocation getDynamicModelPrefix();
+	
+	public abstract Property<?>[] dynamicModelProperties();
 
 	@Environment(EnvType.CLIENT)
 	public abstract StateModelDefinition getModelDefinition(BlockState state);

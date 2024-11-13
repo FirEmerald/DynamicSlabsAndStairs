@@ -1,0 +1,4 @@
+{
+  "loader": "additionalplacements:dynamic",
+  "ourModel": "additionalplacements:block/stairs/base/side/twist_right"
+}
