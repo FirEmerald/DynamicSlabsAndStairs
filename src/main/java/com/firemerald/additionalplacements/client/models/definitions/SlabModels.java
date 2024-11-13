@@ -11,6 +11,7 @@ import net.minecraft.util.Direction.Axis;
 
 public class SlabModels {
 	public static final ResourceLocation BASE_MODEL_FOLDER = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "block/slabs/base");
+	public static final ResourceLocation DYNAMIC_MODEL_FOLDER = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "block/slabs/dynamic");
 	public static final ResourceLocation COLUMN_MODEL_FOLDER = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "block/slabs/column");
 	public static final ResourceLocation SIDE_ALL_MODEL_FOLDER = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "block/slabs/side_all");
 	

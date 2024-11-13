@@ -3,7 +3,7 @@ package com.firemerald.additionalplacements.util;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import com.firemerald.additionalplacements.client.BlockModelUtils;
+import com.firemerald.additionalplacements.client.models.BlockModelUtils;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;

@@ -1,4 +1,4 @@
-package com.firemerald.additionalplacements.client.models;
+package com.firemerald.additionalplacements.client.models.fixed;
 
 import java.util.List;
 import java.util.Random;
@@ -6,7 +6,8 @@ import java.util.Random;
 import javax.annotation.Nonnull;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
-import com.firemerald.additionalplacements.client.BlockModelUtils;
+import com.firemerald.additionalplacements.client.models.BlockModelUtils;
+import com.firemerald.additionalplacements.client.models.PlacementModelWrapper;
 import com.firemerald.additionalplacements.util.BlockRotation;
 
 import net.minecraft.block.BlockState;
@@ -17,13 +18,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.client.model.data.IModelData;
 
-public class BakedPlacementBlockModel extends PlacementModelWrapper
+public class BakedFixedModel extends PlacementModelWrapper
 {
 	private final AdditionalPlacementBlock<?> block;
 	private final IBakedModel ourModel;
 	private final BlockRotation modelRotation;
 	
-	public BakedPlacementBlockModel(AdditionalPlacementBlock<?> block, IBakedModel ourModel, IBakedModel theirModel, BlockRotation modelRotation)
+	public BakedFixedModel(AdditionalPlacementBlock<?> block, IBakedModel ourModel, IBakedModel theirModel, BlockRotation modelRotation)
 	{
 		super(theirModel);
 		this.block = block;

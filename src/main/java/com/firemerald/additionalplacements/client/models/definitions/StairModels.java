@@ -11,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class StairModels {
 	public static final ResourceLocation BASE_MODEL_FOLDER = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "block/stairs/base");
+	public static final ResourceLocation DYNAMIC_MODEL_FOLDER = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "block/stairs/dynamic");
 	public static final ResourceLocation COLUMN_MODEL_FOLDER = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "block/stairs/column");
 	public static final ResourceLocation SIDE_ALL_MODEL_FOLDER = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "block/stairs/side_all");
 

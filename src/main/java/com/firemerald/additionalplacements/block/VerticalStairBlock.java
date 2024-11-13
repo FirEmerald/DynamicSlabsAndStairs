@@ -153,13 +153,24 @@ public class VerticalStairBlock extends AdditionalPlacementLiquidBlock<StairsBlo
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public ResourceLocation getModelPrefix() {
+	public ResourceLocation getBaseModelPrefix() {
 		return StairModels.BASE_MODEL_FOLDER;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public ResourceLocation getDynamicModelPrefix() {
+		return StairModels.DYNAMIC_MODEL_FOLDER;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public StateModelDefinition getModelDefinition(BlockState state) {
 		return StairModels.getModelDefinition(state, allowedConnections);
+	}
+
+	@Override
+	public Property<?>[] dynamicModelProperties() {
+		return allowedConnections.placementProperties;
 	}
 }

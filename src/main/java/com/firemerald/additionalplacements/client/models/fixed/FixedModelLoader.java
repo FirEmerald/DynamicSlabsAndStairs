@@ -1,7 +1,8 @@
-package com.firemerald.additionalplacements.client.models;
+package com.firemerald.additionalplacements.client.models.fixed;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
+import com.firemerald.additionalplacements.client.models.BlockModelCache;
 import com.firemerald.additionalplacements.util.BlockRotation;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
@@ -12,19 +13,19 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModelLoader;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class PlacementBlockModelLoader implements IModelLoader<PlacementBlockModel>
+public class FixedModelLoader implements IModelLoader<UnbakedFixedModel>
 {
-	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "placement_block_loader");
+	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "fixed");
 
 	@Override
 	public void onResourceManagerReload(IResourceManager pResourceManager) {
-		PlacementBlockModel.clearCache();
+		BlockModelCache.clearCache();
 	}
 
 	@Override
-	public PlacementBlockModel read(JsonDeserializationContext deserializationContext, JsonObject modelContents)
+	public UnbakedFixedModel read(JsonDeserializationContext deserializationContext, JsonObject modelContents)
 	{
-		return new PlacementBlockModel(
+		return new UnbakedFixedModel(
 				(AdditionalPlacementBlock<?>) ForgeRegistries.BLOCKS.getValue(new ResourceLocation(modelContents.get("block").getAsString())),
 				new ResourceLocation(modelContents.get("ourModel").getAsString()),
 				new ModelResourceLocation(new ResourceLocation(modelContents.get("theirBlock").getAsString()), modelContents.get("theirState").getAsString()),

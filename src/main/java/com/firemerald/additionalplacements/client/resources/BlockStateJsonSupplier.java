@@ -1,16 +1,17 @@
 package com.firemerald.additionalplacements.client.resources;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.BiFunction;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.client.models.definitions.StateModelDefinition;
+import com.firemerald.additionalplacements.config.APConfigs;
 import com.google.gson.JsonObject;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.state.Property;
+import net.minecraft.util.ResourceLocation;
 
 public class BlockStateJsonSupplier {	
 	public static InputStream of(AdditionalPlacementBlock<?> block, String blockName) {
@@ -19,15 +20,25 @@ public class BlockStateJsonSupplier {
 		root.add("variants", variants);
 		//TODO what if no blockstate properties?
 		BlockState state = block.defaultBlockState();
-		parseBlockstates(block, variants, state, new ArrayList<>(state.getProperties()), 0, "", "block/" + blockName + "/");
+		Property<?>[] props;
+		BiFunction<BlockState, String, ResourceLocation> getModel;
+		if (APConfigs.client().useDynamicModels.get()) {
+			props = block.dynamicModelProperties();
+			getModel = (modelState, stateDir) -> block.getModelDefinition(modelState).location(block.getDynamicModelPrefix());
+		}
+		else {
+			props = state.getProperties().toArray(new Property[state.getProperties().size()]);
+			getModel = (modelState, stateDir) -> new ResourceLocation(AdditionalPlacementsMod.MOD_ID, stateDir + "model");
+		}
+		parseBlockstates(block, variants, state, props, 0, "", "block/" + blockName + "/", getModel);
 		return JsonInputUtil.get(root);
 	}
 	
-	private static <T extends Comparable<T>> void parseBlockstates(AdditionalPlacementBlock<?> block, JsonObject variants, BlockState state, List<Property<?>> props, int index, String currentStateDef, String currentStateDir) {
-		if (index >= props.size()) {
+	private static <T extends Comparable<T>> void parseBlockstates(AdditionalPlacementBlock<?> block, JsonObject variants, BlockState state, Property<?>[] props, int index, String currentStateDef, String currentStateDir, BiFunction<BlockState, String, ResourceLocation> getModel) {
+		if (index >= props.length) {
 			JsonObject variant = new JsonObject();
 			variants.add(currentStateDef.substring(0, currentStateDef.length() - 1), variant);
-			variant.addProperty("model", AdditionalPlacementsMod.MOD_ID + ":" + currentStateDir + "model");
+			variant.addProperty("model", getModel.apply(state, currentStateDir).toString());
 			StateModelDefinition modelDef = block.getModelDefinition(state);
 			if (modelDef.xRotation != 0) variant.addProperty("x", modelDef.xRotation);
 			if (modelDef.yRotation != 0) variant.addProperty("y", modelDef.yRotation);
@@ -35,12 +46,12 @@ public class BlockStateJsonSupplier {
 		}
 		else {
 			@SuppressWarnings("unchecked")
-			Property<T> prop = (Property<T>) props.get(index);
+			Property<T> prop = (Property<T>) props[index];
 			String name = prop.getName();
 			String stateDef2 = currentStateDef + name + "=";
 			prop.getAllValues().forEach(val -> {
 				String valName = prop.getName(val.value());
-				parseBlockstates(block, variants, state.setValue(prop, val.value()), props, index + 1, stateDef2 + valName + ",", currentStateDir + valName + "/");
+				parseBlockstates(block, variants, state.setValue(prop, val.value()), props, index + 1, stateDef2 + valName + ",", currentStateDir + valName + "/", getModel);
 			});
 		}
 	}
