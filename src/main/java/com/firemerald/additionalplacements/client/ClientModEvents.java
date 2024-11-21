@@ -12,7 +12,6 @@ import com.firemerald.additionalplacements.client.models.BakedPlacementModel;
 import com.firemerald.additionalplacements.client.models.Unwrapper;
 import com.firemerald.additionalplacements.common.CommonModEvents;
 import com.firemerald.additionalplacements.config.APConfigs;
-import com.firemerald.additionalplacements.generation.GenerationType;
 import com.firemerald.additionalplacements.generation.Registration;
 
 import me.pepperbell.continuity.client.model.CtmBakedModel;
@@ -71,8 +70,7 @@ public class ClientModEvents implements ClientModInitializer
     		});
 		}
 		ModelLoadingPlugin.register(context -> {
-			context.addModels(Registration.types()
-					.flatMap(GenerationType::created)
+			context.addModels(Registration.created()
 					.flatMap(entry -> entry.newBlock().allBaseModels())
 					.collect(Collectors.toSet())
 					);
