@@ -60,8 +60,7 @@ public class ClientModEventHandler
     
     @SubscribeEvent
     public static void onRegisterAdditionalModels(RegisterAdditional event) {
-    	Registration.types()
-    	.flatMap(GenerationType::created)
+    	Registration.created()
     	.flatMap(entry -> entry.newBlock().allBaseModels())
     	.forEach(event::register);
     }
