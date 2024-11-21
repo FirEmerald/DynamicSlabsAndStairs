@@ -129,7 +129,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 	compileOnly "curse.maven:ctm-267602:5587515" //Connected Textures Mod
-	compileOnly "curse.maven:continuity-531351:5425853" //Fabric mods don't properly deobfuscate, but this works well enough for what we need from it
+	compileOnly "local:continuity:3.0.0-beta.5" //Fabric mods don't properly deobfuscate, so we use a deobfuscated jar from a fabric MDK
 	compileOnly "local:fabric-renderer-api-v1:3.4.0" // Jar extracted from forgified-fabric, META-INF/neoforge.mods.toml removed to prevent it from being loaded as a mod
 }
 
