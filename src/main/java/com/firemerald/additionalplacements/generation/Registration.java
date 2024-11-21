@@ -77,6 +77,14 @@ public class Registration {
 		return TYPES.values().stream();
 	}
 	
+	public static void forEachCreated(Consumer<? super CreatedBlockEntry<?, ?>> action) {
+		TYPES.values().forEach(type -> type.forEachCreated(action));
+	}
+	
+	public static Stream<CreatedBlockEntry<?, ?>> created() {
+		return types().flatMap(GenerationType::created);
+	}
+	
 	public static void buildConfig(ForgeConfigSpec.Builder builder, BiConsumer<GenerationType<?, ?>, ForgeConfigSpec.Builder> build) {
         builder.comment("Options for registered block types for additional placement generation.").push("types");
         Registration.forEach((name, type) -> {

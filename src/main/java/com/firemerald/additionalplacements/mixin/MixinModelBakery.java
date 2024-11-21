@@ -18,7 +18,6 @@ import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.client.models.PlacementModelState;
 import com.firemerald.additionalplacements.client.models.UnbakedPlacementModel;
 import com.firemerald.additionalplacements.client.models.definitions.StateModelDefinition;
-import com.firemerald.additionalplacements.generation.GenerationType;
 import com.firemerald.additionalplacements.generation.Registration;
 import com.firemerald.additionalplacements.util.BlockRotation;
 
@@ -42,7 +41,7 @@ public class MixinModelBakery {
 		Map<UnbakedModel, ResourceLocation> topLevelModelsReversed = topLevelModels.entrySet().stream().collect(Collectors.toMap(Entry::getValue, Entry::getKey, (o, n) -> o));
 		UnbakedModel missingModel = unbakedCache.get(ModelBakery.MISSING_MODEL_LOCATION);
 		//TODO replace with hook in net.minecraft.client.resources.model.BlockStateModelLoader.loadBlockStateDefinitions(ResourceLocation, StateDefinition) line 166 at BlockStateModelLoader.LoadedModel loadedModel = (BlockStateModelLoader.LoadedModel)map2.get(blockState);
-		Registration.types().flatMap(GenerationType::created).forEach(entry -> {
+		Registration.forEachCreated(entry -> {
 			AdditionalPlacementBlock<?> block = entry.newBlock();
 			block.getStateDefinition().getPossibleStates().forEach(ourState -> {
 				ModelResourceLocation ourModelLocation = BlockModelShaper.stateToModelLocation(ourState);
@@ -65,8 +64,7 @@ public class MixinModelBakery {
 	@Inject(method = "getSpecialModels", at = @At("RETURN"))
 	public void getSpecialModels(CallbackInfoReturnable<Set<ResourceLocation>> cli) {
 		Set<ResourceLocation> set = new HashSet<>(cli.getReturnValue());
-    	Registration.types()
-    	.flatMap(GenerationType::created)
+    	Registration.created()
     	.flatMap(entry -> entry.newBlock().allBaseModels())
     	.forEach(set::add);
     	cli.setReturnValue(set);
