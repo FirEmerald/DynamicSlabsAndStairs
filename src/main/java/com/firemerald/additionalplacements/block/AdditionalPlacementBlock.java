@@ -422,10 +422,12 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	public abstract ResourceLocation getBaseModelPrefix();
 
 	@Environment(EnvType.CLIENT)
-	public abstract ResourceLocation getDynamicModelPrefix();
+	public abstract StateModelDefinition getModelDefinition(BlockState state);
 	
-	public abstract Property<?>[] dynamicModelProperties();
+	public abstract Stream<StateModelDefinition> allModelDefinitions();
 
 	@Environment(EnvType.CLIENT)
-	public abstract StateModelDefinition getModelDefinition(BlockState state);
+	public Stream<ResourceLocation> allBaseModels() {
+		return allModelDefinitions().map(model -> model.location(getBaseModelPrefix()));
+	}
 }
