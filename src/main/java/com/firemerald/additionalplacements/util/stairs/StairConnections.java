@@ -3,10 +3,7 @@ package com.firemerald.additionalplacements.util.stairs;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.firemerald.additionalplacements.block.VerticalStairBlock;
-
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.properties.Property;
 
 public enum StairConnections {
 	ALL("all_connections", "all", true, true, CompressedStairShape.ALL_SHAPES),
@@ -27,7 +24,6 @@ public enum StairConnections {
 	public final String name, shortName, translationKey;
 	public final boolean allowVertical, allowMixed;
 	public final EnumProperty<CompressedStairShape> shapeProperty;
-	public final Property<?>[] placementProperties;
 	
 	StairConnections(String name, String shortName, boolean allowVertical, boolean allowMixed, CompressedStairShape... validShapes) {
 		this(name, shortName, allowVertical, allowMixed, EnumProperty.create("shape", CompressedStairShape.class, validShapes));
@@ -48,6 +44,5 @@ public enum StairConnections {
 		this.allowVertical = allowVertical;
 		this.allowMixed = allowMixed;
 		this.shapeProperty = shapeProperty;
-		this.placementProperties = new Property[] {VerticalStairBlock.FACING, shapeProperty};
 	}
 }
