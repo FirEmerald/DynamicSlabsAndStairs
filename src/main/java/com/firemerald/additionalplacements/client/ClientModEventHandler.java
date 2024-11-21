@@ -2,7 +2,6 @@ package com.firemerald.additionalplacements.client;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.client.models.BakedPlacementModel;
-import com.firemerald.additionalplacements.generation.GenerationType;
 import com.firemerald.additionalplacements.generation.Registration;
 
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
@@ -43,8 +42,7 @@ public class ClientModEventHandler
     
     @SubscribeEvent
     public static void onRegisterAdditionalModels(RegisterAdditional event) {
-    	Registration.types()
-    	.flatMap(GenerationType::created)
+    	Registration.created()
     	.flatMap(entry -> entry.newBlock().allBaseModels())
     	.forEach(event::register);
     }
