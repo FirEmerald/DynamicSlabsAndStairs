@@ -1,5 +1,8 @@
 package com.firemerald.additionalplacements.block;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISlabBlock;
 import com.firemerald.additionalplacements.client.models.definitions.SlabModels;
@@ -155,18 +158,13 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public ResourceLocation getDynamicModelPrefix() {
-		return SlabModels.DYNAMIC_MODEL_FOLDER;
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
 	public StateModelDefinition getModelDefinition(BlockState state) {
 		return SlabModels.getModel(state);
 	}
 
 	@Override
-	public Property<?>[] dynamicModelProperties() {
-		return PLACEMENT_PROPERTIES;
+	@OnlyIn(Dist.CLIENT)
+	public Stream<StateModelDefinition> allModelDefinitions() {
+		return Arrays.stream(SlabModels.MODEL_DEFINITIONS).flatMap(Arrays::stream);
 	}
 }

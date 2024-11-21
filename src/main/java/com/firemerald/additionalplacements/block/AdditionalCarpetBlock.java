@@ -1,5 +1,8 @@
 package com.firemerald.additionalplacements.block;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 import com.firemerald.additionalplacements.block.interfaces.ICarpetBlock;
 import com.firemerald.additionalplacements.client.models.definitions.CarpetModels;
 import com.firemerald.additionalplacements.client.models.definitions.StateModelDefinition;
@@ -82,13 +85,13 @@ public class AdditionalCarpetBlock extends AdditionalFloorBlock<CarpetBlock> imp
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public ResourceLocation getDynamicModelPrefix() {
-		return CarpetModels.DYNAMIC_MODEL_FOLDER;
+	public StateModelDefinition getModelDefinition(BlockState state) {
+		return CarpetModels.getModel(state);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public StateModelDefinition getModelDefinition(BlockState state) {
-		return CarpetModels.getModel(state);
+	public Stream<StateModelDefinition> allModelDefinitions() {
+		return Arrays.stream(CarpetModels.MODEL_DEFINITIONS);
 	}
 }
