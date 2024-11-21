@@ -1,6 +1,7 @@
 package com.firemerald.additionalplacements.block;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -443,10 +444,13 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	public abstract ResourceLocation getBaseModelPrefix();
 
 	@OnlyIn(Dist.CLIENT)
-	public abstract ResourceLocation getDynamicModelPrefix();
-	
-	public abstract Property<?>[] dynamicModelProperties();
+	public abstract StateModelDefinition getModelDefinition(BlockState state);
 
 	@OnlyIn(Dist.CLIENT)
-	public abstract StateModelDefinition getModelDefinition(BlockState state);
+	public abstract Stream<StateModelDefinition> allModelDefinitions();
+
+	@OnlyIn(Dist.CLIENT)
+	public Stream<ResourceLocation> allBaseModels() {
+		return allModelDefinitions().map(model -> model.location(getBaseModelPrefix()));
+	}
 }

@@ -7,7 +7,6 @@ import com.firemerald.additionalplacements.util.BlockRotation;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.Direction;
 
@@ -15,7 +14,6 @@ public abstract class AdditionalFloorBlock<T extends Block> extends AdditionalPl
 {
 	private boolean rotateLogic = true, rotateTex = true, rotateModel = true;
 	public static final DirectionProperty PLACING = AdditionalBlockStateProperties.HORIZONTAL_OR_UP_FACING;
-	public static final Property<?>[] PLACEMENT_PROPERTIES = new Property[] {PLACING};
 
 	public AdditionalFloorBlock(T block)
 	{
@@ -88,10 +86,5 @@ public abstract class AdditionalFloorBlock<T extends Block> extends AdditionalPl
 	public void setModelRotation(boolean useTexRotation, boolean useModelRotation) {
 		this.rotateTex = useTexRotation;
 		this.rotateModel = useModelRotation;
-	}
-
-	@Override
-	public Property<?>[] dynamicModelProperties() {
-		return PLACEMENT_PROPERTIES;
 	}
 }
