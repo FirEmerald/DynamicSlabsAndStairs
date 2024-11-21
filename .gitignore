@@ -36,3 +36,4 @@ build.bat
 /.apt_generated/
 /.apt_generated_tests/
 libs/fabric-renderer-api-v1-3.2.1.jar
+libs/*.jar
