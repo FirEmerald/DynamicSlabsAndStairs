@@ -14,10 +14,8 @@
 		"MixinChunkStorage"
 	],
 	"client": [
-		"MixinModResourcePackCreator",
 		"MixinLocalPlayer",
-		"MixinBlockModel",
-		"MixinBlockModelDeserializer",
+		"MixinModelBakery",
 		"MixinVertexFormat"
 	],
 	"minVersion": "0.8"
