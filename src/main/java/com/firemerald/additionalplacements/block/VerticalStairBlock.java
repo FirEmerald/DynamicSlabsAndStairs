@@ -1,5 +1,8 @@
 package com.firemerald.additionalplacements.block;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 import com.firemerald.additionalplacements.block.interfaces.IAdditionalBeaconBeamBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
 import com.firemerald.additionalplacements.block.interfaces.IStairBlock;
@@ -170,18 +173,13 @@ public class VerticalStairBlock extends AdditionalPlacementLiquidBlock<StairBloc
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public ResourceLocation getDynamicModelPrefix() {
-		return StairModels.DYNAMIC_MODEL_FOLDER;
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
 	public StateModelDefinition getModelDefinition(BlockState state) {
 		return StairModels.getModelDefinition(state, allowedConnections);
 	}
 
 	@Override
-	public Property<?>[] dynamicModelProperties() {
-		return allowedConnections.placementProperties;
+	@Environment(EnvType.CLIENT)
+	public Stream<StateModelDefinition> allModelDefinitions() {
+		return Arrays.stream(StairModels.MODEL_DEFINITIONS).flatMap(Arrays::stream);
 	}
 }

@@ -10,13 +10,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.properties.Property;
 
 public abstract class AdditionalFloorBlock<T extends Block> extends AdditionalPlacementBlock<T> implements IFloorBlock<T>, ISimpleRotationBlock
 {
 	private boolean rotateLogic = true, rotateTex = true, rotateModel = true;
 	public static final EnumProperty<Direction> PLACING = AdditionalBlockStateProperties.HORIZONTAL_OR_UP_FACING;
-	public static final Property<?>[] PLACEMENT_PROPERTIES = new Property[] {PLACING};
 
 	public AdditionalFloorBlock(T block, ResourceKey<Block> id)
 	{
@@ -89,10 +87,5 @@ public abstract class AdditionalFloorBlock<T extends Block> extends AdditionalPl
 	public void setModelRotation(boolean useTexRotation, boolean useModelRotation) {
 		this.rotateTex = useTexRotation;
 		this.rotateModel = useModelRotation;
-	}
-
-	@Override
-	public Property<?>[] dynamicModelProperties() {
-		return PLACEMENT_PROPERTIES;
 	}
 }

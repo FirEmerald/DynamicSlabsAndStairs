@@ -1,19 +1,19 @@
 package com.firemerald.additionalplacements.client;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.Nullable;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
+import com.firemerald.additionalplacements.client.models.BakedPlacementModel;
 import com.firemerald.additionalplacements.client.models.Unwrapper;
-import com.firemerald.additionalplacements.client.models.fixed.UnbakedFixedModel;
-import com.firemerald.additionalplacements.client.resources.APDynamicResources;
 import com.firemerald.additionalplacements.common.CommonModEvents;
 import com.firemerald.additionalplacements.config.APConfigs;
+import com.firemerald.additionalplacements.generation.GenerationType;
+import com.firemerald.additionalplacements.generation.Registration;
 
 import me.pepperbell.continuity.client.model.CtmBakedModel;
 import me.pepperbell.continuity.client.model.EmissiveBakedModel;
@@ -25,32 +25,21 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.packs.PackLocationInfo;
-import net.minecraft.server.packs.PackResources;
-import net.minecraft.server.packs.PackSelectionConfig;
-import net.minecraft.server.packs.repository.KnownPack;
-import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.repository.Pack.Metadata;
-import net.minecraft.server.packs.repository.Pack.Position;
-import net.minecraft.server.packs.repository.Pack.ResourcesSupplier;
-import net.minecraft.server.packs.repository.PackCompatibility;
-import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -63,39 +52,6 @@ import net.minecraft.world.phys.HitResult;
 @Environment(EnvType.CLIENT)
 public class ClientModEvents implements ClientModInitializer
 {
-	public static final Pack GENERATED_RESOURCES_PACK = new Pack(
-			new PackLocationInfo(
-					"Additional Placements Dynamic Resources",
-					Component.literal("title"), 
-					PackSource.BUILT_IN, 
-					Optional.of(new KnownPack(
-							AdditionalPlacementsMod.MOD_ID, 
-							"Additional Placements Dynamic Resources",
-							SharedConstants.getCurrentVersion().getId()))),
-			new ResourcesSupplier() {
-				@Override
-				public PackResources openPrimary(PackLocationInfo info) {
-					return new APDynamicResources(info);
-				}
-
-				@Override
-				public PackResources openFull(PackLocationInfo info, Metadata meta) {
-					return new APDynamicResources(info);
-				}
-			},
-			new Metadata(
-					Component.literal("Additional Placements blockstate redirection pack"),
-					PackCompatibility.COMPATIBLE,
-					FeatureFlagSet.of(),
-					Collections.emptyList()
-					),
-			new PackSelectionConfig(
-					true,
-					Position.BOTTOM,
-					true
-					)
-			);
-
 	@Override
 	public void onInitializeClient()
 	{
@@ -114,6 +70,13 @@ public class ClientModEvents implements ClientModInitializer
     			else return null;
     		});
 		}
+		ModelLoadingPlugin.register(context -> {
+			context.addModels(Registration.types()
+					.flatMap(GenerationType::created)
+					.flatMap(entry -> entry.newBlock().allBaseModels())
+					.collect(Collectors.toSet())
+					);
+		});
 	}
 
 	private static boolean hasInit = false;
@@ -131,7 +94,7 @@ public class ClientModEvents implements ClientModInitializer
 			});
 			client.getBlockColors().register(new AdditionalBlockColor(), BuiltInRegistries.BLOCK.stream().filter(block -> block instanceof AdditionalPlacementBlock && !((AdditionalPlacementBlock<?>) block).hasCustomColors()).toArray(Block[]::new));
 	    	((ReloadableResourceManager) client.getResourceManager()).registerReloadListener((ResourceManagerReloadListener) resourceManager -> {
-	    		UnbakedFixedModel.clearCache();
+	    		BakedPlacementModel.clearCache();
 	    	});
 			hasInit = true;
 		}
