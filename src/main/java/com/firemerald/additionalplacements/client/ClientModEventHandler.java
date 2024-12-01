@@ -3,7 +3,6 @@ package com.firemerald.additionalplacements.client;
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.client.models.*;
-import com.firemerald.additionalplacements.generation.Registration;
 
 import me.pepperbell.continuity.client.model.CtmBakedModel;
 import me.pepperbell.continuity.client.model.EmissiveBakedModel;
@@ -17,7 +16,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.ModelEvent.RegisterAdditional;
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
@@ -63,12 +61,5 @@ public class ClientModEventHandler
     			else return null;
     		});
     	}
-    }
-    
-    @SubscribeEvent
-    public static void onRegisterAdditionalModels(RegisterAdditional event) {
-    	Registration.created()
-    	.flatMap(entry -> entry.newBlock().allBaseModels())
-    	.forEach(event::register);
     }
 }
