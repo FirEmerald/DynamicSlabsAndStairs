@@ -1,7 +1,6 @@
 package com.firemerald.additionalplacements.block;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -82,7 +81,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 		return to;
 	}
 	
-	protected boolean isValidProperty(Property<?> prop) {
+	public boolean isValidProperty(Property<?> prop) {
 		return true;
 	}
 
@@ -445,12 +444,4 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 
 	@OnlyIn(Dist.CLIENT)
 	public abstract StateModelDefinition getModelDefinition(BlockState state);
-
-	@OnlyIn(Dist.CLIENT)
-	public abstract Stream<StateModelDefinition> allModelDefinitions();
-
-	@OnlyIn(Dist.CLIENT)
-	public Stream<ResourceLocation> allBaseModels() {
-		return allModelDefinitions().map(model -> model.location(getBaseModelPrefix()));
-	}
 }

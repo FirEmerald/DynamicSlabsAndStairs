@@ -1,8 +1,5 @@
 package com.firemerald.additionalplacements.block;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
-
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISlabBlock;
 import com.firemerald.additionalplacements.client.models.definitions.SlabModels;
@@ -158,11 +155,5 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 	@OnlyIn(Dist.CLIENT)
 	public StateModelDefinition getModelDefinition(BlockState state) {
 		return SlabModels.getModel(state);
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public Stream<StateModelDefinition> allModelDefinitions() {
-		return Arrays.stream(SlabModels.MODEL_DEFINITIONS).flatMap(Arrays::stream);
 	}
 }

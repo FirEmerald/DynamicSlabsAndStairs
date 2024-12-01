@@ -192,7 +192,6 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 	protected void renderDecorations(MatrixStack poseStack, int mouseX, int mouseY) {
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void render(MatrixStack poseStack, int mouseX, int mouseY, float partialTick) {
 		this.hovered = this.isMouseOver(mouseX, mouseY) ? this.getEntryAtPosition(mouseX, mouseY) : null;
