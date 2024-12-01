@@ -1,8 +1,5 @@
 package com.firemerald.additionalplacements.block;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
-
 import com.firemerald.additionalplacements.block.interfaces.IAdditionalBeaconBeamBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
 import com.firemerald.additionalplacements.block.interfaces.IStairBlock;
@@ -69,7 +66,7 @@ public class VerticalStairBlock extends AdditionalPlacementLiquidBlock<StairBloc
 	}
 
 	@Override
-	protected boolean isValidProperty(Property<?> prop) {
+	public boolean isValidProperty(Property<?> prop) {
 		return prop != StairBlock.FACING && prop != StairBlock.HALF && prop != StairBlock.SHAPE;
 	}
 
@@ -174,11 +171,5 @@ public class VerticalStairBlock extends AdditionalPlacementLiquidBlock<StairBloc
 	@Environment(EnvType.CLIENT)
 	public StateModelDefinition getModelDefinition(BlockState state) {
 		return StairModels.getModelDefinition(state, allowedConnections);
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public Stream<StateModelDefinition> allModelDefinitions() {
-		return Arrays.stream(StairModels.MODEL_DEFINITIONS).flatMap(Arrays::stream);
 	}
 }
