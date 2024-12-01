@@ -2,13 +2,11 @@ package com.firemerald.additionalplacements.client;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.client.models.BakedPlacementModel;
-import com.firemerald.additionalplacements.generation.Registration;
 
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelEvent.RegisterAdditional;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -38,12 +36,5 @@ public class ClientModEventHandler
     	event.registerReloadListener((ResourceManagerReloadListener) resourceManager -> {
     		BakedPlacementModel.clearCache();
     	});
-    }
-    
-    @SubscribeEvent
-    public static void onRegisterAdditionalModels(RegisterAdditional event) {
-    	Registration.created()
-    	.flatMap(entry -> entry.newBlock().allBaseModels())
-    	.forEach(event::register);
     }
 }
