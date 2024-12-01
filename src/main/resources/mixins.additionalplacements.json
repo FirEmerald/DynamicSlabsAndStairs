@@ -17,6 +17,7 @@
 		"MixinLocalPlayer",
 		"MixinModelBaker",
 		"MixinModelBakery",
+		"MixinBlockStateModelLoader",
 		"MixinModelBakerImpl"
 	],
 	"minVersion": "0.8"

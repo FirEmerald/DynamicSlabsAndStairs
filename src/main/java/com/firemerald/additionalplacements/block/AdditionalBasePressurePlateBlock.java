@@ -1,14 +1,10 @@
 package com.firemerald.additionalplacements.block;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.firemerald.additionalplacements.block.interfaces.IBasePressurePlateBlock;
 import com.firemerald.additionalplacements.block.interfaces.IBasePressurePlateBlockExtensions;
 import com.firemerald.additionalplacements.client.models.definitions.PressurePlateModels;
-import com.firemerald.additionalplacements.client.models.definitions.StateModelDefinition;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -187,11 +183,5 @@ public abstract class AdditionalBasePressurePlateBlock<T extends BasePressurePla
 	@Environment(EnvType.CLIENT)
 	public ResourceLocation getBaseModelPrefix() {
 		return PressurePlateModels.BASE_MODEL_FOLDER;
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public Stream<StateModelDefinition> allModelDefinitions() {
-		return Arrays.stream(PressurePlateModels.MODEL_DEFINITIONS).flatMap(Arrays::stream);
 	}
 }

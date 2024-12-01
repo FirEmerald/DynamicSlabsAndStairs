@@ -85,7 +85,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 		return to;
 	}
 	
-	protected boolean isValidProperty(Property<?> prop) {
+	public boolean isValidProperty(Property<?> prop) {
 		return true;
 	}
 
@@ -423,11 +423,4 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 
 	@Environment(EnvType.CLIENT)
 	public abstract StateModelDefinition getModelDefinition(BlockState state);
-	
-	public abstract Stream<StateModelDefinition> allModelDefinitions();
-
-	@Environment(EnvType.CLIENT)
-	public Stream<ResourceLocation> allBaseModels() {
-		return allModelDefinitions().map(model -> model.location(getBaseModelPrefix()));
-	}
 }

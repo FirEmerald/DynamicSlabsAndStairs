@@ -1,9 +1,12 @@
 accessWidener v2 named
-accessible field  net/minecraft/world/level/block/BasePressurePlateBlock     type             Lnet/minecraft/world/level/block/state/properties/BlockSetType;
-accessible method net/minecraft/world/level/block/BasePressurePlateBlock     getEntityCount   (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/phys/AABB;Ljava/lang/Class;)I
-accessible field  net/minecraft/world/level/block/WeightedPressurePlateBlock maxWeight        I
-accessible field  net/minecraft/commands/CommandSourceStack                  source           Lnet/minecraft/commands/CommandSource;
-accessible method net/minecraft/tags/BlockTags                               create           (Ljava/lang/String;)Lnet/minecraft/tags/TagKey;
-mutable    field  net/minecraft/world/item/HoneycombItem                     WAXABLES         Ljava/util/function/Supplier;
-mutable    field  net/minecraft/world/item/HoneycombItem                     WAX_OFF_BY_BLOCK Ljava/util/function/Supplier;
-accessible field  net/minecraft/client/resources/model/ModelBakery           topLevelModels   Ljava/util/Map;
+accessible field  net/minecraft/world/level/block/BasePressurePlateBlock                   type             Lnet/minecraft/world/level/block/state/properties/BlockSetType;
+accessible method net/minecraft/world/level/block/BasePressurePlateBlock                   getEntityCount   (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/phys/AABB;Ljava/lang/Class;)I
+accessible field  net/minecraft/world/level/block/WeightedPressurePlateBlock               maxWeight        I
+accessible field  net/minecraft/commands/CommandSourceStack                                source           Lnet/minecraft/commands/CommandSource;
+accessible method net/minecraft/tags/BlockTags                                             create           (Ljava/lang/String;)Lnet/minecraft/tags/TagKey;
+mutable    field  net/minecraft/world/item/HoneycombItem                                   WAXABLES         Ljava/util/function/Supplier;
+mutable    field  net/minecraft/world/item/HoneycombItem                                   WAX_OFF_BY_BLOCK Ljava/util/function/Supplier;
+accessible field  net/minecraft/client/resources/model/ModelBakery                         topLevelModels   Ljava/util/Map;
+accessible class  net/minecraft/client/resources/model/BlockStateModelLoader$LoadedModel   
+accessible class  net/minecraft/client/resources/model/BlockStateModelLoader$ModelGroupKey 
+accessible method net/minecraft/client/resources/model/BlockStateModelLoader$LoadedModel   <init>           (Lnet/minecraft/client/resources/model/UnbakedModel;Ljava/util/function/Supplier;)V
