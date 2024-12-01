@@ -3,8 +3,6 @@ package com.firemerald.additionalplacements.client;
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.client.models.*;
-import com.firemerald.additionalplacements.generation.GenerationType;
-import com.firemerald.additionalplacements.generation.Registration;
 
 import me.pepperbell.continuity.client.model.CtmBakedModel;
 import me.pepperbell.continuity.client.model.EmissiveBakedModel;
@@ -12,7 +10,6 @@ import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelEvent.RegisterAdditional;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -56,12 +53,5 @@ public class ClientModEventHandler
     			else return null;
     		});
     	}
-    }
-    
-    @SubscribeEvent
-    public static void onRegisterAdditionalModels(RegisterAdditional event) {
-    	Registration.created()
-    	.flatMap(entry -> entry.newBlock().allBaseModels())
-    	.forEach(event::register);
     }
 }
