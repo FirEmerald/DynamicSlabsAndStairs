@@ -16,7 +16,7 @@
 	"client": [
 		"MixinLocalPlayer",
 		"MixinModelBaker",
-		"MixinModelBakery",
+		"MixinModelManager",
 		"MixinModelBakerImpl"
 	],
 	"minVersion": "0.8"

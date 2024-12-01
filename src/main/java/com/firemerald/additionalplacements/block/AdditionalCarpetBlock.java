@@ -1,8 +1,5 @@
 package com.firemerald.additionalplacements.block;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
-
 import com.firemerald.additionalplacements.block.interfaces.IAdditionalBeaconBeamBlock;
 import com.firemerald.additionalplacements.block.interfaces.ICarpetBlock;
 import com.firemerald.additionalplacements.client.models.definitions.CarpetModels;
@@ -97,11 +94,5 @@ public class AdditionalCarpetBlock extends AdditionalFloorBlock<CarpetBlock> imp
 	@Environment(EnvType.CLIENT)
 	public StateModelDefinition getModelDefinition(BlockState state) {
 		return CarpetModels.getModel(state);
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public Stream<StateModelDefinition> allModelDefinitions() {
-		return Arrays.stream(CarpetModels.MODEL_DEFINITIONS);
 	}
 }
