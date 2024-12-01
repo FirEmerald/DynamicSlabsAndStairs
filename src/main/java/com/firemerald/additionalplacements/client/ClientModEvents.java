@@ -1,7 +1,6 @@
 package com.firemerald.additionalplacements.client;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +11,6 @@ import com.firemerald.additionalplacements.client.models.BakedPlacementModel;
 import com.firemerald.additionalplacements.client.models.Unwrapper;
 import com.firemerald.additionalplacements.common.CommonModEvents;
 import com.firemerald.additionalplacements.config.APConfigs;
-import com.firemerald.additionalplacements.generation.Registration;
 
 import me.pepperbell.continuity.client.model.CtmBakedModel;
 import me.pepperbell.continuity.client.model.EmissiveBakedModel;
@@ -24,7 +22,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -68,12 +65,6 @@ public class ClientModEvents implements ClientModInitializer
     			else return null;
     		});
 		}
-		ModelLoadingPlugin.register(context -> {
-			context.addModels(Registration.created()
-					.flatMap(entry -> entry.newBlock().allBaseModels())
-					.collect(Collectors.toSet())
-					);
-		});
 	}
 
 	private static boolean hasInit = false;
