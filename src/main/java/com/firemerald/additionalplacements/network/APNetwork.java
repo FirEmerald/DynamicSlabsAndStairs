@@ -46,7 +46,7 @@ public class APNetwork
 
     public static <T extends ClientPlayPacket> void registerClientPlayPacket(ResourceLocation id, Function<FriendlyByteBuf, T> fromBuffer)
     {
-    	ClientPlayNetworking.registerGlobalReceiver(id, (Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender responseSender) -> fromBuffer.apply(buf).handleClient(client, handler, responseSender));
+    	if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) ClientPlayNetworking.registerGlobalReceiver(id, (Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender responseSender) -> fromBuffer.apply(buf).handleClient(client, handler, responseSender));
     }
 
     public static <T extends ServerPlayPacket> void registerServerPlayPacket(ResourceLocation id, Function<FriendlyByteBuf, T> fromBuffer)
@@ -56,7 +56,7 @@ public class APNetwork
 
     public static <T extends ClientLoginPacket> void registerClientLoginPacket(ResourceLocation id, Function<FriendlyByteBuf, T> fromBuffer)
     {
-    	ClientLoginNetworking.registerGlobalReceiver(id, (Minecraft client, ClientHandshakePacketListenerImpl handler, FriendlyByteBuf buf, Consumer<GenericFutureListener<? extends Future<? super Void>>> listenerAdder) -> fromBuffer.apply(buf).handleClient(client, handler, listenerAdder));
+    	if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) ClientLoginNetworking.registerGlobalReceiver(id, (Minecraft client, ClientHandshakePacketListenerImpl handler, FriendlyByteBuf buf, Consumer<GenericFutureListener<? extends Future<? super Void>>> listenerAdder) -> fromBuffer.apply(buf).handleClient(client, handler, listenerAdder));
     }
 
     public static <T extends ServerLoginPacket> void registerServerLoginPacket(ResourceLocation id, Function<FriendlyByteBuf, T> fromBuffer)
@@ -66,7 +66,7 @@ public class APNetwork
 
     public static <T extends ClientLoginPacket, U extends ServerLoginPacket> void registerLoginResponsePackets(ResourceLocation id, Function<FriendlyByteBuf, T> clientFromBuffer, Function<FriendlyByteBuf, U> serverFromBuffer)
     {
-    	if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) registerClientLoginPacket(id, clientFromBuffer);
+    	registerClientLoginPacket(id, clientFromBuffer);
     	registerServerLoginPacket(id, serverFromBuffer);
     }
 
