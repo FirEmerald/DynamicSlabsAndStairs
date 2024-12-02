@@ -11,11 +11,13 @@ import com.firemerald.additionalplacements.network.server.ServerConfigurationPac
 import com.firemerald.additionalplacements.network.server.ServerPlayPacket;
 import com.firemerald.additionalplacements.network.server.SetPlacementTogglePacket;
 
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.*;
 import net.fabricmc.fabric.impl.networking.server.ServerConfigurationNetworkAddon;
 import net.fabricmc.fabric.impl.networking.server.ServerNetworkingImpl;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientConfigurationPacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -43,7 +45,7 @@ public class APNetwork
 
     public static <T extends ClientPlayPacket> void registerClientPlayPacket(ResourceLocation id, Function<FriendlyByteBuf, T> fromBuffer)
     {
-    	ClientPlayNetworking.registerGlobalReceiver(id, (Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender responseSender) -> fromBuffer.apply(buf).handleClient(client, handler, responseSender));
+    	if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) ClientPlayNetworking.registerGlobalReceiver(id, (Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender responseSender) -> fromBuffer.apply(buf).handleClient(client, handler, responseSender));
     }
 
     public static <T extends ServerPlayPacket> void registerServerPlayPacket(ResourceLocation id, Function<FriendlyByteBuf, T> fromBuffer)
@@ -53,7 +55,7 @@ public class APNetwork
 
     public static <T extends ClientConfigurationPacket> void registerClientConfigurationPacket(ResourceLocation id, Function<FriendlyByteBuf, T> fromBuffer)
     {
-    	ClientConfigurationNetworking.registerGlobalReceiver(id, (Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) -> fromBuffer.apply(buf).handleClient(client, handler, responseSender));
+    	if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) ClientConfigurationNetworking.registerGlobalReceiver(id, (Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) -> fromBuffer.apply(buf).handleClient(client, handler, responseSender));
     }
 
     public static <T extends ServerConfigurationPacket> void registerServerConfigurationPacket(ResourceLocation id, Function<FriendlyByteBuf, T> fromBuffer)
