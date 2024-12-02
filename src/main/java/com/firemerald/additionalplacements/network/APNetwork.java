@@ -11,11 +11,13 @@ import com.firemerald.additionalplacements.network.server.ServerConfigurationPac
 import com.firemerald.additionalplacements.network.server.ServerPlayPacket;
 import com.firemerald.additionalplacements.network.server.SetPlacementTogglePacket;
 
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.*;
 import net.fabricmc.fabric.impl.networking.server.ServerConfigurationNetworkAddon;
 import net.fabricmc.fabric.impl.networking.server.ServerNetworkingImpl;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type;
@@ -39,7 +41,7 @@ public class APNetwork
     public static <T extends ClientPlayPacket> void registerClientPlayPacket(Type<T> type, Function<RegistryFriendlyByteBuf, T> fromBuffer)
     {
     	PayloadTypeRegistry.playS2C().register(type, new APStreamCodec<>(fromBuffer));
-    	ClientPlayNetworking.registerGlobalReceiver(type, ClientPlayPacket::handleClient);
+    	if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) ClientPlayNetworking.registerGlobalReceiver(type, ClientPlayPacket::handleClient);
     }
 
     public static <T extends ServerPlayPacket> void registerServerPlayPacket(Type<T> type, Function<RegistryFriendlyByteBuf, T> fromBuffer)
@@ -51,7 +53,7 @@ public class APNetwork
     public static <T extends ClientConfigurationPacket> void registerClientConfigurationPacket(Type<T> type, Function<FriendlyByteBuf, T> fromBuffer)
     {
     	PayloadTypeRegistry.configurationS2C().register(type, new APStreamCodec<>(fromBuffer));
-    	ClientConfigurationNetworking.registerGlobalReceiver(type, ClientConfigurationPacket::handleClient);
+    	if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) ClientConfigurationNetworking.registerGlobalReceiver(type, ClientConfigurationPacket::handleClient);
     }
 
     public static <T extends ServerConfigurationPacket> void registerServerConfigurationPacket(Type<T> type, Function<FriendlyByteBuf, T> fromBuffer)
