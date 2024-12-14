@@ -1,10 +1,11 @@
-package com.firemerald.additionalplacements.util.stairs;
+package com.firemerald.additionalplacements.block.stairs.v1;
 
 import com.firemerald.additionalplacements.util.ComplexFacing;
 
 import net.minecraft.core.Direction;
+import net.minecraft.util.StringRepresentable;
 
-public enum OldStairPlacing {
+public enum V1StairPlacing implements StringRepresentable {
 	NORTH_EAST("north_east", Direction.NORTH, Direction.EAST,
 			ComplexFacing.NORTH_EAST, 
 			ComplexFacing.NORTH_UP, ComplexFacing.EAST_UP,
@@ -26,8 +27,8 @@ public enum OldStairPlacing {
 			ComplexFacing.WEST_DOWN, ComplexFacing.NORTH_DOWN
 			);
 	
-	public static OldStairPlacing get(String name) {
-		for (OldStairPlacing placing : values()) if (placing.name.equals(name)) return placing;
+	public static V1StairPlacing get(String name) {
+		for (V1StairPlacing placing : values()) if (placing.name.equals(name)) return placing;
 		return null;
 	}
 
@@ -35,7 +36,7 @@ public enum OldStairPlacing {
     public final Direction counterClockWiseFront, clockWiseFront, counterClockWiseBack, clockWiseBack;
     public final ComplexFacing equivalent, cwTop, ccwTop, cwBottom, ccwBottom;
 
-    private OldStairPlacing(String name, Direction counterClockWise, Direction clockWise, ComplexFacing equivalent, ComplexFacing cwTop, ComplexFacing ccwTop, ComplexFacing cwBottom, ComplexFacing ccwBottom)
+    private V1StairPlacing(String name, Direction counterClockWise, Direction clockWise, ComplexFacing equivalent, ComplexFacing cwTop, ComplexFacing ccwTop, ComplexFacing cwBottom, ComplexFacing ccwBottom)
     {
         this.name = name;
         this.counterClockWiseFront = counterClockWise;
@@ -48,14 +49,8 @@ public enum OldStairPlacing {
         this.cwBottom = cwBottom;
         this.ccwBottom = ccwBottom;
     }
-
-    @Override
-	public String toString()
-    {
-        return this.name;
-    }
     
-    public ComplexFacing equivalent(OldStairShape shape) {
+    public ComplexFacing equivalent(V1StairShape shape) {
     	if (shape.isUp) {
     		if (shape.isClockwise) {
     			return cwTop;
@@ -71,4 +66,9 @@ public enum OldStairPlacing {
     	}
     	else return equivalent;
     }
+
+	@Override
+	public String getSerializedName() {
+		return name;
+	}
 }

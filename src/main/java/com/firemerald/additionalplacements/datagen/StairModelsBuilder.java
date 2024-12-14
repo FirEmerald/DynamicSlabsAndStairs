@@ -1,13 +1,13 @@
 package com.firemerald.additionalplacements.datagen;
 
-import com.firemerald.additionalplacements.block.VerticalStairBlock;
+import com.firemerald.additionalplacements.block.stairs.AdditionalStairBlockBase;
 import com.firemerald.additionalplacements.client.models.definitions.StairModels;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 
-public class StairModelsBuilder extends ModelBuilder<StairBlock, VerticalStairBlock, StairModelsBuilder>
+public class StairModelsBuilder extends ModelBuilder<StairBlock, AdditionalStairBlockBase, StairModelsBuilder>
 {
 	public StairModelsBuilder(BlockStateProvider stateProvider)
 	{

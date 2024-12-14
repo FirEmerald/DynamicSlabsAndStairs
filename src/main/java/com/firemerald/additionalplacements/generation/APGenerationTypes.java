@@ -5,6 +5,7 @@ import java.util.function.Function;
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.*;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
+import com.firemerald.additionalplacements.block.stairs.AdditionalStairBlockBase;
 import com.firemerald.additionalplacements.config.BlockBlacklist;
 import com.firemerald.additionalplacements.generation.GenerationType.BuilderBase;
 
@@ -13,7 +14,7 @@ import net.minecraft.world.level.block.*;
 
 public class APGenerationTypes implements RegistrationInitializer {
 	private static SimpleRotatableGenerationType<SlabBlock, VerticalSlabBlock> slab;
-	private static VerticalStairsGenerationType<StairBlock, VerticalStairBlock> stairs;
+	private static VerticalStairsGenerationType<StairBlock, AdditionalStairBlockBase> stairs;
 	private static SimpleRotatableGenerationType<CarpetBlock, AdditionalCarpetBlock> carpet;
 	private static SimpleRotatableGenerationType<PressurePlateBlock, AdditionalPressurePlateBlock> pressurePlate;
 	private static SimpleRotatableGenerationType<WeightedPressurePlateBlock, AdditionalWeightedPressurePlateBlock> weightedPressurePlate;
@@ -35,13 +36,12 @@ public class APGenerationTypes implements RegistrationInitializer {
 				.constructor(VerticalSlabBlock::of)
 				.addsProperties("axis"));
 		stairs                  = get(register, StairBlock.class                , "stairs"                 , "Stairs"                  , 
-				new VerticalStairsGenerationType.Builder<StairBlock, VerticalStairBlock>()
+				new VerticalStairsGenerationType.Builder<StairBlock, AdditionalStairBlockBase>()
 				.blacklistModelRotation(new BlockBlacklist.Builder()
 						.blockBlacklist(
 								"minecraft:sandstone_stairs", 
 								"minecraft:red_sandstone_stairs")
-						.build())
-				.constructor((VerticalStairsGenerationType.Constructor<StairBlock, VerticalStairBlock>) VerticalStairBlock::of));
+						.build()));
 		carpet                  = get(register, CarpetBlock.class               , "carpet"                 , "Carpets"                 , AdditionalCarpetBlock::of,                "facing");
 		pressurePlate           = get(register, PressurePlateBlock.class        , "pressure_plate"         , "Regular pressure plates" , AdditionalPressurePlateBlock::of,         "facing");
 		weightedPressurePlate   = get(register, WeightedPressurePlateBlock.class, "weighted_pressure_plate", "Weighted pressure plates", AdditionalWeightedPressurePlateBlock::of, "facing");
@@ -59,7 +59,7 @@ public class APGenerationTypes implements RegistrationInitializer {
 		return slab;
 	}
 	
-	public static VerticalStairsGenerationType<StairBlock, VerticalStairBlock> stairs() {
+	public static VerticalStairsGenerationType<StairBlock, AdditionalStairBlockBase> stairs() {
 		return stairs;
 	}
 	

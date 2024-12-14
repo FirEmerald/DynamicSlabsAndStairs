@@ -12,6 +12,7 @@ public class CommonConfig
 	public final BooleanValue showTooltip;
 	public final BooleanValue checkTags, autoRebuildTags, logTagMismatch;
 	public final IntValue checkerPriority;
+	public final BooleanValue fixStates, fixOldStates;
 
 	public CommonConfig(ForgeConfigSpec.Builder builder)
 	{
@@ -29,8 +30,16 @@ public class CommonConfig
         		.comment("Log missing or additional tags on generated blocks.")
         		.define("log_tag_mismatch", false);
         checkerPriority = builder
-        		.comment("The thread priority of the mismatched tag checker. " + Thread.MIN_PRIORITY + " is lowest, " + Thread.MAX_PRIORITY + " is highest, " + Thread.NORM_PRIORITY + " is normal.")
+        		.comment("The thread priority of the mismatched tag checker. " + Thread.MIN_PRIORITY + " is lowest, " + Thread.MAX_PRIORITY + " is highest, " + Thread.NORM_PRIORITY + " is vanilla.")
         		.defineInRange("checker_priority", Thread.MIN_PRIORITY, Thread.MIN_PRIORITY, Thread.MAX_PRIORITY);
+        fixStates = builder
+        		.comment("Fix incorrect states. Adds a slight bit of additional overhead to chunk loading. \n"
+        				+ "You should only disable this if the worlds you are using were not made using an older version of Additional Placements AND you are not changing the possible placement states of any stair blocks after they were created.")
+        		.define("fix_states", true);
+        fixOldStates = builder
+        		.comment("Upgrade the blockstates from older versions of Additional Placements. Adds a slight bit of additional overhead to chunk loading - more than having JUST fix_states on. Does nothing if fix_states is off. \n"
+        				+ "You should only disable this if the worlds you are using were not made using an older version of Additional Placements.")
+        		.define("fix_old_states", true);
         Registration.buildConfig(builder, GenerationType::buildCommonConfig);
 	}
 }
