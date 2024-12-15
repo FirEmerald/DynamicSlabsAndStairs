@@ -7,7 +7,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.firemerald.additionalplacements.block.interfaces.IStairBlock.IVanillaStairBlock;
-import com.firemerald.additionalplacements.block.stairs.AdditionalStairBlockBase;
+import com.firemerald.additionalplacements.block.stairs.AdditionalStairBlock;
+import com.firemerald.additionalplacements.block.stairs.StairConnectionsType;
 import com.firemerald.additionalplacements.block.stairs.common.CommonStairShapeState;
 import com.firemerald.additionalplacements.block.stairs.vanilla.VanillaStairShapeState;
 
@@ -23,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 @Mixin(StairBlock.class)
 public abstract class MixinStairBlock implements IVanillaStairBlock
 {
-	public AdditionalStairBlockBase stairs;
+	public AdditionalStairBlock stairs;
 	@Shadow
 	private BlockState baseState;
 
@@ -33,13 +34,13 @@ public abstract class MixinStairBlock implements IVanillaStairBlock
 	}
 
 	@Override
-	public void setOtherBlock(AdditionalStairBlockBase stairs)
+	public void setOtherBlock(AdditionalStairBlock stairs)
 	{
 		this.stairs = stairs;
 	}
 
 	@Override
-	public AdditionalStairBlockBase getOtherBlock()
+	public AdditionalStairBlock getOtherBlock()
 	{
 		return stairs;
 	}
@@ -111,23 +112,8 @@ public abstract class MixinStairBlock implements IVanillaStairBlock
 				blockState.getValue(StairBlock.SHAPE));
 	}
 
-	@Override
-	public boolean allowVerticalConnections() {
-		return stairs.allowVerticalConnections();
-	}
-
-	@Override
-	public boolean allowMixedConnections() {
-		return stairs.allowMixedConnections();
-	}
-
-	@Override
-	public boolean allowFlippedFacings() {
-		return stairs.allowFlippedFacings();
-	}
-
     @Override
-	public String connectionsType() {
+	public StairConnectionsType connectionsType() {
 		return stairs.connectionsType();
 	}
 }

@@ -8,7 +8,8 @@ import javax.annotation.Nullable;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
-import com.firemerald.additionalplacements.block.stairs.AdditionalStairBlockBase;
+import com.firemerald.additionalplacements.block.stairs.AdditionalStairBlock;
+import com.firemerald.additionalplacements.block.stairs.StairConnectionsType;
 import com.firemerald.additionalplacements.block.stairs.common.CommonStairShape;
 import com.firemerald.additionalplacements.block.stairs.common.CommonStairShapeState;
 import com.firemerald.additionalplacements.block.stairs.vanilla.VanillaStairShapeState;
@@ -38,7 +39,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 {
-	public static interface IVanillaStairBlock extends IStairBlock<AdditionalStairBlockBase>, IVanillaBlock<AdditionalStairBlockBase>
+	public static interface IVanillaStairBlock extends IStairBlock<AdditionalStairBlock>, IVanillaBlock<AdditionalStairBlock>
 	{
 		public BlockState getModelStateImpl();
 	}
@@ -76,11 +77,7 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 	
 	public abstract CommonStairShapeState getShapeState(BlockState blockState);
 	
-	public boolean allowVerticalConnections();
-	
-	public boolean allowMixedConnections();
-	
-	public boolean allowFlippedFacings();
+	public StairConnectionsType connectionsType();
 
 	@Override
 	public default BlockState updateShapeImpl(BlockState state, Direction direction, BlockState otherState, LevelAccessor level, BlockPos pos, BlockPos otherPos)
@@ -97,8 +94,9 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 	}
 	
 	public default CommonStairShape getShape(ComplexFacing facing, BlockGetter level, BlockPos pos) {
-		boolean allowVertical = allowVerticalConnections();
-		boolean allowMixed = allowMixedConnections();
+		StairConnectionsType connectionsType = connectionsType();
+		boolean allowVertical = connectionsType.allowVertical;
+		boolean allowMixed = connectionsType.allowMixed;
 		//prioritize left, right and back, bottom, front, top
 		boolean connectedLeft = false, connectedRight = false;
 		{ //checking left for connection
@@ -209,7 +207,7 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public default void renderPlacementPreview(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial) {
-		if (!this.allowFlippedFacings()) return;
+		if (!this.connectionsType().allowFlipped) return;
 		ComplexFacing facing = getFacing(result.getDirection(), 
 				(float) (result.getLocation().x - result.getBlockPos().getX() - .5), 
 				(float) (result.getLocation().y - result.getBlockPos().getY() - .5), 
@@ -272,7 +270,7 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 		vertexConsumer.vertex(poseMat, -OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
 		vertexConsumer.vertex(poseMat, -OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
 		
-		if (this.allowFlippedFacings()) {
+		if (this.connectionsType().allowFlipped) {
 			//inner edges
 			vertexConsumer.vertex(poseMat, -OUTER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
 			vertexConsumer.vertex(poseMat,  OUTER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
@@ -402,8 +400,6 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 	public default void addPlacementTooltip(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag)
 	{
 		tooltip.add(Component.translatable("tooltip.additionalplacements.vertical_placement"));
-		tooltip.add(Component.translatable("tooltip.additionalplacements.stair_connections." + connectionsType()));
+		tooltip.add(Component.translatable(connectionsType().tooltip));
 	}
-
-	public String connectionsType();
 }

@@ -2,9 +2,6 @@ package com.firemerald.additionalplacements.block.stairs;
 
 import com.firemerald.additionalplacements.block.stairs.common.CommonStairShape;
 import com.firemerald.additionalplacements.block.stairs.common.CommonStairShapeState;
-import com.firemerald.additionalplacements.block.stairs.complex.ComplexStairShapeState;
-import com.firemerald.additionalplacements.block.stairs.extended.ExtendedStairShapeState;
-import com.firemerald.additionalplacements.block.stairs.simple.SimpleStairShapeState;
 import com.firemerald.additionalplacements.block.stairs.v1.V1StairShapeState;
 import com.firemerald.additionalplacements.block.stairs.v2.V2StairShapeState;
 import com.firemerald.additionalplacements.block.stairs.vanilla.VanillaStairShapeState;
@@ -22,25 +19,11 @@ public class StairShapeStateMapper {
 	public static void run() {
 		if (!lock) {
 			lock = true;
-			//models, vanilla, simple
 			setMapping(StairsShape.STRAIGHT   , StairsShape.STRAIGHT   , CommonStairShape.STRAIGHT         , CommonStairShape.OUTER_BACK_LEFT_BOTTOM_RIGHT, CommonStairShape.OUTER_BACK_RIGHT_BOTTOM_LEFT);
 			setMapping(StairsShape.INNER_LEFT , StairsShape.INNER_RIGHT, CommonStairShape.INNER_FRONT_LEFT , CommonStairShape.INNER_TOP_LEFT              , CommonStairShape.INNER_BOTH_LEFT             );
 			setMapping(StairsShape.INNER_RIGHT, StairsShape.INNER_LEFT , CommonStairShape.INNER_FRONT_RIGHT, CommonStairShape.INNER_TOP_RIGHT             , CommonStairShape.INNER_BOTH_RIGHT            );
 			setMapping(StairsShape.OUTER_LEFT , StairsShape.OUTER_RIGHT, CommonStairShape.OUTER_BACK_LEFT  , CommonStairShape.OUTER_BOTTOM_LEFT           , CommonStairShape.OUTER_BOTH_LEFT             );
 			setMapping(StairsShape.OUTER_RIGHT, StairsShape.OUTER_LEFT , CommonStairShape.OUTER_BACK_RIGHT , CommonStairShape.OUTER_BOTTOM_RIGHT          , CommonStairShape.OUTER_BOTH_RIGHT            );
-			//extended
-			for (ExtendedStairShapeState extended : ExtendedStairShapeState.values()) {
-				CommonStairShapeState common = CommonStairShapeState.of(extended.shape.face.getFacing(extended.facing), extended.shape.shape);
-				extended.setCommon(common);
-				common.setExtended(extended);
-			}
-			//complex
-			for (ComplexStairShapeState complex : ComplexStairShapeState.values()) {
-				CommonStairShapeState common = CommonStairShapeState.of(complex.shape.face.getFacing(complex.facing), complex.shape.shape);
-				complex.setCommon(common);
-				common.setComplex(complex, false);
-				common.flipped().setComplex(complex, true);
-			}
 			//V1
 			for (V1StairShapeState v1 : V1StairShapeState.values()) {
 				CommonStairShapeState common = CommonStairShapeState.of(v1.placing.equivalent(v1.shape), v1.shape.equivalent);
@@ -77,7 +60,6 @@ public class StairShapeStateMapper {
 		if (shapesEqual) {
 			common.setVanilla(vanilla);
 			vanilla.setCommon(common);
-			common.flipped().setComplex(null, true);
 		}
 	}
 	
@@ -85,10 +67,5 @@ public class StairShapeStateMapper {
 		VanillaStairShapeState vanilla = VanillaStairShapeState.of(vanillaFacing, vanillaHalf, vanillaShape);
 		CommonStairShapeState common = CommonStairShapeState.of(ComplexFacing.forFacing(rotation.apply(vanillaFacing.getOpposite()), commonUp), commonShape);
 		common.setModel(vanilla, rotation, shapesEqual);
-		if (shapesEqual) {
-			SimpleStairShapeState simple = SimpleStairShapeState.of(axis, vanillaFacing, vanillaHalf, vanillaShape);
-			common.setSimple(simple);
-			simple.setCommon(common);
-		}
 	}
 }

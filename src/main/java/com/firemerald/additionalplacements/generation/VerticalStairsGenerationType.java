@@ -8,9 +8,8 @@ import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
 import com.firemerald.additionalplacements.block.interfaces.IStairBlock;
-import com.firemerald.additionalplacements.block.stairs.complex.AdditionalComplexStairBlock;
-import com.firemerald.additionalplacements.block.stairs.extended.AdditionalExtendedStairBlock;
-import com.firemerald.additionalplacements.block.stairs.simple.AdditionalSimpleStairBlock;
+import com.firemerald.additionalplacements.block.stairs.AdditionalStairBlock;
+import com.firemerald.additionalplacements.block.stairs.StairConnectionsType;
 import com.firemerald.additionalplacements.config.GenerationBlacklist;
 import com.firemerald.additionalplacements.util.MessageTree;
 
@@ -81,9 +80,9 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 		CompoundTag noMixed = new CompoundTag();
 		CompoundTag noVertical = new CompoundTag();
 		this.forEachCreated(entry -> {
-			if (!entry.newBlock().allowVerticalConnections()) { //simple
+			if (!entry.newBlock().connectionsType().allowVertical) { //simple
 				addBlockEntry(noVertical, entry.originalId());
-			} else if (!entry.newBlock().allowMixedConnections()) { //simple + vertical
+			} else if (!entry.newBlock().connectionsType().allowMixed) { //simple + vertical
 				addBlockEntry(noMixed, entry.originalId());
 			} //common
 		});
@@ -108,11 +107,11 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 			Map<String, List<ResourceLocation>> mismatched = new HashMap<>();
 			this.forEachCreated(entry -> {
 				ResourceLocation id = entry.originalId();
-				if (!entry.newBlock().allowVerticalConnections()) { //simple
+				if (!entry.newBlock().connectionsType().allowVertical) { //simple
 					if (!noVertical.contains(id)) {
 						mismatched.computeIfAbsent("no_vertical_connections", u -> new ArrayList<>()).add(id);
 					}
-				} else if (!entry.newBlock().allowMixedConnections()) { //simple + vertical
+				} else if (!entry.newBlock().connectionsType().allowMixed) { //simple + vertical
 					if (!noMixed.contains(id)) {
 						mismatched.computeIfAbsent("no_mixed_connections", u -> new ArrayList<>()).add(id);
 					}
@@ -157,9 +156,9 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 	@SuppressWarnings("unchecked")
 	@Override
 	public U construct(T block, ResourceLocation blockId) {
-		return (U) (
-				!vertcialConnectionsBlacklist.test(blockId) ? AdditionalSimpleStairBlock.of(block) :
-					!mixedConnectionsBlacklist.test(blockId) ? AdditionalExtendedStairBlock.of(block) : 
-						AdditionalComplexStairBlock.of(block));
+		return (U) AdditionalStairBlock.of(block, 
+				!vertcialConnectionsBlacklist.test(blockId) ? StairConnectionsType.SIMPLE :
+					!mixedConnectionsBlacklist.test(blockId) ? StairConnectionsType.EXTENDED : 
+						StairConnectionsType.COMPLEX);
 	}
 }

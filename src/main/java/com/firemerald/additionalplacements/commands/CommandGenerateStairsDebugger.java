@@ -33,12 +33,14 @@ public class CommandGenerateStairsDebugger
 				.then(Commands.argument("pos", BlockPosArgument.blockPos())
 						.then(Commands.argument("block", BlockStateArgument.block(buildContext))
 								.executes(context -> {
+									try
+									{
 									BlockPos center = BlockPosArgument.getLoadedBlockPos(context, "pos");
 									BlockInput blockInput = BlockStateArgument.getBlock(context, "block");
 									if (blockInput.getState().getBlock() instanceof IStairBlock stair && stair.hasAdditionalStates()) {
 										ServerLevel serverLevel = context.getSource().getLevel();
-										boolean allowMixed = stair.allowMixedConnections();
-										boolean allowVertical = stair.allowVerticalConnections();
+										boolean allowMixed = stair.connectionsType().allowMixed;
+										boolean allowVertical = stair.connectionsType().allowVertical;
 										int minorOffset = allowMixed ? 16 : allowVertical ? 9 : 6;
 										int majorOffset = minorOffset + 2;
 										BlockPos.MutableBlockPos middle = new BlockPos.MutableBlockPos();
@@ -75,6 +77,12 @@ public class CommandGenerateStairsDebugger
 									}
 									else throwInvalidBlock(blockInput.getState());
 									return 1;
+									}
+									catch (Exception e)
+									{
+										e.printStackTrace();
+										throw e;
+									}
 								}))));
 	}
 	

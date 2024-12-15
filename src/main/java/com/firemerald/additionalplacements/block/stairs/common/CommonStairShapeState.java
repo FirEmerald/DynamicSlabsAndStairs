@@ -1,16 +1,22 @@
 package com.firemerald.additionalplacements.block.stairs.common;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.firemerald.additionalplacements.block.stairs.StairShapeStateBase;
-import com.firemerald.additionalplacements.block.stairs.complex.ComplexStairShapeState;
-import com.firemerald.additionalplacements.block.stairs.extended.ExtendedStairShapeState;
-import com.firemerald.additionalplacements.block.stairs.simple.SimpleStairShapeState;
+import com.firemerald.additionalplacements.block.stairs.StairShapeStateMapper;
 import com.firemerald.additionalplacements.block.stairs.vanilla.VanillaStairShapeState;
 import com.firemerald.additionalplacements.util.BlockRotation;
 import com.firemerald.additionalplacements.util.ComplexFacing;
 
-public class CommonStairShapeState extends StairShapeStateBase {
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.StringRepresentable;
+
+public class CommonStairShapeState extends StairShapeStateBase implements StringRepresentable, Comparable<CommonStairShapeState> {
 	public static final int COUNT = 24 * 15;
 	private static final CommonStairShapeState[] VALUES = new CommonStairShapeState[COUNT];
+	private static final Map<String, CommonStairShapeState> MASTER_MAPPING = new HashMap<>(COUNT);
 	
 	static {
 		for (ComplexFacing facing : ComplexFacing.values())
@@ -19,6 +25,7 @@ public class CommonStairShapeState extends StairShapeStateBase {
 		for (ComplexFacing facing : ComplexFacing.values())
 			for (CommonStairShape shape : CommonStairShape.values())
 				VALUES[ordinal(facing, shape)].flipped = VALUES[ordinal(facing.flipped(), shape.flipped())];
+		StairShapeStateMapper.run();
 	}
 	
 	public static int ordinal(ComplexFacing facing, CommonStairShape shape) {
@@ -29,8 +36,12 @@ public class CommonStairShapeState extends StairShapeStateBase {
 		return facing == null || shape == null ? null : VALUES[ordinal(facing, shape)];
 	}
 	
-	public static ExtendedStairShapeState toExtended(ComplexFacing facing, CommonStairShape shape) {
-		return facing == null || shape == null ? null : VALUES[ordinal(facing, shape)].extended;
+	public static CommonStairShapeState[] values() {
+		return VALUES.clone();
+	}
+	
+	public static CommonStairShapeState get(String name) {
+		return MASTER_MAPPING.get(name);
 	}
 
 	public final ComplexFacing facing;
@@ -41,16 +52,17 @@ public class CommonStairShapeState extends StairShapeStateBase {
 	private BlockRotation modelRotation;
 	private boolean isRotatedModel;
 	private VanillaStairShapeState vanilla;
-	private SimpleStairShapeState simple;
-	private ExtendedStairShapeState extended;
-	private ComplexStairShapeState complex;
-	private boolean complexFlipped;
+	public final boolean complexFlipped;
+	private final String name;
 	
 	private CommonStairShapeState(ComplexFacing facing, CommonStairShape shape) {
 		super(ordinal(facing, shape));
 		this.facing = facing;
 		this.shape = shape;
 		this.closestVanillaShape = of(facing, shape.closestVanillaMatch);
+		this.complexFlipped = facing.forward.getAxis() == Axis.Y || facing.left == Direction.DOWN;
+		this.name = facing.getSerializedName() + "_" + shape.getSerializedName();
+		MASTER_MAPPING.put(name, this);
 	}
 	
 	public CommonStairShapeState flipped() {
@@ -83,37 +95,18 @@ public class CommonStairShapeState extends StairShapeStateBase {
 		return vanilla;
 	}
 	
-	public void setSimple(SimpleStairShapeState simple) {
-		this.simple = simple;
-	}
-	
-	public SimpleStairShapeState simple() {
-		return simple;
-	}
-	
-	public void setExtended(ExtendedStairShapeState extended) {
-		this.extended = extended;
-	}
-	
-	public ExtendedStairShapeState extended() {
-		return extended;
-	}
-	
-	public void setComplex(ComplexStairShapeState complex, boolean complexFlipped) {
-		this.complex = complex;
-		this.complexFlipped = complexFlipped;
-	}
-	
-	public ComplexStairShapeState complex() {
-		return complex;
-	}
-	
-	public boolean complexFlipped() {
-		return complexFlipped;
-	}
-	
 	@Override
 	public String toString() {
 		return "CommonStairShapeState{facing=" + facing.getSerializedName() + ",shape=" + shape.getSerializedName() + "}";
+	}
+
+	@Override
+	public String getSerializedName() {
+		return name;
+	}
+
+	@Override
+	public int compareTo(CommonStairShapeState o) {
+		return ordinal - o.ordinal;
 	}
 }

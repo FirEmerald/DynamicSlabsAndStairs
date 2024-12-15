@@ -14,8 +14,7 @@
 		"MixinWeightedPressurePlateBlock",
 		"MixinPlayer",
 		"MixinServerPlayer",
-		"MixinChunkStorage",
-		"MixinStateDefinitionBuilder"
+		"MixinChunkStorage"
 	],
 	"client": [
 		"MixinLocalPlayer",

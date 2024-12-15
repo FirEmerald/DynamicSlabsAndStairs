@@ -5,7 +5,7 @@ import java.util.function.Function;
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.*;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
-import com.firemerald.additionalplacements.block.stairs.AdditionalStairBlockBase;
+import com.firemerald.additionalplacements.block.stairs.AdditionalStairBlock;
 import com.firemerald.additionalplacements.config.BlockBlacklist;
 import com.firemerald.additionalplacements.generation.GenerationType.BuilderBase;
 
@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.*;
 
 public class APGenerationTypes implements RegistrationInitializer {
 	private static SimpleRotatableGenerationType<SlabBlock, VerticalSlabBlock> slab;
-	private static VerticalStairsGenerationType<StairBlock, AdditionalStairBlockBase> stairs;
+	private static VerticalStairsGenerationType<StairBlock, AdditionalStairBlock> stairs;
 	private static SimpleRotatableGenerationType<CarpetBlock, AdditionalCarpetBlock> carpet;
 	private static SimpleRotatableGenerationType<PressurePlateBlock, AdditionalPressurePlateBlock> pressurePlate;
 	private static SimpleRotatableGenerationType<WeightedPressurePlateBlock, AdditionalWeightedPressurePlateBlock> weightedPressurePlate;
@@ -36,7 +36,7 @@ public class APGenerationTypes implements RegistrationInitializer {
 				.constructor(VerticalSlabBlock::of)
 				.addsProperties("axis"));
 		stairs                  = get(register, StairBlock.class                , "stairs"                 , "Stairs"                  , 
-				new VerticalStairsGenerationType.Builder<StairBlock, AdditionalStairBlockBase>()
+				new VerticalStairsGenerationType.Builder<StairBlock, AdditionalStairBlock>()
 				.blacklistModelRotation(new BlockBlacklist.Builder()
 						.blockBlacklist(
 								"minecraft:sandstone_stairs", 
@@ -59,7 +59,7 @@ public class APGenerationTypes implements RegistrationInitializer {
 		return slab;
 	}
 	
-	public static VerticalStairsGenerationType<StairBlock, AdditionalStairBlockBase> stairs() {
+	public static VerticalStairsGenerationType<StairBlock, AdditionalStairBlock> stairs() {
 		return stairs;
 	}
 	
