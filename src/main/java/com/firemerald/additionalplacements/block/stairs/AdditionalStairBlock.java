@@ -45,15 +45,13 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 	}
 	
 	public final StairConnectionsType connectionsType;
-	public final StairShapeStateProperty shapeStateProperty;
 	public boolean rotateLogic = false, rotateModel = false, rotateTex = false;
 
 	protected AdditionalStairBlock(StairBlock stairs, StairConnectionsType connectionsType)
 	{
 		super(stairs);
 		this.connectionsType = connectionsType;
-		this.shapeStateProperty = connectionsType.stateProperty;
-		this.registerDefaultState(copyProperties(getOtherBlockState(), this.stateDefinition.any()).setValue(shapeStateProperty, connectionsType.defaultShapeState));
+		this.registerDefaultState(copyProperties(getOtherBlockState(), this.stateDefinition.any()).setValue(connectionsType, connectionsType.defaultShapeState));
 		((IVanillaStairBlock) stairs).setOtherBlock(this);
 	}
 
@@ -65,7 +63,7 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
 	{
-		builder.add(connectionsTypeStatic.stateProperty);
+		builder.add(connectionsTypeStatic);
 		super.createBlockStateDefinition(builder);
 	}
 	
@@ -190,18 +188,18 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 					}
 				}
 			}
-			if (properties.contains(connectionsType.stateProperty.getName())) {
-				String shapeStateName = properties.getString(connectionsType.stateProperty.getName());
-				if (!connectionsType.stateProperty.isValid(shapeStateName)) return CommonStairShapeState.get(shapeStateName);
+			if (properties.contains(connectionsType.getName())) {
+				String shapeStateName = properties.getString(connectionsType.getName());
+				if (!connectionsType.isValid(shapeStateName)) return CommonStairShapeState.get(shapeStateName);
 			}
 		}
 		return null;
 	}
 	
 	public void applyState(CommonStairShapeState commonShapeState, CompoundTag properties, Consumer<Block> changeBlock) {
-		if (!connectionsType.allowFlipped && commonShapeState.complexFlipped) commonShapeState = commonShapeState.flipped();
+		if (!connectionsType.allowFlipped && commonShapeState.isComplexFlipped) commonShapeState = commonShapeState.flipped();
 		VanillaStairShapeState vanillaShapeState = commonShapeState.vanilla();
-		if (vanillaShapeState == null && !shapeStateProperty.isValid(commonShapeState)) { //not valid
+		if (vanillaShapeState == null && !connectionsType.isValid(commonShapeState)) { //not valid
 			commonShapeState = commonShapeState.closestVanillaShape;
 			vanillaShapeState = commonShapeState.vanilla();
 		}
@@ -211,23 +209,23 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 			IStateFixer.setProperty(properties, StairBlock.HALF, vanillaShapeState.half);
 			IStateFixer.setProperty(properties, StairBlock.SHAPE, vanillaShapeState.shape);
 		} else {
-			IStateFixer.setProperty(properties, shapeStateProperty, commonShapeState);
+			IStateFixer.setProperty(properties, connectionsType, commonShapeState);
 		}
 	}
 
 	@Override
 	public BlockState getBlockStateInternal(CommonStairShapeState commonShapeState, BlockState currentState)
 	{
-		if (!connectionsType.allowFlipped && commonShapeState.complexFlipped) return getBlockState(commonShapeState.flipped(), currentState);
+		if (!connectionsType.allowFlipped && commonShapeState.isComplexFlipped) return getBlockState(commonShapeState.flipped(), currentState);
 		else {
-			if (!shapeStateProperty.isValid(commonShapeState)) return getBlockState(commonShapeState.closestVanillaShape, currentState);
-			return getDefaultAdditionalState(currentState).setValue(shapeStateProperty, commonShapeState);
+			if (!connectionsType.isValid(commonShapeState)) return getBlockState(commonShapeState.closestVanillaShape, currentState);
+			return getDefaultAdditionalState(currentState).setValue(connectionsType, commonShapeState);
 		}
 	}
 
 	@Override
 	public CommonStairShapeState getShapeState(BlockState blockState) {
-		return blockState.getValue(shapeStateProperty);
+		return blockState.getValue(connectionsType);
 	}
 
 	@Override

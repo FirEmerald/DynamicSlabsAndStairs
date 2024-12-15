@@ -52,7 +52,7 @@ public class CommonStairShapeState extends StairShapeStateBase implements String
 	private BlockRotation modelRotation;
 	private boolean isRotatedModel;
 	private VanillaStairShapeState vanilla;
-	public final boolean complexFlipped;
+	public final boolean isComplexFlipped;
 	private final String name;
 	
 	private CommonStairShapeState(ComplexFacing facing, CommonStairShape shape) {
@@ -60,7 +60,7 @@ public class CommonStairShapeState extends StairShapeStateBase implements String
 		this.facing = facing;
 		this.shape = shape;
 		this.closestVanillaShape = of(facing, shape.closestVanillaMatch);
-		this.complexFlipped = facing.forward.getAxis() == Axis.Y || facing.left == Direction.DOWN;
+		this.isComplexFlipped = facing.forward.getAxis() == Axis.Y || facing.left == Direction.DOWN;
 		this.name = facing.getSerializedName() + "_" + shape.getSerializedName();
 		MASTER_MAPPING.put(name, this);
 	}
