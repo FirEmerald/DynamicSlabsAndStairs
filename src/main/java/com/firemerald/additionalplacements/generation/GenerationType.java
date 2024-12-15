@@ -64,6 +64,7 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 	private final boolean defaultPlacementEnabled;
 	private BooleanValue placementEnabled;
 	private List<CreatedBlockEntry<T, U>> created = new ArrayList<>();
+	private final List<IBlockBlacklister<? super T>> blacklisters = new LinkedList<>();
 
 	protected GenerationType(ResourceLocation name, String description, BuilderBase<T, U, ?, ?> builder) {
 		this.name = name;
@@ -71,6 +72,11 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 		this.addsProperties = builder.addsProperties;
 		this.blacklist = builder.blacklist;
 		this.defaultPlacementEnabled = builder.placementEnabled;
+		
+	}
+	
+	protected void addBlacklister(IBlockBlacklister<? super T> blacklister) {
+		blacklisters.add(blacklister);
 	}
 	
 	public boolean placementEnabled() {
@@ -154,6 +160,7 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 	public void checkServerData(CompoundTag tag, Consumer<MessageTree> logError) {}
 	
 	public final boolean enabledForBlock(T block, ResourceLocation blockId) {
+		if (blacklisters.stream().anyMatch(blacklister -> blacklister.blacklist(block, blockId))) return false;
 		if (blacklist.test(blockId)) {
 			Collection<String> has = block.defaultBlockState().getProperties().stream().map(Property::getName).filter(addsProperties::contains).collect(Collectors.toList());
 			if (!has.isEmpty()) {

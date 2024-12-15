@@ -41,7 +41,8 @@ public class APGenerationTypes implements RegistrationInitializer {
 						.blockBlacklist(
 								"minecraft:sandstone_stairs", 
 								"minecraft:red_sandstone_stairs")
-						.build()));
+						.build())
+				.addsProperties("front_top_shape"));
 		carpet                  = get(register, CarpetBlock.class               , "carpet"                 , "Carpets"                 , AdditionalCarpetBlock::of,                "facing");
 		pressurePlate           = get(register, PressurePlateBlock.class        , "pressure_plate"         , "Regular pressure plates" , AdditionalPressurePlateBlock::of,         "facing");
 		weightedPressurePlate   = get(register, WeightedPressurePlateBlock.class, "weighted_pressure_plate", "Weighted pressure plates", AdditionalWeightedPressurePlateBlock::of, "facing");
@@ -74,5 +75,4 @@ public class APGenerationTypes implements RegistrationInitializer {
 	public static SimpleRotatableGenerationType<WeightedPressurePlateBlock, AdditionalWeightedPressurePlateBlock> weightedPressurePlate() {
 		return weightedPressurePlate;
 	}
-	
 }
