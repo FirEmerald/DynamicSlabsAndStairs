@@ -4,13 +4,15 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
 import com.firemerald.additionalplacements.block.interfaces.IStairBlock;
+import com.firemerald.additionalplacements.block.stairs.AdditionalStairBlock;
+import com.firemerald.additionalplacements.block.stairs.StairConnectionsType;
 import com.firemerald.additionalplacements.config.GenerationBlacklist;
 import com.firemerald.additionalplacements.util.MessageTree;
 import com.firemerald.additionalplacements.util.TagIds;
-import com.firemerald.additionalplacements.util.stairs.StairConnections;
 
 import net.minecraft.block.StairsBlock;
 import net.minecraft.nbt.CompoundNBT;
@@ -23,7 +25,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class VerticalStairsGenerationType<T extends StairsBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock & IStairBlock<T>> extends SimpleRotatableGenerationType<T, U> {
 	protected abstract static class BuilderBase<T extends StairsBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock & IStairBlock<T>, V extends SimpleRotatableGenerationType<T, U>, W extends BuilderBase<T, U, V, W>> extends SimpleRotatableGenerationType.BuilderBase<T, U, V, W> {
-		protected Constructor<? super T, ? extends U> constructor;
 		protected GenerationBlacklist 
 		vertcialConnectionsBlacklist = new GenerationBlacklist.Builder().build(),
 		mixedConnectionsBlacklist = new GenerationBlacklist.Builder().build();
@@ -31,11 +32,6 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 		@Override
 		public W constructor(Function<? super T, ? extends U> constructor) {
 			throw new IllegalStateException("Function<? super T, ? extends U> constructor not supported");
-		}
-		
-		public W constructor(Constructor<? super T, ? extends U> constructor) {
-			this.constructor = constructor;
-			return me();
 		}
 		
 		public W blacklistVerticalConnections(GenerationBlacklist blacklist) {
@@ -56,13 +52,11 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 		}
 	}
 	
-	private final Constructor<? super T, ? extends U> constructor;
 	private final GenerationBlacklist vertcialConnectionsBlacklist;
 	private final GenerationBlacklist mixedConnectionsBlacklist;
 	
 	protected VerticalStairsGenerationType(ResourceLocation name, String description, BuilderBase<T, U, ?, ?> builder) {
 		super(name, description, builder);
-		this.constructor = builder.constructor;
 		this.vertcialConnectionsBlacklist = builder.vertcialConnectionsBlacklist;
 		this.mixedConnectionsBlacklist = builder.mixedConnectionsBlacklist;
 	}
@@ -84,70 +78,74 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 	@Override
 	public CompoundNBT getClientCheckData() {
 		CompoundNBT tag = new CompoundNBT();
-		CompoundNBT connections = new CompoundNBT();
+		CompoundNBT noMixed = new CompoundNBT();
+		CompoundNBT noVertical = new CompoundNBT();
 		this.forEachCreated(entry -> {
-			StairConnections allowedConnections = entry.newBlock.allowedConnections();
-			if (allowedConnections != StairConnections.ALL) {
-				ResourceLocation id = entry.originalId;
-				String typeName = allowedConnections.shortName;
-				CompoundNBT typeTag;
-				ListNBT modList;
-				if (connections.contains(typeName, TagIds.TAG_COMPOUND)) {
-					typeTag = connections.getCompound(typeName);
-					if (typeTag.contains(id.getNamespace(), TagIds.TAG_LIST)) modList = typeTag.getList(id.getNamespace(), TagIds.TAG_STRING);
-					else typeTag.put(id.getNamespace(), modList = new ListNBT());
-				}
-				else {
-					connections.put(typeName, typeTag = new CompoundNBT());
-					typeTag.put(id.getNamespace(), modList = new ListNBT());
-				}
-				modList.add(StringNBT.valueOf(id.getPath()));
-			}
+			if (!entry.newBlock.connectionsType().allowVertical) { //simple
+				addBlockEntry(noVertical, entry.originalId);
+			} else if (!entry.newBlock.connectionsType().allowMixed) { //simple + vertical
+				addBlockEntry(noMixed, entry.originalId);
+			} //common
 		});
-		tag.put("connections", connections);
+		if (!noVertical.isEmpty()) tag.put("noVertical", noVertical);
+		if (!noMixed.isEmpty()) tag.put("noMixed", noMixed);
 		return tag;
+	}
+	
+	public static void addBlockEntry(CompoundNBT tag, ResourceLocation id) {
+		ListNBT modList;
+		if (tag.contains(id.getNamespace(), TagIds.TAG_LIST)) modList = tag.getList(id.getNamespace(), TagIds.TAG_STRING);
+		else tag.put(id.getNamespace(), modList = new ListNBT());
+		modList.add(StringNBT.valueOf(id.getPath()));
 	}
 
 	@Override
 	public void checkClientData(CompoundNBT tag, Consumer<MessageTree> onError) {
 		if (tag != null) {
-			CompoundNBT connections = tag.getCompound("connections");
-			if (connections != null) {
-				Map<ResourceLocation, StairConnections> connectionTypes = new HashMap<>(); 
-				connections.getAllKeys().forEach(typeName -> {
-					StairConnections type = StairConnections.getType(typeName);
-					if (type != null) { 
-						CompoundNBT namespaces = connections.getCompound(typeName);
-						namespaces.getAllKeys().forEach(namespace -> {
-							ListNBT blocks = namespaces.getList(namespace, TagIds.TAG_STRING);
-							if (blocks != null) for (int i = 0; i < blocks.size(); ++i) {
-								connectionTypes.put(new ResourceLocation(namespace, blocks.getString(i)), type);
-							}
-						});
-					} else {
-						onError.accept(new MessageTree(new TranslationTextComponent("msg.additionalplacements.stairs.connections_type_not_found", typeName)));
+			Set<ResourceLocation> noVertical = loadEntries(tag, "noVertical");
+			Set<ResourceLocation> noMixed = loadEntries(tag, "noMixed");
+			
+			Map<String, List<ResourceLocation>> mismatched = new HashMap<>();
+			this.forEachCreated(entry -> {
+				ResourceLocation id = entry.originalId;
+				if (!entry.newBlock.connectionsType().allowVertical) { //simple
+					if (!noVertical.contains(id)) {
+						mismatched.computeIfAbsent("no_vertical_connections", u -> new ArrayList<>()).add(id);
 					}
-				});
-				Map<StairConnections, List<ResourceLocation>> mismatched = new HashMap<>();
-				this.forEachCreated(entry -> {
-					StairConnections targetType = connectionTypes.getOrDefault(entry.originalId, StairConnections.ALL);
-					StairConnections actualType = entry.newBlock.allowedConnections();
-					if (targetType != actualType) mismatched.computeIfAbsent(targetType, u -> new ArrayList<>()).add(entry.originalId);
-				});
-				if (!mismatched.isEmpty()) {
-					MessageTree errorListRoot = new MessageTree(new TranslationTextComponent("msg.additionalplacements.stairs.mismatched.header"));
-					mismatched.forEach((type, blocks) -> {
-						MessageTree errorListChild = new MessageTree(new TranslationTextComponent("additionalplacements.stairs.connections_type." + type.name).append(":"));
-						blocks.forEach(block -> errorListChild.children.add(new MessageTree(new StringTextComponent(block.toString()))));
-						errorListRoot.children.add(errorListChild);
-					});
-					onError.accept(errorListRoot);
-					onError.accept(new MessageTree(new TranslationTextComponent("msg.additionalplacements.stairs.mismatched.footer")));
+				} else if (!entry.newBlock.connectionsType().allowMixed) { //simple + vertical
+					if (!noMixed.contains(id)) {
+						mismatched.computeIfAbsent("no_mixed_connections", u -> new ArrayList<>()).add(id);
+					}
+				} else if (noVertical.contains(id) || noMixed.contains(id)) {
+					mismatched.computeIfAbsent("all_connections", u -> new ArrayList<>()).add(id);
 				}
-			} else {
-				onError.accept(new MessageTree(new TranslationTextComponent("msg.additionalplacements.stairs.data_not_found")));
+			});
+			if (!mismatched.isEmpty()) {
+				MessageTree errorListRoot = new MessageTree(new TranslationTextComponent("msg.additionalplacements.stairs.mismatched.header"));
+				mismatched.forEach((type, blocks) -> {
+					MessageTree errorListChild = new MessageTree(new TranslationTextComponent("additionalplacements.stairs.connections_type." + type).append(":"));
+					blocks.forEach(block -> errorListChild.children.add(new MessageTree(new StringTextComponent(block.toString()))));
+					errorListRoot.children.add(errorListChild);
+				});
+				onError.accept(errorListRoot);
+				onError.accept(new MessageTree(new TranslationTextComponent("msg.additionalplacements.stairs.mismatched.footer")));
 			}
 		}
+	}
+	
+	public static Set<ResourceLocation> loadEntries(CompoundNBT tag, String key) {
+		AdditionalPlacementsMod.LOGGER.info(tag.toString());
+		if (tag.contains(key, TagIds.TAG_COMPOUND)) {
+			CompoundNBT entries = tag.getCompound(key);
+			AdditionalPlacementsMod.LOGGER.info(key + ": " + entries.toString());
+			Set<ResourceLocation> set = new HashSet<>();
+			entries.getAllKeys().forEach(modId -> {
+				ListNBT modList = entries.getList(modId, TagIds.TAG_STRING);
+				AdditionalPlacementsMod.LOGGER.info(key + ": " + modId + ": " + modList.toString());
+				modList.forEach(nameTag -> set.add(new ResourceLocation(modId, nameTag.getAsString())));
+			});
+			return set;
+		} else return Collections.emptySet();
 	}
 	
 	public void onStartupConfigLoaded() {
@@ -156,16 +154,12 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 		mixedConnectionsBlacklist.loadListsFromConfig();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public U construct(T block, ResourceLocation blockId) {
-		return constructor.apply(block, 
-				!vertcialConnectionsBlacklist.test(blockId) ? StairConnections.NO_VERTICAL : 
-					!mixedConnectionsBlacklist.test(blockId) ? StairConnections.NO_MIXED : 
-						StairConnections.ALL);
-	}
-	
-	@FunctionalInterface
-	public static interface Constructor<T extends StairsBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock> {
-		public U apply(T block, StairConnections allowedConnections);
+		return (U) AdditionalStairBlock.of(block, 
+				!vertcialConnectionsBlacklist.test(blockId) ? StairConnectionsType.SIMPLE :
+					!mixedConnectionsBlacklist.test(blockId) ? StairConnectionsType.EXTENDED : 
+						StairConnectionsType.COMPLEX);
 	}
 }

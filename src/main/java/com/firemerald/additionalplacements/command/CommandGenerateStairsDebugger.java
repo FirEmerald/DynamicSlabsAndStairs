@@ -3,8 +3,8 @@ package com.firemerald.additionalplacements.command;
 import java.util.*;
 
 import com.firemerald.additionalplacements.block.interfaces.IStairBlock;
+import com.firemerald.additionalplacements.block.stairs.common.CommonStairShape;
 import com.firemerald.additionalplacements.util.ComplexFacing;
-import com.firemerald.additionalplacements.util.stairs.StairShape;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -37,7 +37,9 @@ public class CommandGenerateStairsDebugger
 										IStairBlock<?> stair = (IStairBlock<?>) blockInput.getState().getBlock();
 										if (stair.hasAdditionalStates()) {
 											ServerWorld serverLevel = context.getSource().getLevel();
-											int minorOffset = StairShape.ALL_SHAPES.length + 1;
+											boolean allowMixed = stair.connectionsType().allowMixed;
+											boolean allowVertical = stair.connectionsType().allowVertical;
+											int minorOffset = allowMixed ? 16 : allowVertical ? 9 : 6;
 											int majorOffset = minorOffset + 2;
 											BlockPos.Mutable middle = new BlockPos.Mutable();
 											BlockPos.Mutable pos = new BlockPos.Mutable();
@@ -50,7 +52,7 @@ public class CommandGenerateStairsDebugger
 												}
 											}
 											for (ComplexFacing facing : ComplexFacing.ALL_FACING) {
-												BlockState state = stair.getBlockState(facing, StairShape.STRAIGHT, blockInput.getState());
+												BlockState state = stair.getBlockState(facing, CommonStairShape.STRAIGHT, blockInput.getState());
 												middle.set(
 														center.getX() + facing.up.getStepX() * majorOffset + facing.forward.getStepX() * minorOffset,
 														center.getY() + facing.up.getStepY() * majorOffset + facing.forward.getStepY() * minorOffset,
@@ -60,13 +62,14 @@ public class CommandGenerateStairsDebugger
 												Set<Property<?>> properties = new HashSet<>(state.getProperties()); //TODO properties
 												new BlockStateInput(state, properties, tag).place(serverLevel, middle, 2);
 												{
-													set(serverLevel, stair, state, properties, tag, facing, middle, pos, 2 ,  1,  0);
-													set(serverLevel, stair, state, properties, tag, facing, middle, pos, 4 ,  0,  1);
-													set(serverLevel, stair, state, properties, tag, facing, middle, pos, 6 ,  1,  1);
-													set(serverLevel, stair, state, properties, tag, facing, middle, pos, 8 , -1,  0);
-													set(serverLevel, stair, state, properties, tag, facing, middle, pos, 10,  0, -1);
-													set(serverLevel, stair, state, properties, tag, facing, middle, pos, 12, -1, -1);
-													setTwist(serverLevel, stair, state, properties, tag, facing, middle, pos, 14);
+													int offset = 0;
+													                   set(     serverLevel, stair, state, properties, tag, facing, middle, pos, offset += 2 ,  1,  0);
+													if (allowVertical) set(     serverLevel, stair, state, properties, tag, facing, middle, pos, offset += 2 ,  0,  1);
+													if (allowMixed)    set(     serverLevel, stair, state, properties, tag, facing, middle, pos, offset += 2 ,  1,  1);
+									                                   set(     serverLevel, stair, state, properties, tag, facing, middle, pos, offset += 2 , -1,  0);
+													if (allowVertical) set(     serverLevel, stair, state, properties, tag, facing, middle, pos, offset += 2,  0, -1);
+													if (allowMixed)    set(     serverLevel, stair, state, properties, tag, facing, middle, pos, offset += 2, -1, -1);
+													if (allowMixed)    setTwist(serverLevel, stair, state, properties, tag, facing, middle, pos, offset += 2);
 												}
 											}
 										}
@@ -86,15 +89,15 @@ public class CommandGenerateStairsDebugger
 		new BlockStateInput(rootState, props, tag).place(serverLevel, pos.set(middle).move(facing.right, offset), 2);
 		if (offFront != 0) {
 			new BlockStateInput(stair.getBlockState(ComplexFacing.forFacing(facing.left, facing.up), 
-					StairShape.STRAIGHT, rootState), props, tag).place(serverLevel, pos.set(middle).move(facing.left, offset).move(facing.forward, offFront), 2);
+					CommonStairShape.STRAIGHT, rootState), props, tag).place(serverLevel, pos.set(middle).move(facing.left, offset).move(facing.forward, offFront), 2);
 			new BlockStateInput(stair.getBlockState(ComplexFacing.forFacing(facing.right, facing.up), 
-					StairShape.STRAIGHT, rootState), props, tag).place(serverLevel, pos.set(middle).move(facing.right, offset).move(facing.forward, offFront), 2);
+					CommonStairShape.STRAIGHT, rootState), props, tag).place(serverLevel, pos.set(middle).move(facing.right, offset).move(facing.forward, offFront), 2);
 		}
 		if (offTop != 0) {
 			new BlockStateInput(stair.getBlockState(ComplexFacing.forFacing(facing.forward, facing.left), 
-					StairShape.STRAIGHT, rootState), props, tag).place(serverLevel, pos.set(middle).move(facing.left, offset).move(facing.up, offTop), 2);
+					CommonStairShape.STRAIGHT, rootState), props, tag).place(serverLevel, pos.set(middle).move(facing.left, offset).move(facing.up, offTop), 2);
 			new BlockStateInput(stair.getBlockState(ComplexFacing.forFacing(facing.forward, facing.right), 
-					StairShape.STRAIGHT, rootState), props, tag).place(serverLevel, pos.set(middle).move(facing.right, offset).move(facing.up, offTop), 2);
+					CommonStairShape.STRAIGHT, rootState), props, tag).place(serverLevel, pos.set(middle).move(facing.right, offset).move(facing.up, offTop), 2);
 		}
 	}
 	
@@ -102,12 +105,12 @@ public class CommandGenerateStairsDebugger
 		new BlockStateInput(rootState, props, tag).place(serverLevel, pos.set(middle).move(facing.left, offset), 2);
 		new BlockStateInput(rootState, props, tag).place(serverLevel, pos.set(middle).move(facing.right, offset), 2);
 		new BlockStateInput(stair.getBlockState(ComplexFacing.forFacing(facing.left, facing.up), 
-				StairShape.STRAIGHT, rootState), props, tag).place(serverLevel, pos.set(middle).move(facing.left, offset).move(facing.backward, 1), 2);
+				CommonStairShape.STRAIGHT, rootState), props, tag).place(serverLevel, pos.set(middle).move(facing.left, offset).move(facing.backward, 1), 2);
 		new BlockStateInput(stair.getBlockState(ComplexFacing.forFacing(facing.right, facing.up), 
-				StairShape.STRAIGHT, rootState), props, tag).place(serverLevel, pos.set(middle).move(facing.right, offset).move(facing.backward, 1), 2);
+				CommonStairShape.STRAIGHT, rootState), props, tag).place(serverLevel, pos.set(middle).move(facing.right, offset).move(facing.backward, 1), 2);
 		new BlockStateInput(stair.getBlockState(ComplexFacing.forFacing(facing.forward, facing.right), 
-				StairShape.STRAIGHT, rootState), props, tag).place(serverLevel, pos.set(middle).move(facing.left, offset).move(facing.down, 1), 2);
+				CommonStairShape.STRAIGHT, rootState), props, tag).place(serverLevel, pos.set(middle).move(facing.left, offset).move(facing.down, 1), 2);
 		new BlockStateInput(stair.getBlockState(ComplexFacing.forFacing(facing.forward, facing.left), 
-				StairShape.STRAIGHT, rootState), props, tag).place(serverLevel, pos.set(middle).move(facing.right, offset).move(facing.down, 1), 2);
+				CommonStairShape.STRAIGHT, rootState), props, tag).place(serverLevel, pos.set(middle).move(facing.right, offset).move(facing.down, 1), 2);
 	}
 }

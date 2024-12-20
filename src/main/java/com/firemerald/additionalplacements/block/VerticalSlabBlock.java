@@ -1,9 +1,14 @@
 package com.firemerald.additionalplacements.block;
 
+import java.util.function.Consumer;
+
+import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISlabBlock;
+import com.firemerald.additionalplacements.block.interfaces.IStateFixer;
 import com.firemerald.additionalplacements.client.models.definitions.SlabModels;
 import com.firemerald.additionalplacements.client.models.definitions.StateModelDefinition;
+import com.firemerald.additionalplacements.config.APConfigs;
 import com.firemerald.additionalplacements.util.BlockRotation;
 import com.firemerald.additionalplacements.util.VoxelShapes;
 
@@ -11,6 +16,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -27,7 +33,7 @@ import net.minecraft.world.IWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock> implements ISlabBlock<SlabBlock>, ISimpleRotationBlock
+public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock> implements ISlabBlock<SlabBlock>, ISimpleRotationBlock, IStateFixer
 {
 	public static final EnumProperty<Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
@@ -155,5 +161,20 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 	@OnlyIn(Dist.CLIENT)
 	public StateModelDefinition getModelDefinition(BlockState state) {
 		return SlabModels.getModel(state);
+	}
+
+	@Override
+	public CompoundNBT fix(CompoundNBT properties, Consumer<Block> changeBlock) {
+		if (APConfigs.common().fixOldStates.get()) {
+			if (properties.contains("facing") && !(properties.contains("axis") && properties.contains("type"))) {
+				AdditionalPlacementsMod.LOGGER.debug(this + " Fixing V1 slab block state: " + properties);
+				BlockStateProperties.HORIZONTAL_FACING.getValue(properties.getString("facing")).ifPresent(facing -> {
+					properties.putString("axis", VerticalSlabBlock.AXIS.getName(facing.getAxis()));
+					properties.putString("type", SlabBlock.TYPE.getName(facing.getAxisDirection() == AxisDirection.POSITIVE ? SlabType.TOP : SlabType.BOTTOM));
+				});
+				properties.remove("facing");
+			}
+		}
+		return properties;
 	}
 }
