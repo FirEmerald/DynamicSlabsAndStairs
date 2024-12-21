@@ -70,13 +70,16 @@ public class StairConnectionsType extends Property<CommonStairShapeState> {
 	@Override
 	public boolean equals(Object pOther) {
 		if (this == pOther) return true;
-		else if (pOther instanceof StairConnectionsType connectionsType && super.equals(pOther)) return 
-				this.values.equals(connectionsType.values) && 
-				this.valueMap.equals(connectionsType.valueMap) &&
-				this.tooltip.equals(connectionsType.tooltip) && 
-				this.allowVertical == connectionsType.allowVertical && 
-				this.allowMixed == connectionsType.allowMixed && 
-				this.allowFlipped == connectionsType.allowFlipped;
+		else if (pOther instanceof StairConnectionsType) {
+			StairConnectionsType connectionsType = (StairConnectionsType) pOther;
+			return 
+					this.values.equals(connectionsType.values) && 
+					this.valueMap.equals(connectionsType.valueMap) &&
+					this.tooltip.equals(connectionsType.tooltip) && 
+					this.allowVertical == connectionsType.allowVertical && 
+					this.allowMixed == connectionsType.allowMixed && 
+					this.allowFlipped == connectionsType.allowFlipped;
+		}
 		else return false;
 	}
 	

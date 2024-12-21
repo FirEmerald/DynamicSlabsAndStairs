@@ -5,17 +5,17 @@ import com.firemerald.additionalplacements.block.stairs.common.CommonStairShape;
 import net.minecraft.util.StringRepresentable;
 
 public enum V2StairShape implements StringRepresentable {
-	//NORMAL_STRAIGHT("normal_straight", V2StairFacingType.NORMAL, CommonStairShape.STRAIGHT),
+	//NORMAL_STRAIGHT("normal_straight", V1StairPlacingType.NORMAL, CommonStairShape.STRAIGHT),
 
-	//NORMAL_INNER_FRONT_LEFT("normal_inner_front_left", V2StairFacingType.NORMAL, CommonStairShape.INNER_FRONT_LEFT),
-	//NORMAL_INNER_FRONT_RIGHT("normal_inner_front_right", V2StairFacingType.NORMAL, CommonStairShape.INNER_FRONT_RIGHT),
+	//NORMAL_INNER_FRONT_LEFT("normal_inner_front_left", V1StairPlacingType.NORMAL, CommonStairShape.INNER_FRONT_LEFT),
+	//NORMAL_INNER_FRONT_RIGHT("normal_inner_front_right", V1StairPlacingType.NORMAL, CommonStairShape.INNER_FRONT_RIGHT),
 	NORMAL_INNER_TOP_LEFT("normal_inner_top_left", V2StairFacingType.NORMAL, CommonStairShape.INNER_TOP_LEFT),
 	NORMAL_INNER_TOP_RIGHT("normal_inner_top_right", V2StairFacingType.NORMAL, CommonStairShape.INNER_TOP_RIGHT),
 	NORMAL_INNER_BOTH_LEFT("normal_inner_both_left", V2StairFacingType.NORMAL, CommonStairShape.INNER_BOTH_LEFT),
 	NORMAL_INNER_BOTH_RIGHT("normal_inner_both_right", V2StairFacingType.NORMAL, CommonStairShape.INNER_BOTH_RIGHT),
 	
-	//NORMAL_OUTER_BACK_LEFT("normal_outer_back_left", V2StairFacingType.NORMAL, CommonStairShape.OUTER_BACK_LEFT),
-	//NORMAL_OUTER_BACK_RIGHT("normal_outer_back_right", V2StairFacingType.NORMAL, CommonStairShape.OUTER_BACK_RIGHT),
+	//NORMAL_OUTER_BACK_LEFT("normal_outer_back_left", V1StairPlacingType.NORMAL, CommonStairShape.OUTER_BACK_LEFT),
+	//NORMAL_OUTER_BACK_RIGHT("normal_outer_back_right", V1StairPlacingType.NORMAL, CommonStairShape.OUTER_BACK_RIGHT),
 	NORMAL_OUTER_BOTTOM_LEFT("normal_outer_bottom_left", V2StairFacingType.NORMAL, CommonStairShape.OUTER_BOTTOM_LEFT),
 	NORMAL_OUTER_BOTTOM_RIGHT("normal_outer_bottom_right", V2StairFacingType.NORMAL, CommonStairShape.OUTER_BOTTOM_RIGHT),
 	NORMAL_OUTER_BOTH_LEFT("normal_outer_both_left", V2StairFacingType.NORMAL, CommonStairShape.OUTER_BOTH_LEFT),

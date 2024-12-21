@@ -2,6 +2,7 @@ package com.firemerald.additionalplacements.block.stairs;
 
 import java.util.function.Consumer;
 
+import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementLiquidBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
 import com.firemerald.additionalplacements.block.interfaces.IStairBlock;
@@ -41,13 +42,14 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 	{
 		connectionsTypeStatic = connectionsType;
 		AdditionalStairBlock ret = new AdditionalStairBlock(stairs, connectionsType);
+		connectionsTypeStatic = null;
 		return ret;
 	}
 	
 	public final StairConnectionsType connectionsType;
 	public boolean rotateLogic = false, rotateModel = false, rotateTex = false;
 
-	protected AdditionalStairBlock(StairBlock stairs, StairConnectionsType connectionsType)
+	private AdditionalStairBlock(StairBlock stairs, StairConnectionsType connectionsType)
 	{
 		super(stairs);
 		this.connectionsType = connectionsType;
@@ -136,16 +138,16 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public ResourceLocation getBaseModelPrefix() {
-		return StairModels.BASE_MODEL_FOLDER;
-	}
-
-	@Override
 	public VoxelShape getShapeInternal(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
 	{
 		CommonStairShapeState shapeState = this.getShapeState(state);
 		return shapeState.shape.getVoxelShape(shapeState.facing);
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public ResourceLocation getBaseModelPrefix() {
+		return StairModels.BASE_MODEL_FOLDER;
 	}
 
 	@Override
@@ -166,21 +168,21 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 			if (APConfigs.common().fixOldStates.get()) {
 				if (properties.contains("shape")) {
 					if (properties.contains("facing")) { //potentially V2
-						//AdditionalPlacementsMod.LOGGER.debug(this + " Potentially fixing potential V2 block state: " + properties);
+						AdditionalPlacementsMod.LOGGER.debug(this + " Potentially fixing potential V2 block state: " + properties);
 						V2StairFacing facing = V2StairFacing.get(properties.getString("facing"));
 						V2StairShape shape = V2StairShape.get(properties.getString("shape"));
 						if (facing != null && shape != null) { //V2
-							//AdditionalPlacementsMod.LOGGER.debug(this + " Fixing V2 block state");
+							AdditionalPlacementsMod.LOGGER.debug(this + " Fixing V2 block state");
 							properties.remove("facing");
 							properties.remove("shape");
 							return V2StairShapeState.toCommon(facing, shape);
 						}
 					} else if (properties.contains("placing")) { //potentially V1
-						//AdditionalPlacementsMod.LOGGER.debug(this + " Potentially fixing potential V1 block state: " + properties);
+						AdditionalPlacementsMod.LOGGER.debug(this + " Potentially fixing potential V1 block state: " + properties);
 						V1StairPlacing placing = V1StairPlacing.get(properties.getString("placing"));
 						V1StairShape shape = V1StairShape.get(properties.getString("shape"));
 						if (placing != null && shape != null) { //V1
-							//AdditionalPlacementsMod.LOGGER.debug(this + " Fixing V1 block state");
+							AdditionalPlacementsMod.LOGGER.debug(this + " Fixing V1 block state");
 							properties.remove("placing");
 							properties.remove("shape");
 							return V1StairShapeState.toCommon(placing, shape);
@@ -189,8 +191,12 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 				}
 			}
 			if (properties.contains(connectionsType.getName())) {
+				AdditionalPlacementsMod.LOGGER.debug(this + " Potentially fixing V3 stair block state: " + properties);
 				String shapeStateName = properties.getString(connectionsType.getName());
-				if (!connectionsType.isValid(shapeStateName)) return CommonStairShapeState.get(shapeStateName);
+				if (!connectionsType.isValid(shapeStateName)) {
+					AdditionalPlacementsMod.LOGGER.debug(this + " Fixing V3 stair block state");
+					return CommonStairShapeState.get(shapeStateName);
+				}
 			}
 		}
 		return null;

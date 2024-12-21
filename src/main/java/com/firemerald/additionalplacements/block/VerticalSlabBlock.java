@@ -2,6 +2,7 @@ package com.firemerald.additionalplacements.block;
 
 import java.util.function.Consumer;
 
+import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISlabBlock;
 import com.firemerald.additionalplacements.block.interfaces.IStateFixer;
@@ -164,6 +165,7 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 	public CompoundTag fix(CompoundTag properties, Consumer<Block> changeBlock) {
 		if (APConfigs.common().fixOldStates.get()) {
 			if (properties.contains("facing") && !(properties.contains("axis") && properties.contains("type"))) {
+				AdditionalPlacementsMod.LOGGER.debug(this + " Fixing V1 slab block state: " + properties);
 				BlockStateProperties.HORIZONTAL_FACING.getValue(properties.getString("facing")).ifPresent(facing -> {
 					properties.putString("axis", VerticalSlabBlock.AXIS.getName(facing.getAxis()));
 					properties.putString("type", SlabBlock.TYPE.getName(facing.getAxisDirection() == AxisDirection.POSITIVE ? SlabType.TOP : SlabType.BOTTOM));

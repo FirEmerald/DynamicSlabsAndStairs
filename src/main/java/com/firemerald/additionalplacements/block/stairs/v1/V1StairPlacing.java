@@ -8,23 +8,23 @@ import net.minecraft.util.StringRepresentable;
 public enum V1StairPlacing implements StringRepresentable {
 	NORTH_EAST("north_east", Direction.NORTH, Direction.EAST,
 			ComplexFacing.NORTH_EAST, 
-			ComplexFacing.NORTH_UP, ComplexFacing.EAST_UP,
-			ComplexFacing.NORTH_DOWN, ComplexFacing.EAST_DOWN
+			ComplexFacing.EAST_UP, ComplexFacing.NORTH_UP, 
+			ComplexFacing.EAST_DOWN, ComplexFacing.NORTH_DOWN
 			),
 	EAST_SOUTH("east_south", Direction.EAST, Direction.SOUTH,
 			ComplexFacing.EAST_SOUTH, 
-			ComplexFacing.EAST_UP, ComplexFacing.SOUTH_UP,
-			ComplexFacing.EAST_DOWN, ComplexFacing.SOUTH_DOWN
+			ComplexFacing.SOUTH_UP, ComplexFacing.EAST_UP, 
+			ComplexFacing.SOUTH_DOWN, ComplexFacing.EAST_DOWN
 			),
 	SOUTH_WEST("south_west", Direction.SOUTH, Direction.WEST,
 			ComplexFacing.SOUTH_WEST, 
-			ComplexFacing.SOUTH_UP, ComplexFacing.WEST_UP,
-			ComplexFacing.SOUTH_DOWN, ComplexFacing.WEST_DOWN
+			ComplexFacing.WEST_UP, ComplexFacing.SOUTH_UP, 
+			ComplexFacing.WEST_DOWN, ComplexFacing.SOUTH_DOWN
 			),
 	WEST_NORTH("west_north", Direction.WEST, Direction.NORTH,
 			ComplexFacing.WEST_NORTH, 
-			ComplexFacing.WEST_UP, ComplexFacing.NORTH_UP,
-			ComplexFacing.WEST_DOWN, ComplexFacing.NORTH_DOWN
+			ComplexFacing.NORTH_UP, ComplexFacing.WEST_UP, 
+			ComplexFacing.NORTH_DOWN, ComplexFacing.WEST_DOWN
 			);
 	
 	public static V1StairPlacing get(String name) {
@@ -48,23 +48,6 @@ public enum V1StairPlacing implements StringRepresentable {
         this.ccwTop = ccwTop;
         this.cwBottom = cwBottom;
         this.ccwBottom = ccwBottom;
-    }
-    
-    public ComplexFacing equivalent(V1StairShape shape) {
-    	if (shape.isUp) {
-    		if (shape.isClockwise) {
-    			return cwTop;
-    		} else {
-    			return ccwTop;
-    		}
-    	} else if (shape.isDown) {
-    		if (shape.isClockwise) {
-    			return cwBottom;
-    		} else {
-    			return ccwBottom;
-    		}
-    	}
-    	else return equivalent;
     }
 
 	@Override

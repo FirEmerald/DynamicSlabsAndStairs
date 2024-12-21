@@ -26,12 +26,12 @@ public class StairShapeStateMapper {
 			setMapping(StairsShape.OUTER_RIGHT, StairsShape.OUTER_LEFT , CommonStairShape.OUTER_BACK_RIGHT , CommonStairShape.OUTER_BOTTOM_RIGHT          , CommonStairShape.OUTER_BOTH_RIGHT            );
 			//V1
 			for (V1StairShapeState v1 : V1StairShapeState.values()) {
-				CommonStairShapeState common = CommonStairShapeState.of(v1.placing.equivalent(v1.shape), v1.shape.equivalent);
+				CommonStairShapeState common = CommonStairShapeState.of(v1.shape.placingType.fromV1Placing(v1.placing), v1.shape.equivalent);
 				v1.setCommon(common);
 			}
 			//V2
 			for (V2StairShapeState v2 : V2StairShapeState.values()) {
-				CommonStairShapeState common = CommonStairShapeState.of(v2.shape.facingType.fromCompressedFacing(v2.facing), v2.shape.shape);
+				CommonStairShapeState common = CommonStairShapeState.of(v2.shape.facingType.fromV2Facing(v2.facing), v2.shape.shape);
 				v2.setCommon(common);
 			}
 		}

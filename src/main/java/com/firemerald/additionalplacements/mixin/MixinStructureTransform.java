@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
-import com.firemerald.additionalplacements.config.APConfigs;
 import com.simibubi.create.content.contraptions.StructureTransform;
 
 import net.minecraft.core.Direction;
@@ -22,7 +21,7 @@ public class MixinStructureTransform
 	@Inject(target = @Desc(value = "apply", owner = StructureTransform.class, ret = BlockState.class, args = {BlockState.class}), at = @At("HEAD"), cancellable = true)
 	public void apply(BlockState state, CallbackInfoReturnable<BlockState> ci)
 	{
-		if (APConfigs.common().fixStates.get() && state.getBlock() instanceof IPlacementBlock block)
+		if (state.getBlock() instanceof IPlacementBlock block)
 		{
 			if (block.hasAdditionalStates())
 			{

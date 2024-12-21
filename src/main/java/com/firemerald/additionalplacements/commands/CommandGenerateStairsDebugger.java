@@ -33,8 +33,6 @@ public class CommandGenerateStairsDebugger
 				.then(Commands.argument("pos", BlockPosArgument.blockPos())
 						.then(Commands.argument("block", BlockStateArgument.block(buildContext))
 								.executes(context -> {
-									try
-									{
 									BlockPos center = BlockPosArgument.getLoadedBlockPos(context, "pos");
 									BlockInput blockInput = BlockStateArgument.getBlock(context, "block");
 									if (blockInput.getState().getBlock() instanceof IStairBlock stair && stair.hasAdditionalStates()) {
@@ -77,12 +75,6 @@ public class CommandGenerateStairsDebugger
 									}
 									else throwInvalidBlock(blockInput.getState());
 									return 1;
-									}
-									catch (Exception e)
-									{
-										e.printStackTrace();
-										throw e;
-									}
 								}))));
 	}
 	

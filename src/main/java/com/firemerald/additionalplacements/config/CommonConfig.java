@@ -30,7 +30,7 @@ public class CommonConfig
         		.comment("Log missing or additional tags on generated blocks.")
         		.define("log_tag_mismatch", false);
         checkerPriority = builder
-        		.comment("The thread priority of the mismatched tag checker. " + Thread.MIN_PRIORITY + " is lowest, " + Thread.MAX_PRIORITY + " is highest, " + Thread.NORM_PRIORITY + " is vanilla.")
+        		.comment("The thread priority of the mismatched tag checker. " + Thread.MIN_PRIORITY + " is lowest, " + Thread.MAX_PRIORITY + " is highest, " + Thread.NORM_PRIORITY + " is normal.")
         		.defineInRange("checker_priority", Thread.MIN_PRIORITY, Thread.MIN_PRIORITY, Thread.MAX_PRIORITY);
         fixStates = builder
         		.comment("Fix incorrect states. Adds a slight bit of additional overhead to chunk loading. \n"
