@@ -17,7 +17,6 @@ import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.storage.ChunkStorage;
 import net.minecraft.world.level.storage.DimensionDataStorage;
@@ -40,9 +39,7 @@ public class MixinChunkStorage {
 									CompoundTag block = (CompoundTag) blockTag;
 									if (block.contains("Name", Tag.TAG_STRING)) {
 										String name = block.getString("Name");
-										Block theBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(name));
-										if (theBlock instanceof IStateFixer) {
-											IStateFixer fixer = (IStateFixer) theBlock;
+										if (ForgeRegistries.BLOCKS.getValue(new ResourceLocation(name)) instanceof IStateFixer fixer) {
 											CompoundTag original = block.getCompound("Properties");
 											CompoundTag fixed = fixer.fix(original, newBlock -> {
 												block.put("Name", StringTag.valueOf(ForgeRegistries.BLOCKS.getKey(newBlock).toString()));
