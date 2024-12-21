@@ -6,10 +6,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.firemerald.additionalplacements.block.VerticalStairBlock;
 import com.firemerald.additionalplacements.block.interfaces.IStairBlock.IVanillaStairBlock;
-import com.firemerald.additionalplacements.util.stairs.CompressedStairShape;
-import com.firemerald.additionalplacements.util.stairs.StairConnections;
+import com.firemerald.additionalplacements.block.stairs.AdditionalStairBlock;
+import com.firemerald.additionalplacements.block.stairs.StairConnectionsType;
+import com.firemerald.additionalplacements.block.stairs.common.CommonStairShapeState;
+import com.firemerald.additionalplacements.block.stairs.vanilla.VanillaStairShapeState;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,12 +20,11 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 @Mixin(StairBlock.class)
 public abstract class MixinStairBlock implements IVanillaStairBlock
 {
-	public VerticalStairBlock stairs;
+	public AdditionalStairBlock stairs;
 	@Shadow
 	private BlockState baseState;
 
@@ -34,13 +34,13 @@ public abstract class MixinStairBlock implements IVanillaStairBlock
 	}
 
 	@Override
-	public void setOtherBlock(VerticalStairBlock stairs)
+	public void setOtherBlock(AdditionalStairBlock stairs)
 	{
 		this.stairs = stairs;
 	}
 
 	@Override
-	public VerticalStairBlock getOtherBlock()
+	public AdditionalStairBlock getOtherBlock()
 	{
 		return stairs;
 	}
@@ -100,12 +100,19 @@ public abstract class MixinStairBlock implements IVanillaStairBlock
 	}
 
 	@Override
-	public StairConnections allowedConnections() {
-		return stairs.allowedConnections();
+	public BlockState getBlockStateInternal(CommonStairShapeState shapeState, BlockState currentState) {
+		return stairs.getBlockStateInternal(shapeState, currentState);
+	}
+	
+	public CommonStairShapeState getShapeState(BlockState blockState) {
+		return VanillaStairShapeState.toCommon(
+				blockState.getValue(StairBlock.FACING), 
+				blockState.getValue(StairBlock.HALF), 
+				blockState.getValue(StairBlock.SHAPE));
 	}
 
 	@Override
-	public EnumProperty<CompressedStairShape> shapeProperty() {
-		return stairs.shapeProperty();
+	public StairConnectionsType connectionsType() {
+		return stairs.connectionsType();
 	}
 }
