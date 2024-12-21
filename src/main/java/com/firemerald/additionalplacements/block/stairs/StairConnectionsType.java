@@ -26,7 +26,7 @@ public class StairConnectionsType extends Property<CommonStairShapeState> {
 				(!state.shape.isVertical || allowVertical) && 
 				(!state.shape.isMixed || allowMixed) && 
 				(!state.isComplexFlipped || allowFlipped))
-		.collect(Collectors.toList()));
+		.collect(Collectors.toUnmodifiableList()), null);
 	}
 	
 	public StairConnectionsType(String tooltip, boolean allowVertical, boolean allowMixed, boolean allowFlipped, CommonStairShapeState... allowedShapeStates) {
