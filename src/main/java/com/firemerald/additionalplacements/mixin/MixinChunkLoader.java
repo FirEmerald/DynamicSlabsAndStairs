@@ -33,7 +33,7 @@ public class MixinChunkLoader {
 				NBTUtils.ifCompoundNotEmpty(chunkData, "Level", level -> {
 					NBTUtils.ifListNotEmpty(level, "Sections", TagIds.TAG_COMPOUND, sections -> {
 						sections.forEach(section -> {
-							if (section instanceof CompoundNBT) NBTUtils.ifListNotEmpty((CompoundNBT) section, "Palette", TagIds.TAG_COMPOUND, palette -> {
+							NBTUtils.ifListNotEmpty((CompoundNBT) section, "Palette", TagIds.TAG_COMPOUND, palette -> {
 								palette.forEach(blockTag -> {
 									CompoundNBT block = (CompoundNBT) blockTag;
 									if (block.contains("Name", TagIds.TAG_STRING)) {

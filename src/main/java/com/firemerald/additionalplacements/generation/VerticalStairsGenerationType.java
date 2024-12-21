@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
 import com.firemerald.additionalplacements.block.interfaces.IStairBlock;
@@ -134,14 +133,11 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 	}
 	
 	public static Set<ResourceLocation> loadEntries(CompoundNBT tag, String key) {
-		AdditionalPlacementsMod.LOGGER.info(tag.toString());
 		if (tag.contains(key, TagIds.TAG_COMPOUND)) {
 			CompoundNBT entries = tag.getCompound(key);
-			AdditionalPlacementsMod.LOGGER.info(key + ": " + entries.toString());
 			Set<ResourceLocation> set = new HashSet<>();
 			entries.getAllKeys().forEach(modId -> {
 				ListNBT modList = entries.getList(modId, TagIds.TAG_STRING);
-				AdditionalPlacementsMod.LOGGER.info(key + ": " + modId + ": " + modList.toString());
 				modList.forEach(nameTag -> set.add(new ResourceLocation(modId, nameTag.getAsString())));
 			});
 			return set;
