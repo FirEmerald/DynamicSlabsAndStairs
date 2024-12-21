@@ -5,6 +5,7 @@ import java.util.function.BiFunction;
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.*;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
+import com.firemerald.additionalplacements.block.stairs.AdditionalStairBlock;
 import com.firemerald.additionalplacements.config.BlockBlacklist;
 import com.firemerald.additionalplacements.generation.GenerationType.BuilderBase;
 
@@ -14,11 +15,11 @@ import net.minecraft.world.level.block.*;
 
 public class APGenerationTypes implements RegistrationInitializer {
 	private static SimpleRotatableGenerationType<SlabBlock, VerticalSlabBlock> slab;
-	private static VerticalStairsGenerationType<StairBlock, VerticalStairBlock> stairs;
+	private static VerticalStairsGenerationType<StairBlock, AdditionalStairBlock> stairs;
 	private static SimpleRotatableGenerationType<CarpetBlock, AdditionalCarpetBlock> carpet;
 	private static SimpleRotatableGenerationType<PressurePlateBlock, AdditionalPressurePlateBlock> pressurePlate;
 	private static SimpleRotatableGenerationType<WeightedPressurePlateBlock, AdditionalWeightedPressurePlateBlock> weightedPressurePlate;
-	
+
 	@Override
 	public void onInitializeRegistration(IRegistration register) {
 		slab                    = get(register, SlabBlock.class                 , "slab"                   , "Slabs"                   , 
@@ -36,22 +37,22 @@ public class APGenerationTypes implements RegistrationInitializer {
 				.constructor(VerticalSlabBlock::of)
 				.addsProperties("axis"));
 		stairs                  = get(register, StairBlock.class                , "stairs"                 , "Stairs"                  , 
-				new VerticalStairsGenerationType.Builder<StairBlock, VerticalStairBlock>()
+				new VerticalStairsGenerationType.Builder<StairBlock, AdditionalStairBlock>()
 				.blacklistModelRotation(new BlockBlacklist.Builder()
 						.blockBlacklist(
 								"minecraft:sandstone_stairs", 
 								"minecraft:red_sandstone_stairs")
 						.build())
-				.constructor((VerticalStairsGenerationType.Constructor<StairBlock, VerticalStairBlock>) VerticalStairBlock::of));
+				.addsProperties("front_top_shape"));
 		carpet                  = get(register, CarpetBlock.class               , "carpet"                 , "Carpets"                 , AdditionalCarpetBlock::of,                "facing");
 		pressurePlate           = get(register, PressurePlateBlock.class        , "pressure_plate"         , "Regular pressure plates" , AdditionalPressurePlateBlock::of,         "facing");
 		weightedPressurePlate   = get(register, WeightedPressurePlateBlock.class, "weighted_pressure_plate", "Weighted pressure plates", AdditionalWeightedPressurePlateBlock::of, "facing");
 	}
-	
+
 	private static <T extends Block, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock> SimpleRotatableGenerationType<T, U> get(IRegistration register, Class<T> clazz, String name, String description, BiFunction<? super T, ResourceKey<Block>, ? extends U> constructor, String... addsProperties) {
 		return register.registerType(clazz, ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, name), description, new SimpleRotatableGenerationType.Builder<T, U>().constructor(constructor).addsProperties(addsProperties));
 	}
-	
+
 	private static <T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>> V get(IRegistration register, Class<T> clazz, String name, String description, BuilderBase<T, U, V, ?> builder) {
 		return register.registerType(clazz, ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, name), description, builder);
 	}
@@ -60,7 +61,7 @@ public class APGenerationTypes implements RegistrationInitializer {
 		return slab;
 	}
 	
-	public static VerticalStairsGenerationType<StairBlock, VerticalStairBlock> stairs() {
+	public static VerticalStairsGenerationType<StairBlock, AdditionalStairBlock> stairs() {
 		return stairs;
 	}
 	
@@ -75,5 +76,4 @@ public class APGenerationTypes implements RegistrationInitializer {
 	public static SimpleRotatableGenerationType<WeightedPressurePlateBlock, AdditionalWeightedPressurePlateBlock> weightedPressurePlate() {
 		return weightedPressurePlate;
 	}
-	
 }
