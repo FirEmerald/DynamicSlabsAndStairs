@@ -1,7 +1,5 @@
 package com.firemerald.additionalplacements.config;
 
-import java.util.function.Consumer;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
@@ -11,6 +9,7 @@ import com.firemerald.additionalplacements.generation.Registration;
 import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeConfigRegistry;
 import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeModConfigEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.neoforged.fml.config.IConfigSpec;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
@@ -75,18 +74,16 @@ public class APConfigs {
     }
     
     private static void onModConfigLoaded(ModConfig config) {
-    	if (config.getSpec() == commonSpec) sendConfigEvent(GenerationType::onCommonConfigLoaded);
-    	else if (config.getSpec() == serverSpec) sendConfigEvent(GenerationType::onServerConfigLoaded);
-    	else if (config.getSpec() == clientSpec) sendConfigEvent(GenerationType::onClientConfigLoaded);
+    	onModConfigsLoaded(config.getSpec());
     }
     
     private static void onModConfigReloaded(ModConfig config) {
-    	if (config.getSpec() == commonSpec) sendConfigEvent(GenerationType::onCommonConfigReloaded);
-    	else if (config.getSpec() == serverSpec) sendConfigEvent(GenerationType::onServerConfigReloaded);
-    	else if (config.getSpec() == clientSpec) sendConfigEvent(GenerationType::onClientConfigReloaded);
+    	onModConfigsLoaded(config.getSpec());
     }
 
-    public static void sendConfigEvent(Consumer<? super GenerationType<?, ?>> action) {
-    	Registration.forEach(action);
+    private static void onModConfigsLoaded(IConfigSpec<?> configSpec) {
+    	if (configSpec == commonSpec) Registration.forEach(GenerationType::onCommonConfigLoaded);
+    	else if (configSpec == serverSpec) Registration.forEach(GenerationType::onServerConfigLoaded);
+    	else if (configSpec == clientSpec) Registration.forEach(GenerationType::onClientConfigLoaded);
     }
 }

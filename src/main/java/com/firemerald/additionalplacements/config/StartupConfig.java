@@ -20,10 +20,6 @@ public class StartupConfig {
         Registration.buildConfig(builder, GenerationType::buildStartupConfig);
 	}
 	
-	public void loadValues() {
-		APConfigs.sendConfigEvent(GenerationType::onStartupConfigLoaded);
-	}
-	
 	public void loadConfig(Path configPath, ModConfigSpec spec) {
         final CommentedFileConfig config = CommentedFileConfig.builder(configPath, TomlFormat.instance())
         		.sync()
@@ -33,7 +29,7 @@ public class StartupConfig {
                 .build();
         config.load();
 		spec.acceptConfig(config);
-		loadValues();
+		Registration.forEach(GenerationType::onStartupConfigLoaded);
 		config.close();
 	}
 
