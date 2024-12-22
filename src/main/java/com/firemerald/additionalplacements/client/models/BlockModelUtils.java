@@ -6,7 +6,6 @@ import java.util.function.Function;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
-import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
 import com.firemerald.additionalplacements.client.IVertexFormatExtensions;
 import com.firemerald.additionalplacements.util.BlockRotation;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -169,7 +168,7 @@ public class BlockModelUtils
 		else return Pair.of(Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(MissingTextureAtlasSprite.getLocation()), -1);
 	}
 
-	public static List<BakedQuad> retexturedQuads(BlockState modelState, BakedModel originalModel, BakedModel ourModel, Direction side, Direction modelSide, Random rand)
+	public static List<BakedQuad> retexturedQuads(BlockState modelState, BakedModel originalModel, BakedModel ourModel, Direction side, Random rand)
 	{
 		VertexFormat format = DefaultVertexFormat.BLOCK;
 		int vertexSize = format.getIntegerSize();
@@ -181,7 +180,8 @@ public class BlockModelUtils
 		List<BakedQuad> bakedQuads = new ArrayList<>(originalQuads.size());
 		for (BakedQuad originalQuad : originalQuads)
 		{
-			int dirIndex = originalQuad.getDirection().get3DDataValue();
+			Direction modelSide = originalQuad.getDirection();
+			int dirIndex = modelSide.get3DDataValue();
 			Pair<TextureAtlasSprite, Integer> texture = textures[dirIndex];
 			if (texture == null) texture = textures[dirIndex] = getSidedTexture(modelState, originalModel, modelSide, rand, vertexSize, posOffset);
     		bakedQuads.add(retexture(originalQuad, texture.getLeft(), texture.getRight(), vertexSize, uvOffset));
@@ -190,11 +190,7 @@ public class BlockModelUtils
 	}
 
 	public static List<BakedQuad> retexturedQuads(BlockState state, BlockState modelState, Function<BlockState, BakedModel> originalModel, BakedModel ourModel, Direction side, Random rand) {
-		Function<Direction, Direction> transformSide;
-		if (side != null && state.getBlock() instanceof IPlacementBlock) transformSide = ((IPlacementBlock<?>) state.getBlock()).getModelDirectionFunction(state, rand);
-		else transformSide = Function.identity();
-		Direction modelSide = side == null ? null : transformSide.apply(side);
-		return retexturedQuads(modelState, originalModel.apply(modelState), ourModel, side, modelSide, rand);
+		return retexturedQuads(modelState, originalModel.apply(modelState), ourModel, side, rand);
 	}
 
 	public static List<BakedQuad> rotatedQuads(BlockState modelState, BakedModel model, BlockRotation rotation, boolean rotateTex, Direction side, Random rand)

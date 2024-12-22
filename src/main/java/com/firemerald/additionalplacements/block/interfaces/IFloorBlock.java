@@ -1,7 +1,6 @@
 package com.firemerald.additionalplacements.block.interfaces;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Function;
 
 import javax.annotation.Nullable;
@@ -62,55 +61,5 @@ public interface IFloorBlock<T extends Block> extends IPlacementBlock<T>
 	public default Direction transformModelDirection(Direction from)
 	{
 		return from;
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public default Function<Direction, Direction> getModelDirectionFunction(BlockState state, Random rand)
-	{
-		return switch(getPlacing(state)) {
-		case UP -> side -> switch (side) {
-		case UP -> Direction.DOWN;
-		case DOWN -> Direction.UP;
-		case NORTH -> Direction.SOUTH;
-		case SOUTH -> Direction.NORTH;
-		default -> side;
-		};
-		case NORTH -> side -> switch (side) {
-		case UP -> Direction.NORTH;
-		case DOWN -> Direction.SOUTH;
-		case NORTH -> Direction.DOWN;
-		case SOUTH -> Direction.UP;
-		default -> side;
-		};
-		case SOUTH -> side -> switch (side) {
-		case UP -> Direction.NORTH;
-		case DOWN -> Direction.SOUTH;
-		case NORTH -> Direction.UP;
-		case SOUTH -> Direction.DOWN;
-		case EAST -> Direction.WEST;
-		case WEST -> Direction.EAST;
-		default -> side;
-		};
-		case EAST -> side -> switch (side) {
-		case UP -> Direction.NORTH;
-		case DOWN -> Direction.SOUTH;
-		case NORTH -> Direction.WEST;
-		case SOUTH -> Direction.EAST;
-		case EAST -> Direction.DOWN;
-		case WEST -> Direction.UP;
-		default -> side;
-		};
-		case WEST -> side -> switch (side) {
-		case UP -> Direction.NORTH;
-		case DOWN -> Direction.SOUTH;
-		case NORTH -> Direction.EAST;
-		case SOUTH -> Direction.WEST;
-		case EAST -> Direction.UP;
-		case WEST -> Direction.DOWN;
-		default -> side;
-		};
-		default -> Function.identity();
-		};
 	}
 }

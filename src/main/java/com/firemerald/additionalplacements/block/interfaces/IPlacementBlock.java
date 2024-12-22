@@ -1,7 +1,6 @@
 package com.firemerald.additionalplacements.block.interfaces;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Function;
 
 import javax.annotation.Nullable;
@@ -131,12 +130,6 @@ public interface IPlacementBlock<T extends Block> extends ItemLike, IGenerationC
 
 	public default boolean enablePlacement(BlockPos hit, Level level, Direction direction, Player player) {
 		return enablePlacement(player);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public default Function<Direction, Direction> getModelDirectionFunction(BlockState state, Random rand)
-	{
-		return Function.identity();
 	}
 	
 	public GenerationType<?, ?> getGenerationType();
