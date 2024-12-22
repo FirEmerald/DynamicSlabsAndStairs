@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
+import com.firemerald.additionalplacements.config.APConfigs;
 import com.firemerald.additionalplacements.config.GenerationBlacklist;
 import com.firemerald.additionalplacements.util.MessageTree;
 
@@ -92,8 +93,12 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 		blacklist.addToConfig(builder);
 		builder.pop();
 	}
+
+	public final void onStartupConfigLoaded() {
+		loadStartupConfig();
+	}
 	
-	public void onStartupConfigLoaded() {
+	protected void loadStartupConfig() {
 		blacklist.loadListsFromConfig();
 	}
 	
@@ -102,30 +107,43 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 				.comment("Whether or not to allow for manual placement of the additional placement variants of this block type.")
 				.define("enable_placement", defaultPlacementEnabled); //TODO make this also a blacklist
 	}
-	
-	public void onCommonConfigLoaded() {}
-	
-	public void onCommonConfigReloaded() {
-		onCommonConfigLoaded();
+
+	public final void onCommonConfigLoaded() {
+		loadCommonConfig();
+		updateCommonSettings();
 	}
+
+	protected void loadCommonConfig() {}
 	
+	protected void updateCommonSettings() {}
+
 	public void buildClientConfig(ForgeConfigSpec.Builder builder) {}
-	
-	public void onClientConfigLoaded() {}
-	
-	public void onClientConfigReloaded() {
-		onClientConfigLoaded();
+
+	public final void onClientConfigLoaded() {
+		loadClientConfig();
+		updateClientSettings();
 	}
+
+	protected void loadClientConfig() {}
 	
+	protected void updateClientSettings() {}
+
 	public void buildServerConfig(ForgeConfigSpec.Builder builder) {}
-	
-	public void onServerConfigLoaded() {}
-	
-	public void onServerConfigReloaded() {
-		onServerConfigLoaded();
+
+	public final void onServerConfigLoaded() {
+		loadServerConfig();
+		updateServerSettings();
 	}
+
+	protected void loadServerConfig() {}
 	
-	public void onTagsUpdated(boolean isClient) {}
+	protected void updateServerSettings() {}
+
+	public void onTagsUpdated(boolean isClient) {
+		if (APConfigs.commonLoaded()) updateCommonSettings();
+		if (isClient && APConfigs.clientLoaded()) updateClientSettings();
+		if (APConfigs.serverLoaded()) updateServerSettings();
+	}
 	
 	/**
 	 * Data to check ON SERVER
