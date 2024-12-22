@@ -1,13 +1,12 @@
 package com.firemerald.additionalplacements.config;
 
-import java.util.function.Consumer;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.firemerald.additionalplacements.generation.GenerationType;
 import com.firemerald.additionalplacements.generation.Registration;
 
 import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.config.IConfigSpec;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -70,19 +69,17 @@ public class APConfigs {
     }
     
     public static void onModConfigsLoaded(ModConfigEvent.Loading event) {
-    	if (event.getConfig().getSpec() == startupSpec) sendConfigEvent(GenerationType::onStartupConfigLoaded);
-    	else if (event.getConfig().getSpec() == commonSpec) sendConfigEvent(GenerationType::onCommonConfigLoaded);
-    	else if (event.getConfig().getSpec() == serverSpec) sendConfigEvent(GenerationType::onServerConfigLoaded);
-    	else if (event.getConfig().getSpec() == clientSpec) sendConfigEvent(GenerationType::onClientConfigLoaded);
+    	if (event.getConfig().getSpec() == startupSpec) Registration.forEach(GenerationType::onStartupConfigLoaded);
+    	else onModConfigsLoaded(event.getConfig().getSpec());
     }
     
     public static void onModConfigsReloaded(ModConfigEvent.Reloading event) {
-    	if (event.getConfig().getSpec() == commonSpec) sendConfigEvent(GenerationType::onCommonConfigReloaded);
-    	else if (event.getConfig().getSpec() == serverSpec) sendConfigEvent(GenerationType::onServerConfigReloaded);
-    	else if (event.getConfig().getSpec() == clientSpec) sendConfigEvent(GenerationType::onClientConfigReloaded);
+    	onModConfigsLoaded(event.getConfig().getSpec());
     }
 
-    public static void sendConfigEvent(Consumer<? super GenerationType<?, ?>> action) {
-    	Registration.forEach(action);
+    private static void onModConfigsLoaded(IConfigSpec configSpec) {
+    	if (configSpec == commonSpec) Registration.forEach(GenerationType::onCommonConfigLoaded);
+    	else if (configSpec == serverSpec) Registration.forEach(GenerationType::onServerConfigLoaded);
+    	else if (configSpec == clientSpec) Registration.forEach(GenerationType::onClientConfigLoaded);
     }
 }
