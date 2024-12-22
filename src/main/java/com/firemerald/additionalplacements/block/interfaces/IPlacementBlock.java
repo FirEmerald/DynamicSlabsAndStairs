@@ -33,7 +33,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.client.model.data.ModelData;
 
 public interface IPlacementBlock<T extends Block> extends ItemLike, IGenerationControl
 {
@@ -133,12 +132,6 @@ public interface IPlacementBlock<T extends Block> extends ItemLike, IGenerationC
 
 	public default boolean enablePlacement(BlockPos hit, Level level, Direction direction, Player player) {
 		return enablePlacement(player);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public default Function<Direction, Direction> getModelDirectionFunction(BlockState state, RandomSource rand, ModelData extraData)
-	{
-		return Function.identity();
 	}
 	
 	public GenerationType<?, ?> getGenerationType();
