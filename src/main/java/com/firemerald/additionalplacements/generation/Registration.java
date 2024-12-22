@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class Registration {
+	private static final List<IBlockBlacklister<Block>> BLACKLISTERS = new LinkedList<>();
 	private static List<RegistrationInitializer> registrators = new ArrayList<>();
 	
 	public static void addRegistration(RegistrationInitializer listener) {
@@ -26,7 +27,10 @@ public class Registration {
 	}
 	
 	public static void registerTypes() {
-		registrators.forEach(registrator -> registrator.onInitializeRegistration(Registration::registerType));
+		registrators.forEach(registrator -> {
+			registrator.onInitializeRegistration(Registration::registerType);
+			registrator.addGlobalBlacklisters(BLACKLISTERS::add);
+		});
 		registrators = null;
 	}
 	
@@ -35,7 +39,7 @@ public class Registration {
 	
 	@SuppressWarnings("unchecked")
 	public static <T extends Block, U extends AdditionalPlacementBlock<T>> void tryApply(Block block, ResourceLocation blockId, BiConsumer<ResourceKey<Block>, AdditionalPlacementBlock<?>> action) {
-		if (block instanceof IPlacementBlock placement && placement.canGenerateAdditionalStates()) {
+		if (block instanceof IPlacementBlock placement && placement.canGenerateAdditionalStates() && !BLACKLISTERS.stream().anyMatch(blacklister -> blacklister.blacklist(block, blockId))) {
 			GenerationType<T, U> type = (GenerationType<T, U>) getType(block);
 			if (type != null) type.apply((T) block, blockId, (BiConsumer<ResourceKey<Block>, U>) action);
 		}
@@ -60,6 +64,7 @@ public class Registration {
 	private static <T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>> V registerType(Class<T> clazz, ResourceLocation name, String description, BuilderBase<T, U, V, ?> builder) {
 		if (TYPES.containsKey(name)) throw new IllegalStateException("A generation type with name " + name + " is already registered!");
 		V type = builder.construct(name, description);
+		registrators.forEach(registrator -> registrator.addBlacklisters(clazz, type, blacklister -> type.addBlacklister(blacklister)));
 		TYPES.put(name, type);
 		if (TYPES_BY_CLASS.containsKey(clazz)) AdditionalPlacementsMod.LOGGER.warn("A generation type for class " + clazz + " is already registered. The registration with name " + name + " will not be used.");
 		else TYPES_BY_CLASS.put(clazz, type);
