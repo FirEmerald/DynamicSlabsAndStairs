@@ -2,7 +2,6 @@ package com.firemerald.additionalplacements.generation;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
-import com.firemerald.additionalplacements.config.APConfigs;
 import com.firemerald.additionalplacements.config.BlockBlacklist;
 
 import net.minecraft.resources.ResourceLocation;
@@ -49,23 +48,6 @@ public class SimpleRotatableGenerationType<T extends Block, U extends Additional
 	}
 
 	@Override
-	public void buildServerConfig(ModConfigSpec.Builder builder) {
-		super.buildServerConfig(builder);
-		builder
-		.comment("Options to control which blocks will use \"rotated logic\" of their original blocks. Mainly affects bounding boxes.")
-		.push("rotated_logic");
-		logicRotationBlackist.addToConfig(builder);
-		builder.pop();
-	}
-
-	@Override
-	public void onServerConfigLoaded() {
-		super.onServerConfigLoaded();
-		logicRotationBlackist.loadListsFromConfig();
-		updateLogicSettings();
-	}
-
-	@Override
 	public void buildClientConfig(ModConfigSpec.Builder builder) {
 		super.buildClientConfig(builder);
 		builder
@@ -81,24 +63,37 @@ public class SimpleRotatableGenerationType<T extends Block, U extends Additional
 	}
 
 	@Override
-	public void onClientConfigLoaded() {
-		super.onClientConfigLoaded();
+	public void loadClientConfig() {
+		super.loadClientConfig();
 		textureRotationBlacklist.loadListsFromConfig();
 		modelRotationBlacklist.loadListsFromConfig();
-		updateModelSettings();
 	}
 
 	@Override
-	public void onTagsUpdated(boolean isClient) {
-		if (isClient && APConfigs.clientLoaded()) updateModelSettings();
-		if (APConfigs.serverLoaded()) updateLogicSettings();
-	}
-	
-	public void updateModelSettings() {
+	public void updateClientSettings() {
+		super.updateClientSettings();
 		forEachCreated(entry -> entry.newBlock().setModelRotation(textureRotationBlacklist.testOriginal(entry), modelRotationBlacklist.testOriginal(entry)));
 	}
-	
-	public void updateLogicSettings() {
+
+	@Override
+	public void buildServerConfig(ModConfigSpec.Builder builder) {
+		super.buildServerConfig(builder);
+		builder
+		.comment("Options to control which blocks will use \"rotated logic\" of their original blocks. Mainly affects bounding boxes.")
+		.push("rotated_logic");
+		logicRotationBlackist.addToConfig(builder);
+		builder.pop();
+	}
+
+	@Override
+	public void loadServerConfig() {
+		super.loadServerConfig();
+		logicRotationBlackist.loadListsFromConfig();
+	}
+
+	@Override
+	public void updateServerSettings() {
+		super.updateServerSettings();
 		forEachCreated(entry -> entry.newBlock().setLogicRotation(logicRotationBlackist.testOriginal(entry)));
 	}
 }
