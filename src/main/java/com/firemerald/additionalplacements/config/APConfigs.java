@@ -1,7 +1,5 @@
 package com.firemerald.additionalplacements.config;
 
-import java.util.function.Consumer;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.firemerald.additionalplacements.generation.GenerationType;
@@ -9,6 +7,7 @@ import com.firemerald.additionalplacements.generation.Registration;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.IConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -73,18 +72,16 @@ public class APConfigs {
     }
     
     public static void onModConfigsLoaded(ModConfigEvent.Loading event) {
-    	if (event.getConfig().getSpec() == commonSpec) sendConfigEvent(GenerationType::onCommonConfigLoaded);
-    	else if (event.getConfig().getSpec() == serverSpec) sendConfigEvent(GenerationType::onServerConfigLoaded);
-    	else if (event.getConfig().getSpec() == clientSpec) sendConfigEvent(GenerationType::onClientConfigLoaded);
+    	onModConfigsLoaded(event.getConfig().getSpec());
     }
     
     public static void onModConfigsReloaded(ModConfigEvent.Reloading event) {
-    	if (event.getConfig().getSpec() == commonSpec) sendConfigEvent(GenerationType::onCommonConfigReloaded);
-    	else if (event.getConfig().getSpec() == serverSpec) sendConfigEvent(GenerationType::onServerConfigReloaded);
-    	else if (event.getConfig().getSpec() == clientSpec) sendConfigEvent(GenerationType::onClientConfigReloaded);
+    	onModConfigsLoaded(event.getConfig().getSpec());
     }
 
-    public static void sendConfigEvent(Consumer<? super GenerationType<?, ?>> action) {
-    	Registration.forEach(action);
+    private static void onModConfigsLoaded(IConfigSpec<?> configSpec) {
+    	if (configSpec == commonSpec) Registration.forEach(GenerationType::onCommonConfigLoaded);
+    	else if (configSpec == serverSpec) Registration.forEach(GenerationType::onServerConfigLoaded);
+    	else if (configSpec == clientSpec) Registration.forEach(GenerationType::onClientConfigLoaded);
     }
 }
