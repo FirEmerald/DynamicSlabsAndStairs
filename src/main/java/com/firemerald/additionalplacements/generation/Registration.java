@@ -18,16 +18,20 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class Registration {
+	private static final List<IBlockBlacklister<Block>> BLACKLISTERS = new LinkedList<>();
 	private static final Map<ResourceLocation, GenerationType<?, ?>> TYPES = new LinkedHashMap<>();
 	private static final Map<Class<?>, GenerationType<?, ?>> TYPES_BY_CLASS = new HashMap<>();
 	
-	public static void gatherTypes() { 
-		FabricLoader.getInstance().invokeEntrypoints("additional-placements-generators", RegistrationInitializer.class, instance -> instance.onInitializeRegistration(Registration::registerType));
+	public static void gatherTypes() {
+		FabricLoader.getInstance().invokeEntrypoints("additional-placements-generators", RegistrationInitializer.class, instance -> {
+			instance.onInitializeRegistration(Registration::registerType);
+			instance.addGlobalBlacklisters(BLACKLISTERS::add);
+		});
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static <T extends Block, U extends AdditionalPlacementBlock<T>> void tryApply(Block block, ResourceLocation blockId, BiConsumer<ResourceLocation, AdditionalPlacementBlock<?>> action) {
-		if (block instanceof IPlacementBlock placement && placement.canGenerateAdditionalStates()) {
+		if (block instanceof IPlacementBlock placement && placement.canGenerateAdditionalStates() && !BLACKLISTERS.stream().anyMatch(blacklister -> blacklister.blacklist(block, blockId))) {
 			GenerationType<T, U> type = (GenerationType<T, U>) getType(block);
 			if (type != null) type.apply((T) block, blockId, (BiConsumer<ResourceLocation, U>) action);
 		}
@@ -52,6 +56,7 @@ public class Registration {
 	protected static <T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>> V registerType(Class<T> clazz, ResourceLocation name, String description, BuilderBase<T, U, V, ?> builder) {
 		if (TYPES.containsKey(name)) throw new IllegalStateException("A generation type with name " + name + " is already registered!");
 		V type = builder.construct(name, description);
+		FabricLoader.getInstance().invokeEntrypoints("additional-placements-generators", RegistrationInitializer.class, instance -> instance.addBlacklisters(clazz, type, blacklister -> type.addBlacklister(blacklister)));
 		TYPES.put(name, type);
 		if (TYPES_BY_CLASS.containsKey(clazz)) AdditionalPlacementsMod.LOGGER.warn("A generation type for class " + clazz + " is already registered. The registration with name " + name + " will not be used.");
 		else TYPES_BY_CLASS.put(clazz, type);
