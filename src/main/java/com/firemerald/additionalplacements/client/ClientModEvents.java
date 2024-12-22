@@ -4,16 +4,12 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
 import com.firemerald.additionalplacements.client.models.BakedPlacementModel;
-import com.firemerald.additionalplacements.client.models.Unwrapper;
 import com.firemerald.additionalplacements.common.CommonModEvents;
 import com.firemerald.additionalplacements.config.APConfigs;
 
-import me.pepperbell.continuity.client.model.CtmBakedModel;
-import me.pepperbell.continuity.client.model.EmissiveBakedModel;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,7 +22,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -58,6 +53,8 @@ public class ClientModEvents implements ClientModInitializer
 		ClientTickEvents.END_CLIENT_TICK.register(ClientModEvents::onClientEndTick);
 		ClientPlayConnectionEvents.JOIN.register(ClientModEvents::onServerJoined);
 		KeyBindingHelper.registerKeyBinding(APClientData.AP_PLACEMENT_KEY);
+		/*
+    	 * TODO unavailable until a compatible Continuity release
 		if (FabricLoader.getInstance().isModLoaded("continuity")) {
     		AdditionalPlacementsMod.LOGGER.info("Continuity detected, registering continuity BakedModel unwrappers");
     		Unwrapper.registerUnwrapper(model -> {
@@ -66,6 +63,7 @@ public class ClientModEvents implements ClientModInitializer
     			else return null;
     		});
 		}
+		*/
 	}
 
 	private static boolean hasInit = false;

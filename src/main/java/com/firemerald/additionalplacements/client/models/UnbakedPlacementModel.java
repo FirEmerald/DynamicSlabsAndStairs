@@ -2,22 +2,22 @@ package com.firemerald.additionalplacements.client.models;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.util.BlockRotation;
 
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.block.model.UnbakedBlockStateModel;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class UnbakedPlacementModel implements UnbakedModel
+public class UnbakedPlacementModel implements UnbakedBlockStateModel
 {
-	private static record ModelKey(AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, ModelState ourModelRotation, UnbakedModel theirModel, BlockRotation theirModelRotation) {}
+	private static record ModelKey(AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, ModelState ourModelRotation, UnbakedBlockStateModel theirModel, BlockRotation theirModelRotation) {}
 	
 	private static final Map<ModelKey, UnbakedPlacementModel> MODEL_CACHE = new HashMap<>();
 	
-	public static UnbakedPlacementModel of(AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, ModelState ourModelRotation, UnbakedModel theirModel, BlockRotation theirModelRotation) {
+	public static UnbakedPlacementModel of(AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, ModelState ourModelRotation, UnbakedBlockStateModel theirModel, BlockRotation theirModelRotation) {
 		return MODEL_CACHE.computeIfAbsent(new ModelKey(block, ourModelLocation, ourModelRotation, theirModel, theirModelRotation), UnbakedPlacementModel::new);
 	}
 	
@@ -28,7 +28,7 @@ public class UnbakedPlacementModel implements UnbakedModel
 	public final AdditionalPlacementBlock<?> block;
 	public final ResourceLocation ourModelLocation;
 	public final ModelState ourModelRotation;
-	public final UnbakedModel theirModel;
+	public final UnbakedBlockStateModel theirModel;
 	public final BlockRotation theirModelRotation;
 
 	private UnbakedPlacementModel(ModelKey key)
@@ -44,10 +44,14 @@ public class UnbakedPlacementModel implements UnbakedModel
 	public void resolveDependencies(Resolver resolver) {
 		resolver.resolve(ourModelLocation);
 	}
+	
+	@Override
+	public BakedModel bake(ModelBaker baker) {
+		return BakedPlacementModel.of(baker, ourModelRotation, block, ourModelLocation, theirModel, theirModelRotation);
+	}
 
 	@Override
-	public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState state)
-	{
-		return BakedPlacementModel.of(baker, ourModelRotation, block, ourModelLocation, theirModel, theirModelRotation);
+	public Object visualEqualityGroup(BlockState state) {
+		return theirModel.visualEqualityGroup(block.getModelState(state));
 	}
 }

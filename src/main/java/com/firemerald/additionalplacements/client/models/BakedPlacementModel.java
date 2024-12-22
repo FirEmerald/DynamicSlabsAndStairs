@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
-import com.firemerald.additionalplacements.client.IModelBakerExtensions;
 import com.firemerald.additionalplacements.util.BlockRotation;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.UnbakedBlockStateModel;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -21,10 +21,10 @@ public class BakedPlacementModel extends PlacementModelWrapper
 	
 	private static final Map<ModelKey, BakedPlacementModel> MODEL_CACHE = new HashMap<>();
 	
-	public static BakedPlacementModel of(ModelBaker bakery, ModelState modelTransform, AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, UnbakedModel theirModel, BlockRotation modelRotation) {
+	public static BakedPlacementModel of(ModelBaker bakery, ModelState modelTransform, AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, UnbakedBlockStateModel theirModel, BlockRotation modelRotation) {
 		return of(block, 
 				Unwrapper.unwrap(bakery.bake(ourModelLocation, modelTransform)), 
-				Unwrapper.unwrap(((IModelBakerExtensions) bakery).apBakeUncached(theirModel, BlockModelRotation.X0_Y0)),
+				Unwrapper.unwrap(theirModel.bake(bakery)),
 				modelRotation);
 	}
 	
@@ -53,8 +53,8 @@ public class BakedPlacementModel extends PlacementModelWrapper
 	{
 		BlockState modelState = block.getModelState(state);
 		if (block.rotatesModel(state))
-			return BlockModelUtils.rotatedQuads(modelState, unused -> wrapped, modelRotation, block.rotatesTexture(state), side, rand);
+			return BlockModelUtils.rotatedQuads(modelState, unused -> parent, modelRotation, block.rotatesTexture(state), side, rand);
 		else
-			return BlockModelUtils.retexturedQuads(state, modelState, unused -> wrapped, ourModel, side, rand);
+			return BlockModelUtils.retexturedQuads(state, modelState, unused -> parent, ourModel, side, rand);
 	}
 }

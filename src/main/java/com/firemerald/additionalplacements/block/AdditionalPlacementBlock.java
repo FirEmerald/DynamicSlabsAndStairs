@@ -128,10 +128,9 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
-	@Deprecated
-	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state)
+	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData)
 	{
-		return parentBlock.getCloneItemStack(level, pos, getModelState(state));
+		return getModelState(state).getCloneItemStack(level, pos, includeData);
 	}
 
 	@Override
