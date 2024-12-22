@@ -144,8 +144,9 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 		} else return Collections.emptySet();
 	}
 	
-	public void onStartupConfigLoaded() {
-		super.onStartupConfigLoaded();
+	@Override
+	public void loadStartupConfig() {
+		super.loadStartupConfig();
 		vertcialConnectionsBlacklist.loadListsFromConfig();
 		mixedConnectionsBlacklist.loadListsFromConfig();
 	}

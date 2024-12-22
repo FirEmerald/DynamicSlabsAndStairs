@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
+import com.firemerald.additionalplacements.config.APConfigs;
 import com.firemerald.additionalplacements.config.GenerationBlacklist;
 import com.firemerald.additionalplacements.util.MessageTree;
 
@@ -92,7 +93,11 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 		builder.pop();
 	}
 	
-	public void onStartupConfigLoaded() {
+	public final void onStartupConfigLoaded() {
+		loadStartupConfig();
+	}
+	
+	protected void loadStartupConfig() {
 		blacklist.loadListsFromConfig();
 	}
 	
@@ -102,29 +107,42 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 				.define("enable_placement", defaultPlacementEnabled); //TODO make this also a blacklist
 	}
 	
-	public void onCommonConfigLoaded() {}
-	
-	public void onCommonConfigReloaded() {
-		onCommonConfigLoaded();
+	public final void onCommonConfigLoaded() {
+		loadCommonConfig();
+		updateCommonSettings();
 	}
+	
+	protected void loadCommonConfig() {}
+	
+	protected void updateCommonSettings() {}
 	
 	public void buildClientConfig(ForgeConfigSpec.Builder builder) {}
 	
-	public void onClientConfigLoaded() {}
-	
-	public void onClientConfigReloaded() {
-		onClientConfigLoaded();
+	public final void onClientConfigLoaded() {
+		loadClientConfig();
+		updateClientSettings();
 	}
+	
+	protected void loadClientConfig() {}
+	
+	protected void updateClientSettings() {}
 	
 	public void buildServerConfig(ForgeConfigSpec.Builder builder) {}
 	
-	public void onServerConfigLoaded() {}
-	
-	public void onServerConfigReloaded() {
-		onServerConfigLoaded();
+	public final void onServerConfigLoaded() {
+		loadServerConfig();
+		updateServerSettings();
 	}
 	
-	public void onTagsUpdated() {}
+	protected void loadServerConfig() {}
+	
+	protected void updateServerSettings() {}
+
+	public void onTagsUpdated() {
+		if (APConfigs.commonLoaded()) updateCommonSettings();
+		if (APConfigs.clientLoaded()) updateClientSettings();
+		if (APConfigs.serverLoaded()) updateServerSettings();
+	}
 	
 	/**
 	 * Data to check ON SERVER
