@@ -60,12 +60,9 @@ public class CommonModEventHandler
 	}
 
 	@SubscribeEvent
-	public static void onGatherData(GatherDataEvent event)
+	public static void onGatherClientData(GatherDataEvent.Client event)
 	{
-		if (event.includeClient())
-		{
-			event.getGenerator().addProvider(true, (DataProvider.Factory<ModelGenerator>) (PackOutput pack) -> new ModelGenerator(pack, AdditionalPlacementsMod.MOD_ID, event.getExistingFileHelper()));
-		}
+		event.getGenerator().addProvider(true, (DataProvider.Factory<ModelGenerator>) (PackOutput pack) -> new ModelGenerator(pack, AdditionalPlacementsMod.MOD_ID, event.getExistingFileHelper()));
 	}
 
 	public static boolean doubleslabsLoaded;

@@ -40,7 +40,6 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
@@ -129,16 +128,15 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player)
+	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
 	{
-		return getModelState(state).getCloneItemStack(target, level, pos, player);
+		return getModelState(state).getCloneItemStack(pos, level, includeData, player);
 	}
 
 	@Override
-	@Deprecated
-	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state)
+	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData)
 	{
-		return parentBlock.getCloneItemStack(level, pos, getModelState(state));
+		return getModelState(state).getCloneItemStack(level, pos, includeData);
 	}
 
 	@Override

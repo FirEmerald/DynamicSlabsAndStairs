@@ -1,11 +1,8 @@
 package com.firemerald.additionalplacements.client;
 
-import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.client.models.*;
 
-import me.pepperbell.continuity.client.model.CtmBakedModel;
-import me.pepperbell.continuity.client.model.EmissiveBakedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.level.block.Block;
@@ -13,13 +10,11 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import team.chisel.ctm.client.model.AbstractCTMBakedModel;
 
 @EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 @OnlyIn(Dist.CLIENT)
@@ -46,6 +41,8 @@ public class ClientModEventHandler
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
+		/*
+    	 * TODO unavailable until a compatible Continuity release
     	if (ModList.get().isLoaded("continuity")) {
     		AdditionalPlacementsMod.LOGGER.info("Continuity detected, registering continuity BakedModel unwrappers");
     		Unwrapper.registerUnwrapper(model -> {
@@ -54,12 +51,16 @@ public class ClientModEventHandler
     			else return null;
     		});
     	}
+    	*/
+    	/*
+    	 * TODO unavailable until a compatible ConnectedTexturesMod release
     	if (ModList.get().isLoaded("ctm")) {
     		AdditionalPlacementsMod.LOGGER.info("Connected Textures Mod (ctm) detected, registering ctm BakedModel unwrappers");
     		Unwrapper.registerUnwrapper(model -> {
     			if (model instanceof AbstractCTMBakedModel ctm) return ctm.getParent();
     			else return null;
     		});
-    	}
+    	} 
+    	*/
     }
 }

@@ -3,7 +3,6 @@ package com.firemerald.additionalplacements.client.models;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,7 +12,7 @@ import com.firemerald.additionalplacements.util.BlockRotation;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.block.model.UnbakedBlockStateModel;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,10 +30,10 @@ public class BakedPlacementModel extends PlacementModelWrapper
 	
 	private static final Map<ModelKey, BakedPlacementModel> MODEL_CACHE = new HashMap<>();
 	
-	public static BakedPlacementModel of(ModelBaker bakery, ModelState modelTransform, AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, UnbakedModel theirModel, BlockRotation modelRotation, Function<Material, TextureAtlasSprite> sprites) {
+	public static BakedPlacementModel of(ModelBaker bakery, ModelState modelTransform, AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, UnbakedBlockStateModel theirModel, BlockRotation modelRotation) {
 		return of(block, 
-				Unwrapper.unwrap(bakery.bake(ourModelLocation, modelTransform, sprites)), 
-				Unwrapper.unwrap(bakery.bakeUncached(theirModel, BlockModelRotation.X0_Y0, sprites)),
+				Unwrapper.unwrap(bakery.bake(ourModelLocation, modelTransform)), 
+				Unwrapper.unwrap(theirModel.bake(bakery)),
 				modelRotation);
 	}
 	
@@ -63,27 +62,27 @@ public class BakedPlacementModel extends PlacementModelWrapper
 	{
 		BlockState modelState = block.getModelState(state);
 		if (block.rotatesModel(state))
-			return BlockModelUtils.rotatedQuads(modelState, unused -> originalModel, modelRotation, block.rotatesTexture(state), side, rand, extraData, renderType);
+			return BlockModelUtils.rotatedQuads(modelState, unused -> parent, modelRotation, block.rotatesTexture(state), side, rand, extraData, renderType);
 		else
-			return BlockModelUtils.retexturedQuads(state, modelState, unused -> originalModel, ourModel, side, rand, extraData, renderType);
+			return BlockModelUtils.retexturedQuads(state, modelState, unused -> parent, ourModel, side, rand, extraData, renderType);
 	}
 
     @Override
     public TriState useAmbientOcclusion(BlockState state, ModelData extraData, RenderType renderType)
     {
-        return originalModel.useAmbientOcclusion(state == null ? null : block.getModelState(state), extraData, renderType);
+        return parent.useAmbientOcclusion(state == null ? null : block.getModelState(state), extraData, renderType);
     }
 
     @NotNull
     @Override
     public ModelData getModelData(@NotNull BlockAndTintGetter level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData modelData)
     {
-        return originalModel.getModelData(level, pos, block.getModelState(state), modelData);
+        return parent.getModelData(level, pos, block.getModelState(state), modelData);
     }
 
     @Override
     public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data)
     {
-        return originalModel.getRenderTypes(block.getModelState(state), rand, data);
+        return parent.getRenderTypes(block.getModelState(state), rand, data);
     }
 }

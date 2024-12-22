@@ -15,6 +15,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractContainerWidget;
 import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -156,6 +157,21 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 		return null;
 	}
 
+    public void updateSize(int width, HeaderAndFooterLayout layout) {
+        this.updateSizeAndPosition(width, layout.getContentHeight(), layout.getHeaderHeight());
+    }
+
+    public void updateSizeAndPosition(int width, int height, int y) {
+        this.setSize(width, height);
+        this.setPosition(0, y);
+        this.refreshScrollAmount();
+    }
+
+    @Override
+    protected int contentHeight() {
+		return children().stream().mapToInt(Entry::getHeight).sum() + this.headerHeight + 4;
+    }
+
 	protected int getMaxPosition() {
 		//TODO cache
 		return children().stream().mapToInt(Entry::getHeight).sum() + this.headerHeight;
@@ -260,6 +276,11 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 	private void scroll(int scroll) {
 		this.setScrollAmount(this.getScrollAmount() + scroll);
 	}
+
+    @Override
+    protected double scrollRate() {
+        return this.normalItemHeight / 2.0;
+    }
 
 	public double getScrollAmount() {
 		return this.scrollAmount;
