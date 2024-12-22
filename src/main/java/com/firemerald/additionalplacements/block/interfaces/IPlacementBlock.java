@@ -1,7 +1,6 @@
 package com.firemerald.additionalplacements.block.interfaces;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Function;
 
 import javax.annotation.Nullable;
@@ -33,7 +32,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.IModelData;
 
 public interface IPlacementBlock<T extends Block> extends IItemProvider, IGenerationControl
 {
@@ -135,12 +133,6 @@ public interface IPlacementBlock<T extends Block> extends IItemProvider, IGenera
 
 	public default boolean enablePlacement(BlockPos hit, World level, Direction direction, @Nullable PlayerEntity player) {
 		return enablePlacement(player);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public default Function<Direction, Direction> getModelDirectionFunction(BlockState state, Random rand, IModelData extraData)
-	{
-		return Function.identity();
 	}
 	
 	public GenerationType<?, ?> getGenerationType();

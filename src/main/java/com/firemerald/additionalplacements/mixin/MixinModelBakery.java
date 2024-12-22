@@ -44,7 +44,7 @@ public class MixinModelBakery {
 		return null;
 	}
 	
-	@Inject(method = "processLoading", at = @At("RETURN"))
+	@Inject(method = "processLoading", at = @At("RETURN"), remap = false)
 	public void processLoading(IProfiler profiler, int maxMipmapLevel, CallbackInfo cli) {
 		UnbakedPlacementModel.clearCache();
 	}
