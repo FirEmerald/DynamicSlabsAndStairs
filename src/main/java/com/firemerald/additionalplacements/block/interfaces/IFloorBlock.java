@@ -11,7 +11,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -60,55 +59,5 @@ public interface IFloorBlock<T extends Block> extends IPlacementBlock<T>
 	public default Direction transformModelDirection(Direction from)
 	{
 		return from;
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public default Function<Direction, Direction> getModelDirectionFunction(BlockState state, RandomSource rand)
-	{
-		return switch(getPlacing(state)) {
-		case UP -> side -> switch (side) {
-		case UP -> Direction.DOWN;
-		case DOWN -> Direction.UP;
-		case NORTH -> Direction.SOUTH;
-		case SOUTH -> Direction.NORTH;
-		default -> side;
-		};
-		case NORTH -> side -> switch (side) {
-		case UP -> Direction.NORTH;
-		case DOWN -> Direction.SOUTH;
-		case NORTH -> Direction.DOWN;
-		case SOUTH -> Direction.UP;
-		default -> side;
-		};
-		case SOUTH -> side -> switch (side) {
-		case UP -> Direction.NORTH;
-		case DOWN -> Direction.SOUTH;
-		case NORTH -> Direction.UP;
-		case SOUTH -> Direction.DOWN;
-		case EAST -> Direction.WEST;
-		case WEST -> Direction.EAST;
-		default -> side;
-		};
-		case EAST -> side -> switch (side) {
-		case UP -> Direction.NORTH;
-		case DOWN -> Direction.SOUTH;
-		case NORTH -> Direction.WEST;
-		case SOUTH -> Direction.EAST;
-		case EAST -> Direction.DOWN;
-		case WEST -> Direction.UP;
-		default -> side;
-		};
-		case WEST -> side -> switch (side) {
-		case UP -> Direction.NORTH;
-		case DOWN -> Direction.SOUTH;
-		case NORTH -> Direction.EAST;
-		case SOUTH -> Direction.WEST;
-		case EAST -> Direction.UP;
-		case WEST -> Direction.DOWN;
-		default -> side;
-		};
-		default -> Function.identity();
-		};
 	}
 }

@@ -132,12 +132,6 @@ public interface IPlacementBlock<T extends Block> extends ItemLike, IGenerationC
 	public default boolean enablePlacement(BlockPos hit, Level level, Direction direction, Player player) {
 		return enablePlacement(player);
 	}
-
-	@Environment(EnvType.CLIENT)
-	public default Function<Direction, Direction> getModelDirectionFunction(BlockState state, RandomSource rand)
-	{
-		return Function.identity();
-	}
 	
 	public GenerationType<?, ?> getGenerationType();
 	
