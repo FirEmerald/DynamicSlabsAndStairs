@@ -44,7 +44,7 @@ public class MixinModelBakery {
 	}
 
 	@ModifyVariable(
-			method = "lambda$loadModel$22", 
+			method = {"lambda$loadModel$22", "m_119331_"}, 
 			at = @At("STORE"), 
 			index = 7
 			)
