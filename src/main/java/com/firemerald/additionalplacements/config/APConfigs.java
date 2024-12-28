@@ -6,6 +6,7 @@ import com.firemerald.additionalplacements.generation.GenerationType;
 import com.firemerald.additionalplacements.generation.Registration;
 
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -80,6 +81,36 @@ public class APConfigs {
     private static void onModConfigsLoaded(ForgeConfigSpec configSpec) {
     	if (configSpec == commonSpec) Registration.forEach(GenerationType::onCommonConfigLoaded);
     	else if (configSpec == serverSpec) Registration.forEach(GenerationType::onServerConfigLoaded);
-    	else if (configSpec == clientSpec) Registration.forEach(GenerationType::onClientConfigLoaded);
+    	else if (configSpec == clientSpec) {
+    		client.onConfigLoaded();
+    		Registration.forEach(GenerationType::onClientConfigLoaded);
+    	}
     }
+	
+	public static boolean isColorString(Object o) {
+		if (o instanceof String) {
+			String s = (String) o;
+			if (s.length() == 8) { //must be 8 characters (AARRGGBB)
+				for (int i = 0; i < 8; ++i) {
+					char c = s.charAt(i);
+					if ((c < '0' || c > '9') && (c < 'a' && c > 'f') && (c < 'A' && c > 'F')) return false; //only 0-9, a-f, or A-F allowed
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static float[] parseColorString(String s) {
+		return new float[] {
+				Integer.parseInt(s.substring(2, 4), 16) / 255f, //XXRRXXXX
+				Integer.parseInt(s.substring(4, 6), 16) / 255f, //XXXXGGXX
+				Integer.parseInt(s.substring(6, 8), 16) / 255f, //XXXXXXBB
+				Integer.parseInt(s.substring(0, 2), 16) / 255f  //AAXXXXXX
+		};
+	}
+	
+	public static float[] parseColorString(ConfigValue<String> s) {
+		return parseColorString(s.get());
+	}
 }

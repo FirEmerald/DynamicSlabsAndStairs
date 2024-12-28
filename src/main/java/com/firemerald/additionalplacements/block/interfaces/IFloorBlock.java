@@ -50,7 +50,7 @@ public interface IFloorBlock<T extends Block> extends IPlacementBlock<T>
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public default void renderPlacementHighlight(MatrixStack pose, IVertexBuilder vertexConsumer, PlayerEntity player, BlockRayTraceResult result, float partial) {}
+	public default void renderPlacementHighlight(MatrixStack pose, IVertexBuilder vertexConsumer, PlayerEntity player, BlockRayTraceResult result, float partial, float r, float g, float b, float a) {}
 
     @Override
 	@OnlyIn(Dist.CLIENT)
