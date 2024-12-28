@@ -42,6 +42,7 @@ public class ClientConfig
 	public void onConfigLoaded() {
 		gridColorVal = APConfigs.parseColorString(gridColor);
 		previewColorVal = APConfigs.parseColorString(previewColor);
+		Registration.forEach(GenerationType::onClientConfigLoaded);
 	}
 	
 	public float[] gridColor() {

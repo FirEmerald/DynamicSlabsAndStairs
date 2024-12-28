@@ -2,9 +2,6 @@ package com.firemerald.additionalplacements.config;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.firemerald.additionalplacements.generation.GenerationType;
-import com.firemerald.additionalplacements.generation.Registration;
-
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -79,12 +76,9 @@ public class APConfigs {
     }
     
     private static void onModConfigsLoaded(ForgeConfigSpec configSpec) {
-    	if (configSpec == commonSpec) Registration.forEach(GenerationType::onCommonConfigLoaded);
-    	else if (configSpec == serverSpec) Registration.forEach(GenerationType::onServerConfigLoaded);
-    	else if (configSpec == clientSpec) {
-    		client.onConfigLoaded();
-    		Registration.forEach(GenerationType::onClientConfigLoaded);
-    	}
+    	if (configSpec == commonSpec) common.onConfigLoaded();
+    	else if (configSpec == serverSpec) server.onConfigLoaded();
+    	else if (configSpec == clientSpec) client.onConfigLoaded();
     }
 	
 	public static boolean isColorString(Object o) {

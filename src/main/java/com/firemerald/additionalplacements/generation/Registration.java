@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.block.interfaces.IPlacementBlock;
+import com.firemerald.additionalplacements.config.APConfigs;
 import com.firemerald.additionalplacements.generation.GenerationType.BuilderBase;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -41,7 +42,7 @@ public class Registration {
 	public static <T extends Block, U extends AdditionalPlacementBlock<T>> void tryApply(Block block, ResourceLocation blockId, BiConsumer<ResourceLocation, AdditionalPlacementBlock<?>> action) {
 		if (block instanceof IPlacementBlock) {
 			IPlacementBlock<?> placement = (IPlacementBlock<?>) block;
-			if (placement.canGenerateAdditionalStates() && !BLACKLISTERS.stream().anyMatch(blacklister -> blacklister.blacklist(block, blockId))) {
+			if (placement.canGenerateAdditionalStates() && !BLACKLISTERS.stream().anyMatch(blacklister -> blacklister.blacklist(block, blockId)) && APConfigs.startup().blacklist.test(blockId)) {
 				GenerationType<T, U> type = (GenerationType<T, U>) getType(block);
 				if (type != null) type.apply((T) block, blockId, (BiConsumer<ResourceLocation, U>) action);
 			}
