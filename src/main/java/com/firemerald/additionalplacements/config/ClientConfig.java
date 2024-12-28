@@ -10,7 +10,7 @@ import net.minecraftforge.common.ForgeConfigSpec.LongValue;
 
 public class ClientConfig
 {
-	public final BooleanValue defaultPlacementLogicState;
+	public final BooleanValue defaultPlacementLogicState, loginPlacementLogicStateMessage, togglePlacementLogicStateMessage;
 	public final LongValue toggleQuickpressTime;
 	public final ConfigValue<String> gridColor, previewColor;
 	private float[] gridColorVal = {.4f, 0, 0, 0}, previewColorVal = {.4f, 1, 1, 1};
@@ -21,6 +21,12 @@ public class ClientConfig
         defaultPlacementLogicState = builder
         		.comment("Default enabled state for Additional Placement placement logic. Please note that this value takes effect any time you load a world or log in to a server.")
         		.define("default_placement_logic_state", true);
+        loginPlacementLogicStateMessage = builder
+        		.comment("Whether to display the logic placement enabled state when first initially loading up a world or logging in to a server. This does NOT stop it from showing when toggled via the keybind later.")
+        		.define("login_placement_logic_state_message", true);
+        togglePlacementLogicStateMessage = builder
+        		.comment("Whether to display the logic placement enabled state when toggled with the keybind. This does NOT stop it from showing when you initially load up a world or log in to a server.")
+        		.define("toggle_placement_logic_state_message", true);
         toggleQuickpressTime = builder
         		.comment("The length of time in milliseconds for which the placement toggle key must be held for it to automatically return to the previous state when the key is released. setting to 0 turns the key into hold only, setting it to a high value (such as 1000000) will make it generally behave as always a toggle")
         		.defineInRange("toggle_quickpress_time", 500l, 0, Long.MAX_VALUE);

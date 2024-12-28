@@ -1,5 +1,6 @@
 package com.firemerald.additionalplacements.client;
 
+import com.firemerald.additionalplacements.config.APConfigs;
 import com.firemerald.additionalplacements.network.server.SetPlacementTogglePacket;
 
 import net.minecraft.client.Minecraft;
@@ -32,18 +33,18 @@ public class APClientData
 
 	public static void togglePlacementEnabled()
 	{
-		setPlacementEnabledAndSynchronize(!placementEnabled);
+		setPlacementEnabledAndSynchronize(!placementEnabled, APConfigs.client().togglePlacementLogicStateMessage.get());
 	}
 
 	@SuppressWarnings("resource")
-	public static void setPlacementEnabledAndSynchronize(boolean state)
+	public static void setPlacementEnabledAndSynchronize(boolean state, boolean showMessage)
 	{
 		placementEnabled = state;
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		if (player != null)
 		{
 			synchronizePlacementEnabled();
-			player.displayClientMessage(new TranslationTextComponent(placementEnabled ? "msg.additionalplacements.placement_enable" : "msg.additionalplacements.placement_disable"), true);
+			if (showMessage) player.displayClientMessage(new TranslationTextComponent(placementEnabled ? "msg.additionalplacements.placement_enable" : "msg.additionalplacements.placement_disable"), true);
 		}
 	}
 
