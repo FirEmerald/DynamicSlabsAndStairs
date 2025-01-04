@@ -14,6 +14,7 @@ import com.firemerald.additionalplacements.block.stairs.AdditionalStairBlock;
 import com.firemerald.additionalplacements.block.stairs.common.CommonStairShape;
 import com.firemerald.additionalplacements.block.stairs.common.CommonStairShapeState;
 import com.firemerald.additionalplacements.block.stairs.vanilla.VanillaStairShapeState;
+import com.firemerald.additionalplacements.client.BlockHighlightHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
@@ -206,7 +207,7 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 	
 	@Override
 	@Environment(EnvType.CLIENT)
-	public default void renderPlacementPreview(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial) {
+	public default void renderPlacementPreview(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial, float r, float g, float b, float a) {
 		if (!this.connectionsType().allowFlipped) return;
 		ComplexFacing facing = getFacing(result.getDirection(), 
 				(float) (result.getLocation().x - result.getBlockPos().getX() - .5), 
@@ -226,26 +227,14 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 		pose.mulPoseMatrix(mat);
 		Matrix4f poseMat = pose.last().pose();
 		Matrix3f normMat = pose.last().normal();
-		vertexConsumer.vertex(poseMat,  0          ,  ARROW_OUTER, ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  ARROW_OUTER,  0          , ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		
-		vertexConsumer.vertex(poseMat,  ARROW_OUTER,  0          , ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  ARROW_INNER,  0          , ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-
-		vertexConsumer.vertex(poseMat,  ARROW_INNER,  0          , ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  ARROW_INNER, -ARROW_OUTER, ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-
-		vertexConsumer.vertex(poseMat,  ARROW_INNER, -ARROW_OUTER, ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -ARROW_INNER, -ARROW_OUTER, ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-
-		vertexConsumer.vertex(poseMat, -ARROW_INNER, -ARROW_OUTER, ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -ARROW_INNER,  0          , ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-
-		vertexConsumer.vertex(poseMat, -ARROW_INNER,  0          , ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -ARROW_OUTER,  0          , ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		
-		vertexConsumer.vertex(poseMat, -ARROW_OUTER,  0          , ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  0          ,  ARROW_OUTER, ARROW_OFFSET).color(1, 1, 1, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		BlockHighlightHelper.lineLoop(vertexConsumer, poseMat, normMat, ARROW_OFFSET, r, g, b, a, 
+				 0          ,  ARROW_OUTER,
+				 ARROW_OUTER,  0          ,
+				 ARROW_INNER,  0          ,
+				 ARROW_INNER, -ARROW_OUTER,
+				-ARROW_INNER, -ARROW_OUTER,
+				-ARROW_INNER,  0          ,
+				-ARROW_OUTER,  0          );
 		pose.popPose();
 	}
 
@@ -254,75 +243,32 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public default void renderPlacementHighlight(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial)
+	public default void renderPlacementHighlight(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial, float r, float g, float b, float a)
 	{
 		Matrix4f poseMat = pose.last().pose();
 		Matrix3f normMat = pose.last().normal();
 		
 		//outer box
-		vertexConsumer.vertex(poseMat, -OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+		BlockHighlightHelper.lineCenteredSquare(vertexConsumer, poseMat, normMat, -OUTER_EDGE, r, g, b, a, 
+				OUTER_EDGE);
 		
-		vertexConsumer.vertex(poseMat,  OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat,  OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		
-		vertexConsumer.vertex(poseMat,  OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		
-		vertexConsumer.vertex(poseMat, -OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-		vertexConsumer.vertex(poseMat, -OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
 		if (this.connectionsType().allowFlipped) {
 			//inner edges
-			vertexConsumer.vertex(poseMat, -OUTER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			vertexConsumer.vertex(poseMat,  OUTER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			
-			vertexConsumer.vertex(poseMat,  INNER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			vertexConsumer.vertex(poseMat,  INNER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			
-			vertexConsumer.vertex(poseMat,  OUTER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			vertexConsumer.vertex(poseMat, -OUTER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			
-			vertexConsumer.vertex(poseMat, -INNER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			vertexConsumer.vertex(poseMat, -INNER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+			BlockHighlightHelper.lineCenteredSquare(vertexConsumer, poseMat, normMat, -OUTER_EDGE, r, g, b, a, 
+					OUTER_EDGE);
 			
 			//middle cross
-			vertexConsumer.vertex(poseMat, -OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			vertexConsumer.vertex(poseMat,  OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			
-			vertexConsumer.vertex(poseMat, -OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			vertexConsumer.vertex(poseMat,  OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+			BlockHighlightHelper.lineCenteredCross(vertexConsumer, poseMat, normMat, -OUTER_EDGE, r, g, b, a, 
+					OUTER_EDGE);
 		} else {
 			//corners
-			vertexConsumer.vertex(poseMat, -OUTER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			vertexConsumer.vertex(poseMat, -INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			
-			vertexConsumer.vertex(poseMat, -INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			vertexConsumer.vertex(poseMat, -INNER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			
-			vertexConsumer.vertex(poseMat,  OUTER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			vertexConsumer.vertex(poseMat,  INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			
-			vertexConsumer.vertex(poseMat,  INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			vertexConsumer.vertex(poseMat,  INNER_EDGE, -OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			
-			vertexConsumer.vertex(poseMat, -OUTER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			vertexConsumer.vertex(poseMat, -INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			
-			vertexConsumer.vertex(poseMat, -INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			vertexConsumer.vertex(poseMat, -INNER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			
-			vertexConsumer.vertex(poseMat,  OUTER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			vertexConsumer.vertex(poseMat,  INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			
-			vertexConsumer.vertex(poseMat,  INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			vertexConsumer.vertex(poseMat,  INNER_EDGE,  OUTER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+			BlockHighlightHelper.lineOctal(vertexConsumer, poseMat, normMat, -OUTER_EDGE, r, g, b, a, 
+					INNER_EDGE, INNER_EDGE,
+					OUTER_EDGE, INNER_EDGE);
 			
 			//middle cross
-			vertexConsumer.vertex(poseMat, -INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			vertexConsumer.vertex(poseMat,  INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			
-			vertexConsumer.vertex(poseMat, -INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
-			vertexConsumer.vertex(poseMat,  INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).color(0, 0, 0, 0.4f).normal(normMat, 0, 0, 1).endVertex();
+			BlockHighlightHelper.lineCenteredCross(vertexConsumer, poseMat, normMat, -OUTER_EDGE, r, g, b, a, 
+					INNER_EDGE);
 		}
 	}
     
