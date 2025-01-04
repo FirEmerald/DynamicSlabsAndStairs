@@ -10,6 +10,7 @@ import com.firemerald.additionalplacements.block.stairs.StairConnectionsType;
 import com.firemerald.additionalplacements.block.stairs.common.CommonStairShape;
 import com.firemerald.additionalplacements.block.stairs.common.CommonStairShapeState;
 import com.firemerald.additionalplacements.block.stairs.vanilla.VanillaStairShapeState;
+import com.firemerald.additionalplacements.client.BlockHighlightHelper;
 import com.firemerald.additionalplacements.generation.APGenerationTypes;
 import com.firemerald.additionalplacements.generation.GenerationType;
 import com.firemerald.additionalplacements.util.*;
@@ -205,7 +206,7 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 	
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public default void renderPlacementPreview(PoseStack poseStack, VertexConsumer vertexConsumer, Player player, BlockHitResult result, DeltaTracker delta) {
+	public default void renderPlacementPreview(PoseStack poseStack, VertexConsumer vertexConsumer, Player player, BlockHitResult result, DeltaTracker delta, float r, float g, float b, float a) {
 		if (!this.connectionsType().allowFlipped) return;
 		ComplexFacing facing = getFacing(result.getDirection(), 
 				(float) (result.getLocation().x - result.getBlockPos().getX() - .5), 
@@ -222,27 +223,14 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 				0, 0, 0, 1
 				));
 		PoseStack.Pose pose = poseStack.last();
-		
-		vertexConsumer.addVertex(pose,  0          ,  ARROW_OUTER, ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose,  ARROW_OUTER,  0          , ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
-		
-		vertexConsumer.addVertex(pose,  ARROW_OUTER,  0          , ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose,  ARROW_INNER,  0          , ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
-
-		vertexConsumer.addVertex(pose,  ARROW_INNER,  0          , ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose,  ARROW_INNER, -ARROW_OUTER, ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
-
-		vertexConsumer.addVertex(pose,  ARROW_INNER, -ARROW_OUTER, ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, -ARROW_INNER, -ARROW_OUTER, ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
-
-		vertexConsumer.addVertex(pose, -ARROW_INNER, -ARROW_OUTER, ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, -ARROW_INNER,  0          , ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
-
-		vertexConsumer.addVertex(pose, -ARROW_INNER,  0          , ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, -ARROW_OUTER,  0          , ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
-		
-		vertexConsumer.addVertex(pose, -ARROW_OUTER,  0          , ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose,  0          ,  ARROW_OUTER, ARROW_OFFSET).setColor(1, 1, 1, 0.4f).setNormal(pose, 0, 0, 1);
+		BlockHighlightHelper.lineLoop(vertexConsumer, pose, ARROW_OFFSET, r, g, b, a, 
+				 0          ,  ARROW_OUTER,
+				 ARROW_OUTER,  0          ,
+				 ARROW_INNER,  0          ,
+				 ARROW_INNER, -ARROW_OUTER,
+				-ARROW_INNER, -ARROW_OUTER,
+				-ARROW_INNER,  0          ,
+				-ARROW_OUTER,  0          );
 		poseStack.popPose();
 	}
 
@@ -251,75 +239,31 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public default void renderPlacementHighlight(PoseStack poseStack, VertexConsumer vertexConsumer, Player player, BlockHitResult result, DeltaTracker delta)
+	public default void renderPlacementHighlight(PoseStack poseStack, VertexConsumer vertexConsumer, Player player, BlockHitResult result, DeltaTracker delta, float r, float g, float b, float a)
 	{
 		PoseStack.Pose pose = poseStack.last();
 		
 		//outer box
-		vertexConsumer.addVertex(pose, -OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose,  OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		
-		vertexConsumer.addVertex(pose,  OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose,  OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		
-		vertexConsumer.addVertex(pose,  OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, -OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		
-		vertexConsumer.addVertex(pose, -OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, -OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		BlockHighlightHelper.lineCenteredSquare(vertexConsumer, pose, -OUTER_EDGE, r, g, b, a, 
+				OUTER_EDGE);
 		
 		if (this.connectionsType().allowFlipped) {
 			//inner edges
-			vertexConsumer.addVertex(pose, -OUTER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			vertexConsumer.addVertex(pose,  OUTER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			
-			vertexConsumer.addVertex(pose,  INNER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			vertexConsumer.addVertex(pose,  INNER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			
-			vertexConsumer.addVertex(pose,  OUTER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			vertexConsumer.addVertex(pose, -OUTER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			
-			vertexConsumer.addVertex(pose, -INNER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			vertexConsumer.addVertex(pose, -INNER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+			BlockHighlightHelper.lineCenteredGrid(vertexConsumer, pose, -OUTER_EDGE, r, g, b, a, 
+					INNER_EDGE, OUTER_EDGE);
 			
 			//middle cross
-			vertexConsumer.addVertex(pose, -OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			vertexConsumer.addVertex(pose,  OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			
-			vertexConsumer.addVertex(pose, -OUTER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			vertexConsumer.addVertex(pose,  OUTER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+			BlockHighlightHelper.lineCenteredCross(vertexConsumer, pose, -OUTER_EDGE, r, g, b, a, 
+					OUTER_EDGE);
 		} else {
 			//corners
-			vertexConsumer.addVertex(pose, -OUTER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			vertexConsumer.addVertex(pose, -INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			
-			vertexConsumer.addVertex(pose, -INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			vertexConsumer.addVertex(pose, -INNER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			
-			vertexConsumer.addVertex(pose,  OUTER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			vertexConsumer.addVertex(pose,  INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			
-			vertexConsumer.addVertex(pose,  INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			vertexConsumer.addVertex(pose,  INNER_EDGE, -OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			
-			vertexConsumer.addVertex(pose, -OUTER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			vertexConsumer.addVertex(pose, -INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			
-			vertexConsumer.addVertex(pose, -INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			vertexConsumer.addVertex(pose, -INNER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			
-			vertexConsumer.addVertex(pose,  OUTER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			vertexConsumer.addVertex(pose,  INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			
-			vertexConsumer.addVertex(pose,  INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			vertexConsumer.addVertex(pose,  INNER_EDGE,  OUTER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+			BlockHighlightHelper.lineOctal(vertexConsumer, pose, -OUTER_EDGE, r, g, b, a, 
+					INNER_EDGE, INNER_EDGE,
+					OUTER_EDGE, INNER_EDGE);
 			
 			//middle cross
-			vertexConsumer.addVertex(pose, -INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			vertexConsumer.addVertex(pose,  INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			
-			vertexConsumer.addVertex(pose, -INNER_EDGE,  INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-			vertexConsumer.addVertex(pose,  INNER_EDGE, -INNER_EDGE, -OUTER_EDGE).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+			BlockHighlightHelper.lineCenteredCross(vertexConsumer, pose, -OUTER_EDGE, r, g, b, a, 
+					INNER_EDGE);
 		}
 	}
     
