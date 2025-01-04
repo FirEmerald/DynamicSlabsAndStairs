@@ -6,6 +6,7 @@ import java.util.function.Function;
 import org.jetbrains.annotations.Nullable;
 
 import com.firemerald.additionalplacements.block.VerticalSlabBlock;
+import com.firemerald.additionalplacements.client.BlockHighlightHelper;
 import com.firemerald.additionalplacements.generation.APGenerationTypes;
 import com.firemerald.additionalplacements.generation.GenerationType;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -173,35 +174,26 @@ public interface ISlabBlock<T extends Block> extends IPlacementBlock<T>
         }
 	}
 
+	static final float OUTER_EDGE = .5f;
+	static final float INNER_EDGE = .25f;
+
 	@Override
 	@Environment(EnvType.CLIENT)
-	public default void renderPlacementHighlight(PoseStack poseStack, VertexConsumer vertexConsumer, Player player, BlockHitResult result, DeltaTracker delta)
+	public default void renderPlacementHighlight(PoseStack poseStack, VertexConsumer vertexConsumer, Player player, BlockHitResult result, DeltaTracker delta, float r, float g, float b, float a)
 	{
 		PoseStack.Pose pose = poseStack.last();
-		vertexConsumer.addVertex(pose, -.5f, -.5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, .5f, -.5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, .5f, -.5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, .5f, .5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, .5f, .5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, -.5f, .5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, -.5f, .5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, -.5f, -.5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, -.25f, -.25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, .25f, -.25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, .25f, -.25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, .25f, .25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, .25f, .25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, -.25f, .25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, -.25f, .25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, -.25f, -.25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, -.5f, -.5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, -.25f, -.25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, .5f, -.5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, .25f, -.25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, .5f, .5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, .25f, .25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, -.5f, .5f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
-		vertexConsumer.addVertex(pose, -.25f, .25f, -.5f).setColor(0, 0, 0, 0.4f).setNormal(pose, 0, 0, 1);
+		
+		//outer box
+		BlockHighlightHelper.lineCenteredSquare(vertexConsumer, pose, -OUTER_EDGE, r, g, b, a, 
+				OUTER_EDGE);
+		
+		//inner box
+		BlockHighlightHelper.lineCenteredSquare(vertexConsumer, pose, -OUTER_EDGE, r, g, b, a, 
+				INNER_EDGE);
+		
+		//diagonals
+		BlockHighlightHelper.lineAxisDiagonal(vertexConsumer, pose, -OUTER_EDGE, r, g, b, a, 
+				INNER_EDGE, OUTER_EDGE);
 	}
     
 	@Override
