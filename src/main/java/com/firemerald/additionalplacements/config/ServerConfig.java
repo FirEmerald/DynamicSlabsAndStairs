@@ -25,4 +25,8 @@ public class ServerConfig
         		.define("fake_player_placement", true);
         Registration.buildConfig(builder, GenerationType::buildServerConfig);
 	}
+	
+	public void onConfigLoaded() {
+		Registration.forEach(GenerationType::onServerConfigLoaded);
+	}
 }
