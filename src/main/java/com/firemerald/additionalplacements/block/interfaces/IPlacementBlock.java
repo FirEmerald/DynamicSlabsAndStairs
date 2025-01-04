@@ -113,18 +113,20 @@ public interface IPlacementBlock<T extends Block> extends ItemLike, IGenerationC
 			}
 			Vec3 pos = camera.getPosition();
 			pose.translate(hitX - pos.x + .5, hitY - pos.y + .5, hitZ - pos.z + .5);
-			renderPlacementPreview(pose, vertexConsumer, player, result, partial);
+			float[] previewColor = APConfigs.client().previewColor();
+			if (previewColor[3] > 0) renderPlacementPreview(pose, vertexConsumer, player, result, partial, previewColor[0], previewColor[1], previewColor[2], previewColor[3]);
 			pose.mulPose(DIRECTION_TRANSFORMS[result.getDirection().ordinal()]);
-			renderPlacementHighlight(pose, vertexConsumer, player, result, partial);
+			float[] gridColor = APConfigs.client().gridColor();
+			if (gridColor[3] > 0) renderPlacementHighlight(pose, vertexConsumer, player, result, partial, gridColor[0], gridColor[1], gridColor[2], gridColor[3]);
 			pose.popPose();
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
-	public default void renderPlacementPreview(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial) {}
+	public default void renderPlacementPreview(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial, float r, float g, float b, float a) {}
 
 	@Environment(EnvType.CLIENT)
-	public void renderPlacementHighlight(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial);
+	public void renderPlacementHighlight(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial, float r, float g, float b, float a);
 
 	public default boolean enablePlacement(@Nullable Player player) {
 		return getGenerationType().placementEnabled() && (!(player instanceof IAPPlayer) || ((IAPPlayer) player).isPlacementEnabled());
