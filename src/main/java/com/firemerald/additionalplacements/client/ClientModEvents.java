@@ -104,6 +104,7 @@ public class ClientModEvents implements ClientModInitializer
 
 	public static boolean onHighlightBlock(WorldRenderContext context, @Nullable HitResult hitResult)
 	{
+		if (!APConfigs.client().enablePlacementHighlight.get()) return true;
 		if (hitResult != null && hitResult.getType() == HitResult.Type.BLOCK)
 		{
 			@SuppressWarnings("resource")
@@ -125,7 +126,7 @@ public class ClientModEvents implements ClientModInitializer
 
 	public static void onServerJoined(ClientPacketListener handler, PacketSender sender, Minecraft client)
 	{
-		APClientData.setPlacementEnabledAndSynchronize(APConfigs.client().defaultPlacementLogicState.get());
+		APClientData.setPlacementEnabledAndSynchronize(APConfigs.client().defaultPlacementLogicState.get(), APConfigs.client().loginPlacementLogicStateMessage.get());
 	}
 
 	public static void onClientEndTick(Minecraft mc)
