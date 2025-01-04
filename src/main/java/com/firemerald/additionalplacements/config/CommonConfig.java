@@ -43,4 +43,8 @@ public class CommonConfig
         		.define("fix_old_states", true);
         Registration.buildConfig(builder, GenerationType::buildCommonConfig);
 	}
+	
+	public void onConfigLoaded() {
+		Registration.forEach(GenerationType::onCommonConfigLoaded);
+	}
 }

@@ -47,7 +47,7 @@ public interface IFloorBlock<T extends Block> extends IPlacementBlock<T>
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public default void renderPlacementHighlight(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial) {}
+	public default void renderPlacementHighlight(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial, float r, float g, float b, float a) {}
 
     @Override
 	public default void addPlacementTooltip(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag)
