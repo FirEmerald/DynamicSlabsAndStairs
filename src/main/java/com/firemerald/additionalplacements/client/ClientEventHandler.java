@@ -29,6 +29,7 @@ public class ClientEventHandler
 	@SubscribeEvent
 	public static void onHighlightBlock(HighlightBlock event)
 	{
+		if (!APConfigs.client().enablePlacementHighlight.get()) return;
 		@SuppressWarnings("resource")
 		Player player = Minecraft.getInstance().player;
 		ItemStack stack = player.getMainHandItem();
@@ -68,7 +69,7 @@ public class ClientEventHandler
 	@SubscribeEvent
 	public static void onPlayerLoggingIn(ClientPlayerNetworkEvent.LoggedInEvent event)
 	{
-		APClientData.setPlacementEnabledAndSynchronize(APConfigs.client().defaultPlacementLogicState.get());
+		APClientData.setPlacementEnabledAndSynchronize(APConfigs.client().defaultPlacementLogicState.get(), APConfigs.client().loginPlacementLogicStateMessage.get());
 	}
 
 	@SuppressWarnings("resource")
