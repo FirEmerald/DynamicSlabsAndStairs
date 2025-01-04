@@ -10,7 +10,7 @@ import net.minecraftforge.common.ForgeConfigSpec.LongValue;
 
 public class ClientConfig
 {
-	public final BooleanValue defaultPlacementLogicState, loginPlacementLogicStateMessage, togglePlacementLogicStateMessage;
+	public final BooleanValue defaultPlacementLogicState, loginPlacementLogicStateMessage, togglePlacementLogicStateMessage, enablePlacementHighlight;
 	public final LongValue toggleQuickpressTime;
 	public final ConfigValue<String> gridColor, previewColor;
 	private float[] gridColorVal = {.4f, 0, 0, 0}, previewColorVal = {.4f, 1, 1, 1};
@@ -30,6 +30,9 @@ public class ClientConfig
         toggleQuickpressTime = builder
         		.comment("The length of time in milliseconds for which the placement toggle key must be held for it to automatically return to the previous state when the key is released. setting to 0 turns the key into hold only, setting it to a high value (such as 1000000) will make it generally behave as always a toggle")
         		.defineInRange("toggle_quickpress_time", 500l, 0, Long.MAX_VALUE);
+        enablePlacementHighlight = builder
+        		.comment("Whether to enable the rendering of the placement grid and/or preview.")
+        		.define("enable_placement_highlights", true);
         gridColor = builder
         		.comment("The color of the placement grid, in AARRGGBB hex format.")
         		.define("grid_color", "66000000", APConfigs::isColorString);

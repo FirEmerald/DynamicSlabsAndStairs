@@ -44,6 +44,7 @@ public class ClientEventHandler
 	@SubscribeEvent
 	public static void onHighlightBlock(HighlightBlock event)
 	{
+		if (!APConfigs.client().enablePlacementHighlight.get()) return;
 		@SuppressWarnings("resource")
 		PlayerEntity player = Minecraft.getInstance().player;
 		ItemStack stack = player.getMainHandItem();
