@@ -8,14 +8,14 @@ import com.electronwill.nightconfig.core.ConfigFormat;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import com.electronwill.nightconfig.toml.TomlFormat;
-import com.firemerald.additionalplacements.generation.Registration;
 import com.firemerald.additionalplacements.generation.GenerationType;
+import com.firemerald.additionalplacements.generation.Registration;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class StartupConfig {
 	public final GenerationBlacklist blacklist = new GenerationBlacklist.Builder().build();
-	
+
 	public StartupConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Startup settings").push("startup");
 		builder
@@ -25,7 +25,7 @@ public class StartupConfig {
 		builder.pop();
         Registration.buildConfig(builder, GenerationType::buildStartupConfig);
 	}
-	
+
 	public void loadConfig(Path configPath, ForgeConfigSpec spec) {
         final CommentedFileConfig config = CommentedFileConfig.builder(configPath, TomlFormat.instance())
         		.sync()
@@ -44,7 +44,7 @@ public class StartupConfig {
         conf.initEmptyFile(file);
         return true;
     }
-	
+
 	public void onConfigLoaded() {
 		blacklist.loadListsFromConfig();
 		Registration.forEach(GenerationType::onStartupConfigLoaded);

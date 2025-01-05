@@ -1,6 +1,9 @@
 package com.firemerald.additionalplacements.datagen;
 
-import com.firemerald.additionalplacements.client.models.definitions.*;
+import com.firemerald.additionalplacements.client.models.definitions.CarpetModels;
+import com.firemerald.additionalplacements.client.models.definitions.PressurePlateModels;
+import com.firemerald.additionalplacements.client.models.definitions.SlabModels;
+import com.firemerald.additionalplacements.client.models.definitions.StairModels;
 
 import io.github.fabricators_of_create.porting_lib.data.ExistingFileHelper;
 import io.github.fabricators_of_create.porting_lib.models.generators.block.BlockStateProvider;

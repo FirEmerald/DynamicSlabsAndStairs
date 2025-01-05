@@ -19,7 +19,7 @@ import com.firemerald.additionalplacements.block.stairs.vanilla.VanillaStairShap
 import com.firemerald.additionalplacements.client.models.definitions.StairModels;
 import com.firemerald.additionalplacements.client.models.definitions.StateModelDefinition;
 import com.firemerald.additionalplacements.config.APConfigs;
-import com.firemerald.additionalplacements.util.*;
+import com.firemerald.additionalplacements.util.BlockRotation;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,7 +39,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBlock> implements IStairBlock<StairBlock>, ISimpleRotationBlock, IStateFixer
 {
 	private static StairConnectionsType connectionsTypeStatic;
-	
+
 	public static AdditionalStairBlock of(StairBlock stairs, StairConnectionsType connectionsType)
 	{
 		connectionsTypeStatic = connectionsType;
@@ -111,7 +111,7 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 				.setValue(StairBlock.HALF, modelShapeState.half)
 				.setValue(StairBlock.SHAPE, modelShapeState.shape);
 	}
-	
+
 	public boolean canRotate(BlockState state) {
 		return this.getShapeState(state).isRotatedModel();
 	}
@@ -146,7 +146,7 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 		this.rotateTex = useTexRotation;
 		this.rotateModel = useModelRotation;
 	}
-	
+
 	@Override
 	public VoxelShape getShapeInternal(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
 	{
@@ -172,7 +172,7 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 		if (commonShape != null) applyState(commonShape, properties, changeBlock);
 		return properties;
 	}
-	
+
 	public CommonStairShapeState getOldPropertyShapeState(CompoundTag properties) {
 		if (APConfigs.common().fixStates.get()) {
 			if (IStateFixer.contains(properties, connectionsType)) {
@@ -210,7 +210,7 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 		}
 		return null;
 	}
-	
+
 	public void applyState(CommonStairShapeState commonShapeState, CompoundTag properties, Consumer<Block> changeBlock) {
 		if (!connectionsType.allowFlipped && commonShapeState.isComplexFlipped) commonShapeState = commonShapeState.flipped();
 		VanillaStairShapeState vanillaShapeState = commonShapeState.vanilla();

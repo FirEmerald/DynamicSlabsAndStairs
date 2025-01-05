@@ -4,15 +4,15 @@ import com.firemerald.additionalplacements.block.stairs.common.CommonStairShapeS
 
 public abstract class SpecificStairShapeStateBase extends StairShapeStateBase {
 	protected CommonStairShapeState common;
-	
+
 	protected SpecificStairShapeStateBase(int ordinal) {
 		super(ordinal);
 	}
-	
+
 	public void setCommon(CommonStairShapeState common) {
 		this.common = common;
 	}
-	
+
 	public CommonStairShapeState common() {
 		return common;
 	}
