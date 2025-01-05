@@ -12,15 +12,15 @@ public abstract class ServerPacket<T extends IPayloadContext> extends APPacket<T
 	public PacketFlow getDirection() {
 		return PacketFlow.SERVERBOUND;
 	}
-	
+
 	public abstract void handleServer(T context);
-	
+
 	@Override
 	public void handleInternal(T context)
 	{
 		handleServer(context);
 	}
-	
+
     public void sendToServer()
     {
     	APNetwork.sendToServer(this);

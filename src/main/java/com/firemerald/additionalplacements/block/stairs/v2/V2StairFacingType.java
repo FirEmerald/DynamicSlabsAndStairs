@@ -21,6 +21,6 @@ public enum V2StairFacingType {
 			return facing.vertical;
 		}
 	};
-	
+
 	public abstract ComplexFacing fromV2Facing(V2StairFacing facing);
 }

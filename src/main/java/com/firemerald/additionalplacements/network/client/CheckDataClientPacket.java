@@ -17,9 +17,9 @@ import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
 public class CheckDataClientPacket extends ClientPacket<ConfigurationPayloadContext>
 {
 	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "check_data_client");
-	
+
 	private final Map<ResourceLocation, CompoundTag> data;
-	
+
 	public CheckDataClientPacket() {
 		data = new HashMap<>();
 		Registration.forEach((id, type) -> {

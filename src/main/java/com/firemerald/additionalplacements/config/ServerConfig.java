@@ -1,11 +1,10 @@
 package com.firemerald.additionalplacements.config;
 
+import com.firemerald.additionalplacements.generation.GenerationType;
 import com.firemerald.additionalplacements.generation.Registration;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
-
-import com.firemerald.additionalplacements.generation.GenerationType;
 
 public class ServerConfig
 {
@@ -25,7 +24,7 @@ public class ServerConfig
         		.define("fake_player_placement", true);
         Registration.buildConfig(builder, GenerationType::buildServerConfig);
 	}
-	
+
 	public void onConfigLoaded() {
 		Registration.forEach(GenerationType::onServerConfigLoaded);
 	}

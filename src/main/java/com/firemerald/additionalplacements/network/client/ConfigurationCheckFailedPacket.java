@@ -23,9 +23,9 @@ import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
 public class ConfigurationCheckFailedPacket extends ClientPacket<ConfigurationPayloadContext>
 {
 	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "configuration_check_failed");
-	
+
 	private final List<Triple<ResourceLocation, List<MessageTree>, List<MessageTree>>> compiledErrors;
-	
+
 	public ConfigurationCheckFailedPacket(List<Triple<ResourceLocation, List<MessageTree>, List<MessageTree>>> compiledErrors) {
 		this.compiledErrors = compiledErrors;
 	}

@@ -12,7 +12,7 @@ public abstract class APPacket<T extends IPayloadContext> implements CustomPacke
 	public abstract PacketFlow getDirection();
 
 	public abstract void handleInternal(T context);
-	
+
 	public void handle(T context)
 	{
 		if (context.flow() == getDirection()) handleInternal(context);
@@ -23,7 +23,7 @@ public abstract class APPacket<T extends IPayloadContext> implements CustomPacke
     {
     	APNetwork.sendTo(this, target);
     }
-    
+
     public void reply(T context)
     {
     	context.replyHandler().send(this);

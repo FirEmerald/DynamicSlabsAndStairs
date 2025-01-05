@@ -135,14 +135,14 @@ public interface IPlacementBlock<T extends Block> extends ItemLike, IGenerationC
 	public default boolean enablePlacement(BlockPos hit, Level level, Direction direction, Player player) {
 		return enablePlacement(player);
 	}
-	
+
 	public GenerationType<?, ?> getGenerationType();
-	
+
 	@Override
 	public default boolean generateAdditionalStates() {
 		return true;
 	}
-	
+
 	public default boolean canGenerateAdditionalStates() {
 		return generateAdditionalStates() && !hasAdditionalStates();
 	}

@@ -15,16 +15,16 @@ public abstract class ClientPacket<T extends IPayloadContext> extends APPacket<T
 	public PacketFlow getDirection() {
 		return PacketFlow.CLIENTBOUND;
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public abstract void handleClient(T context);
-	
+
 	@Override
 	public void handleInternal(T context)
 	{
 		handleClient(context);
 	}
-	
+
     public void sendToClient(ServerPlayer player)
     {
     	APNetwork.sendToClient(this, player);

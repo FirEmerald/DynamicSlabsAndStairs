@@ -13,15 +13,15 @@ public enum V2StairFacing implements StringRepresentable {
 	WEST_DOWN_NORTH("west_down_north", ComplexFacing.WEST_DOWN, ComplexFacing.DOWN_WEST, ComplexFacing.WEST_NORTH),
 	NORTH_DOWN_EAST("north_down_east", ComplexFacing.NORTH_DOWN, ComplexFacing.DOWN_NORTH, ComplexFacing.NORTH_EAST),
 	EAST_DOWN_SOUTH("east_down_south", ComplexFacing.EAST_DOWN, ComplexFacing.DOWN_EAST, ComplexFacing.EAST_SOUTH);
-	
+
 	public static V2StairFacing get(String name) {
 		for (V2StairFacing placing : values()) if (placing.name.equals(name)) return placing;
 		return null;
 	}
-	
+
 	public final String name;
 	public final ComplexFacing normal, flipped, vertical;
-	
+
 	V2StairFacing(String name, ComplexFacing normal, ComplexFacing flipped, ComplexFacing vertical) {
 		this.name = name;
 		this.normal = normal;

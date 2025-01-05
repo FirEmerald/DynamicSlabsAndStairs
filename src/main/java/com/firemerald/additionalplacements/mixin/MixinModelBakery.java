@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
@@ -22,7 +24,10 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.resources.model.*;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.block.state.BlockState;
@@ -37,24 +42,24 @@ public class MixinModelBakery {
 	public UnbakedModel getModel(ResourceLocation modelLocation) {
 		return null;
 	}
-	
+
 	@Inject(method = "<init>", at = @At("RETURN"))
 	public void init(BlockColors blockColors, ProfilerFiller profilerFiller, Map<ResourceLocation, BlockModel> modelResources, Map<ResourceLocation, List<ModelBakery.LoadedJson>> blockStateResources, CallbackInfo cli) {
 		UnbakedPlacementModel.clearCache();
 	}
 
 	@ModifyVariable(
-			method = {"lambda$loadModel$22", "m_119331_"}, 
-			at = @At("STORE"), 
+			method = {"lambda$loadModel$22", "m_119331_"},
+			at = @At("STORE"),
 			index = 7
 			)
 	private Pair<UnbakedModel, Supplier<ModelBakery.ModelGroupKey>> loadModelLambda(
-			Pair<UnbakedModel, Supplier<ModelBakery.ModelGroupKey>> modelPair, 
-			Map<ModelResourceLocation, BlockState> modelToState, 
-			ResourceLocation blockId, 
-			Pair<UnbakedModel, Supplier<ModelBakery.ModelGroupKey>> missingModelPair, 
-			Map<ModelBakery.ModelGroupKey, Set<BlockState>> modelGroups, 
-			ModelResourceLocation currentModelLocation, 
+			Pair<UnbakedModel, Supplier<ModelBakery.ModelGroupKey>> modelPair,
+			Map<ModelResourceLocation, BlockState> modelToState,
+			ResourceLocation blockId,
+			Pair<UnbakedModel, Supplier<ModelBakery.ModelGroupKey>> missingModelPair,
+			Map<ModelBakery.ModelGroupKey, Set<BlockState>> modelGroups,
+			ModelResourceLocation currentModelLocation,
 			BlockState ourState) {
 		if (modelPair == null) { //replace only states which do not already have a model
 			if (ourState != null && ourState.getBlock() instanceof AdditionalPlacementBlock) {
@@ -68,7 +73,7 @@ public class MixinModelBakery {
 				UnbakedModel theirModel = getModel(theirModelLocation);
 				BlockRotation theirModelRotation = block.getRotation(ourState);
 				UnbakedPlacementModel unbakedModel = UnbakedPlacementModel.of(block, ourModel, ourModelRotation, theirModelLocation, theirModel, theirModelRotation);
-				
+
 				List<Property<?>> coloringProperties = this.blockColors.getColoringProperties(theirState.getBlock()).stream()
 						.filter(block::isValidProperty) //just in case
 						.collect(Collectors.toList());
