@@ -22,7 +22,8 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.HoneycombItem;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
@@ -37,7 +38,7 @@ import net.minecraftforge.registries.RegisterEvent;
 public class CommonModEventHandler
 {
 	private static boolean init = false;
-	
+
 	@SubscribeEvent
 	public static void onNewRegistry(NewRegistryEvent event) { //best hook I could find for loading a config after all mods have been processed but before registries are built
 		if (!init) {
@@ -46,7 +47,7 @@ public class CommonModEventHandler
 			init = true;
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onBlockRegistry(RegisterEvent event)
 	{

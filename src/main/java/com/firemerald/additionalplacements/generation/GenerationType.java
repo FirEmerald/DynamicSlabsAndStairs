@@ -20,44 +20,44 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 
 public abstract class GenerationType<T extends Block, U extends AdditionalPlacementBlock<T>> {
-	
+
 	protected abstract static class BuilderBase<T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>, W extends BuilderBase<T, U, V, W>> {
 		protected Set<String> addsProperties = Collections.emptySet();
 		protected GenerationBlacklist blacklist = new GenerationBlacklist.Builder().build();
 		protected boolean placementEnabled = true;
-		
+
 		@SuppressWarnings("unchecked")
 		protected W me() {
 			return (W) this;
 		}
-		
+
 		public W addsProperties(String... properties) {
 			return addsProperties(Arrays.asList(properties));
 		}
-		
+
 		public W addsProperties(Collection<String> properties) {
-			this.addsProperties = new HashSet<String>(properties);
+			this.addsProperties = new HashSet<>(properties);
 			return me();
 		}
-		
+
 		public W blacklist(GenerationBlacklist blacklist) {
 			this.blacklist = blacklist;
 			return me();
 		}
-		
+
 		public W placementEnabled() {
 			placementEnabled = true;
 			return me();
 		}
-		
+
 		public W placementDisabled() {
 			placementEnabled = false;
 			return me();
 		}
-		
+
 		public abstract V construct(ResourceLocation name, String description);
 	}
-	
+
 	public final ResourceLocation name;
 	public final String description;
 	private final Set<String> addsProperties;
@@ -74,15 +74,15 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 		this.blacklist = builder.blacklist;
 		this.defaultPlacementEnabled = builder.placementEnabled;
 	}
-	
+
 	protected void addBlacklister(IBlockBlacklister<? super T> blacklister) {
 		blacklisters.add(blacklister);
 	}
-	
+
 	public boolean placementEnabled() {
 		return placementEnabled.get();
 	}
-	
+
 	//The following method is for the "startup" config, a custom config that loads before block registration and doesn't support re-loading changed values in-game.
 	//They should be used for options that affect the dynamic generation of additional placement blocks.
 	public void buildStartupConfig(ForgeConfigSpec.Builder builder) {
@@ -96,11 +96,11 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 	public final void onStartupConfigLoaded() {
 		loadStartupConfig();
 	}
-	
+
 	protected void loadStartupConfig() {
 		blacklist.loadListsFromConfig();
 	}
-	
+
 	public void buildCommonConfig(ForgeConfigSpec.Builder builder) {
 		placementEnabled = builder
 				.comment("Whether or not to allow for manual placement of the additional placement variants of this block type.")
@@ -113,7 +113,7 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 	}
 
 	protected void loadCommonConfig() {}
-	
+
 	protected void updateCommonSettings() {}
 
 	public void buildClientConfig(ForgeConfigSpec.Builder builder) {}
@@ -124,7 +124,7 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 	}
 
 	protected void loadClientConfig() {}
-	
+
 	protected void updateClientSettings() {}
 
 	public void buildServerConfig(ForgeConfigSpec.Builder builder) {}
@@ -135,7 +135,7 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 	}
 
 	protected void loadServerConfig() {}
-	
+
 	protected void updateServerSettings() {}
 
 	public void onTagsUpdated(boolean isClient) {
@@ -143,10 +143,10 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 		if (isClient && APConfigs.clientLoaded()) updateClientSettings();
 		if (APConfigs.serverLoaded()) updateServerSettings();
 	}
-	
+
 	/**
 	 * Data to check ON SERVER
-	 * 
+	 *
 	 * @return
 	 */
 	public CompoundTag getClientCheckData() {
@@ -155,14 +155,14 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 
 	/**
 	 * Check data FROM CLIENT
-	 * 
+	 *
 	 * @return
 	 */
 	public void checkClientData(CompoundTag tag, Consumer<MessageTree> logError) {}
 
 	/**
 	 * Data to check ON CLIENT
-	 * 
+	 *
 	 * @return
 	 */
 	public CompoundTag getServerCheckData() {
@@ -171,11 +171,11 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 
 	/**
 	 * Check data FROM SERVER
-	 * 
+	 *
 	 * @return
 	 */
 	public void checkServerData(CompoundTag tag, Consumer<MessageTree> logError) {}
-	
+
 	public final boolean enabledForBlock(T block, ResourceLocation blockId) {
 		if (blacklisters.stream().anyMatch(blacklister -> blacklister.blacklist(block, blockId))) return false;
 		if (blacklist.test(blockId)) {
@@ -188,7 +188,7 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 			} else return true;
 		} else return false;
 	}
-	
+
 	public final void apply(T block, ResourceLocation blockId, BiConsumer<ResourceLocation, U> action) {
 		if (enabledForBlock(block, blockId)) {
 			ResourceLocation newId = new ResourceLocation(name.getNamespace(), blockId.getNamespace() + "." + blockId.getPath());
@@ -197,13 +197,13 @@ public abstract class GenerationType<T extends Block, U extends AdditionalPlacem
 			action.accept(newId, created);
 		}
 	}
-	
+
 	public abstract U construct(T block, ResourceLocation blockId);
-	
+
 	public void forEachCreated(Consumer<? super CreatedBlockEntry<T, U>> action) {
 		created.forEach(action);
 	}
-	
+
 	public Stream<CreatedBlockEntry<T, U>> created() {
 		return created.stream();
 	}

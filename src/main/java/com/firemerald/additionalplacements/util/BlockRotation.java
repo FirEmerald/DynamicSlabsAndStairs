@@ -17,7 +17,7 @@ public enum BlockRotation
 		public Direction apply(Direction original) {
 			return original;
 		}
-		
+
 		@Override
 		public Direction unapply(Direction original) {
 			return original;
@@ -27,7 +27,7 @@ public enum BlockRotation
 		public int getVertexShiftLeft(Direction original) {
 			return 0;
 		}
-		
+
 		@Override
 		public int[] applyVertices(Direction original, int[] oldData, int vertexSize) {
 			return BlockModelUtils.copyVertices(oldData);
@@ -78,11 +78,11 @@ public enum BlockRotation
 		@Override
 		public VoxelShape createRotatedBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
 			return Shapes.create(
-	        		minX, 
-	        		minZ, 
-	        		1 - maxY, 
-	        		maxX, 
-	        		maxZ, 
+	        		minX,
+	        		minZ,
+	        		1 - maxY,
+	        		maxX,
+	        		maxZ,
 	        		1 - minY);
 		}
 	},
@@ -115,11 +115,11 @@ public enum BlockRotation
 		@Override
 		public VoxelShape createRotatedBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
 			return Shapes.create(
-	        		minX, 
-	        		1 - maxZ, 
-	        		minY, 
-	        		maxX, 
-	        		1 - minZ, 
+	        		minX,
+	        		1 - maxZ,
+	        		minY,
+	        		maxX,
+	        		1 - minZ,
 	        		maxY);
 		}
 	},
@@ -153,11 +153,11 @@ public enum BlockRotation
 		@Override
 		public VoxelShape createRotatedBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
 			return Shapes.create(
-	        		1 - maxY, 
-	        		1 - maxZ, 
-	        		minX, 
-	        		1 - minY, 
-	        		1 - minZ, 
+	        		1 - maxY,
+	        		1 - maxZ,
+	        		minX,
+	        		1 - minY,
+	        		1 - minZ,
 	        		maxX);
 		}
 	},
@@ -191,11 +191,11 @@ public enum BlockRotation
 		@Override
 		public VoxelShape createRotatedBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
 			return Shapes.create(
-	        		1 - maxX, 
-	        		1 - maxZ, 
-	        		1 - maxY, 
-	        		1 - minX, 
-	        		1 - minZ, 
+	        		1 - maxX,
+	        		1 - maxZ,
+	        		1 - maxY,
+	        		1 - minX,
+	        		1 - minZ,
 	        		1 - minY);
 		}
 	},
@@ -229,11 +229,11 @@ public enum BlockRotation
 		@Override
 		public VoxelShape createRotatedBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
 			return Shapes.create(
-	        		minY, 
-	        		1 - maxZ, 
-	        		1 - maxX, 
-	        		maxY, 
-	        		1 - minZ, 
+	        		minY,
+	        		1 - maxZ,
+	        		1 - maxX,
+	        		maxY,
+	        		1 - minZ,
 	        		1 - minX);
 		}
 	},
@@ -265,42 +265,42 @@ public enum BlockRotation
 		@Override
 		public VoxelShape createRotatedBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
 			return Shapes.create(
-	        		minX, 
-	        		1 - maxY, 
-	        		1 - maxZ, 
-	        		maxX, 
-	        		1 - minY, 
+	        		minX,
+	        		1 - maxY,
+	        		1 - maxZ,
+	        		maxX,
+	        		1 - minY,
 	        		1 - minZ);
 		}
 	};
-	
+
 	private final Map<VoxelShape, VoxelShape> shapeCache = new WeakHashMap<>(); //we cache these values, to avoid overhead, but weakly in case of dynamically computed shapes
 	private final Direction[] applyDirection, unapplyDirection;
 	private final int[] vertexShiftLeft;
-	
+
 	BlockRotation(Direction[] appliedDirection, int[] vertexShiftLeft) {
 		applyDirection = appliedDirection;
 		unapplyDirection = new Direction[6];
 		for (int i = 0; i < 6; ++i) unapplyDirection[applyDirection[i].get3DDataValue()] = Direction.from3DDataValue(i);
 		this.vertexShiftLeft = vertexShiftLeft;
 	}
-	
+
 	public Direction apply(Direction original) {
 		return original == null ? null : applyDirection[original.get3DDataValue()];
 	}
-	
+
 	public Direction unapply(Direction original) {
 		return original == null ? null : unapplyDirection[original.get3DDataValue()];
 	}
-	
+
 	public int getVertexShiftLeft(Direction original) {
 		return original == null ? 0 : vertexShiftLeft[original.get3DDataValue()];
 	}
-	
+
 	public int[] applyVertices(Direction original, int[] oldData, int vertexSize) {
 		return BlockModelUtils.copyVertices(oldData, vertexSize, getVertexShiftLeft(original));
 	}
-	
+
 	public int[] applyVertices(Direction original, int[] oldData, int vertexSize, int posOffset, int uvOffset, boolean rotateUV, TextureAtlasSprite tex) {
 		int shiftLeft = getVertexShiftLeft(original);
 		rotateUV &= shiftLeft != 0;
@@ -314,11 +314,11 @@ public enum BlockRotation
 		}
 		return newData;
 	}
-	
+
 	public abstract void applyBlockSpace(float[] vertex);
-	
+
 	public abstract void rotatePos(int[] oldData, int oldPos, int[] newData, int newPos);
-	
+
 	public void rotateUV(int[] oldData, int oldPos, int[] newData, int newPos, int rotateUV, TextureAtlasSprite tex) {
 		switch (rotateUV) {
 		case 1:
@@ -335,7 +335,7 @@ public enum BlockRotation
 			break;
 		}
 	}
-	
+
 	public VoxelShape applyBlockSpace(VoxelShape shape) {
 		return shapeCache.computeIfAbsent(shape, nil -> {
 	        VoxelShape[] buffer = new VoxelShape[] { Shapes.empty() };
@@ -343,6 +343,6 @@ public enum BlockRotation
 	        return buffer[0];
 		});
 	}
-	
+
 	protected abstract VoxelShape createRotatedBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ);
 }
