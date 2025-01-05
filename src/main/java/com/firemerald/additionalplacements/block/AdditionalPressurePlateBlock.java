@@ -31,7 +31,7 @@ public class AdditionalPressurePlateBlock extends AdditionalBasePressurePlateBlo
 	@Override
 	protected int getSignalStrength(Level level, BlockPos pos)
 	{
-		AABB aabb = TOUCH_AABBS[level.getBlockState(pos).getValue(AdditionalBasePressurePlateBlock.PLACING).ordinal() - 1].move(pos);
+		AABB aabb = TOUCH_AABBS[level.getBlockState(pos).getValue(AdditionalFloorBlock.PLACING).ordinal() - 1].move(pos);
 		List<? extends Entity> list;
 		switch (this.parentBlock.sensitivity)
 		{

@@ -36,7 +36,7 @@ public class ClientModEventHandler
     {
     	event.register(APClientData.AP_PLACEMENT_KEY);
     }
-    
+
     @SubscribeEvent
     public static void onRegisterClientReloadListeners(RegisterClientReloadListenersEvent event) {
     	event.registerReloadListener((ResourceManagerReloadListener) resourceManager -> {

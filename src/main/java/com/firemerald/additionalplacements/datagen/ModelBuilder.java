@@ -22,7 +22,7 @@ public class ModelBuilder<T extends Block, U extends AdditionalPlacementBlock<T>
 		this.stateProvider = stateProvider;
 		this.modelType = new ModelType<>(models);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public V me() {
 		return (V) this;
