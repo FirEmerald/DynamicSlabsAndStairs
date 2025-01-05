@@ -10,7 +10,7 @@ public class CreatedBlockEntry<T extends Block, U extends AdditionalPlacementBlo
 	public final T originalBlock;
 	public final ResourceLocation newId;
 	public final U newBlock;
-	
+
 	public CreatedBlockEntry(ResourceLocation originalId, T originalBlock, ResourceLocation newId, U newBlock) {
 		this.originalId = originalId;
 		this.originalBlock = originalBlock;

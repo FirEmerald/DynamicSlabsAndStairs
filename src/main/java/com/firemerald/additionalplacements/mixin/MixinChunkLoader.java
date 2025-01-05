@@ -13,7 +13,8 @@ import com.firemerald.additionalplacements.util.NBTUtils;
 import com.firemerald.additionalplacements.util.TagIds;
 
 import net.minecraft.block.Block;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.StringNBT;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -23,7 +24,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 @Mixin(ChunkLoader.class)
 public class MixinChunkLoader {
-	
+
 	@Inject(method = "upgradeChunkTag", at = @At("RETURN"), cancellable = true)
 	public void upgradeChunkTag(RegistryKey<World> pLevelKey, Supplier<DimensionSavedDataManager> pStorage, CompoundNBT pChunkData, CallbackInfoReturnable<CompoundNBT> cli) {
 		//AdditionalPlacementsMod.LOGGER.info(NBTUtils.toJson(pChunkData).toString());

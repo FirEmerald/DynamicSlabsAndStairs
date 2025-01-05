@@ -40,7 +40,7 @@ public class ClientEventHandler
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onHighlightBlock(HighlightBlock event)
 	{

@@ -50,12 +50,12 @@ public class CommonEventHandler
 			possiblyCheckTags(server, fromAutoGenerate);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onServerStarted(FMLServerStartedEvent event) {
 		possiblyCheckTags(event.getServer(), false);
 	}
-	
+
 	private static void possiblyCheckTags(MinecraftServer server, boolean fromAutoGenerate) {
 		misMatchedTags = false;
 		autoGenerateFailed = false;

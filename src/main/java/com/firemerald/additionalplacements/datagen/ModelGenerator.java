@@ -1,6 +1,9 @@
 package com.firemerald.additionalplacements.datagen;
 
-import com.firemerald.additionalplacements.client.models.definitions.*;
+import com.firemerald.additionalplacements.client.models.definitions.CarpetModels;
+import com.firemerald.additionalplacements.client.models.definitions.PressurePlateModels;
+import com.firemerald.additionalplacements.client.models.definitions.SlabModels;
+import com.firemerald.additionalplacements.client.models.definitions.StairModels;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.client.model.generators.BlockStateProvider;

@@ -34,35 +34,35 @@ public class BlockHighlightHelper {
 	}
 
 	public static void lineOctal(IVertexBuilder vertexConsumer, Matrix4f poseMat, Matrix3f normMat, float z, float r, float g, float b, float a, float offset1A, float offset1B, float offset2A, float offset2B) {
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				 offset1A,  offset1B,  offset2A,  offset2B);
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				 offset1B,  offset1A,  offset2B,  offset2A);
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				-offset1A,  offset1B, -offset2A,  offset2B);
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				-offset1B,  offset1A, -offset2B,  offset2A);
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				-offset1A, -offset1B, -offset2A, -offset2B);
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				-offset1B, -offset1A, -offset2B, -offset2A);
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				 offset1A, -offset1B,  offset2A, -offset2B);
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				 offset1B, -offset1A,  offset2B, -offset2A);
 	}
 
 	public static void lineCenteredGrid(IVertexBuilder vertexConsumer, Matrix4f poseMat, Matrix3f normMat, float z, float r, float g, float b, float a, float offset1, float offset2) {
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				-offset1, -offset2,
 				-offset1,  offset2);
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				-offset2, -offset1,
 				 offset2, -offset1);
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				 offset1, -offset2,
 				 offset1,  offset2);
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				-offset2,  offset1,
 				 offset2,  offset1);
 	}
@@ -72,22 +72,22 @@ public class BlockHighlightHelper {
 	}
 
 	public static void lineRectangle(IVertexBuilder vertexConsumer, Matrix4f poseMat, Matrix3f normMat, float z, float r, float g, float b, float a, float x1, float y1, float x2, float y2) {
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
-				x1, y1, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
+				x1, y1,
 				x2, y1);
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				x2, y1,
 				x2, y2);
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				x2, y2,
 				x1, y2);
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				x1, y2,
 				x1, y1);
 	}
 
 	public static void lineCenteredPlus(IVertexBuilder vertexConsumer, Matrix4f poseMat, Matrix3f normMat, float z, float r, float g, float b, float a, float offset) {
-		linePlus(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		linePlus(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				-offset, -offset,
 				 offset,  offset);
 	}
@@ -95,41 +95,41 @@ public class BlockHighlightHelper {
 	public static void linePlus(IVertexBuilder vertexConsumer, Matrix4f poseMat, Matrix3f normMat, float z, float r, float g, float b, float a, float x1, float y1, float x2, float y2) {
 		float xC = (x1 + x2) / 2;
 		float yC = (y1 + y2) / 2;
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
-				x1, yC, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
+				x1, yC,
 				x2, yC);
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				xC, y1,
 				xC, y2);
 	}
 
 	public static void lineCenteredCross(IVertexBuilder vertexConsumer, Matrix4f poseMat, Matrix3f normMat, float z, float r, float g, float b, float a, float offset) {
-		lineCross(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		lineCross(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				-offset, -offset,
 				 offset,  offset);
 	}
 
 	public static void lineCross(IVertexBuilder vertexConsumer, Matrix4f poseMat, Matrix3f normMat, float z, float r, float g, float b, float a, float x1, float y1, float x2, float y2) {
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
-				x1, y1, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
+				x1, y1,
 				x2, y2);
-		line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
+		line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
 				x2, y1,
 				x1, y2);
 	}
 
 	public static void lineList(IVertexBuilder vertexConsumer, Matrix4f poseMat, Matrix3f normMat, float z, float r, float g, float b, float a, float... points) {
 		for (int i = 0; i < points.length; i += 4) {
-			line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
-					points[i    ], points[i + 1], 
+			line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
+					points[i    ], points[i + 1],
 					points[i + 2], points[i + 3]);
 		}
 	}
 
 	public static void lineStrip(IVertexBuilder vertexConsumer, Matrix4f poseMat, Matrix3f normMat, float z, float r, float g, float b, float a, float... points) {
 		for (int i = 2; i < points.length; i += 2) {
-			line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
-					points[i - 2], points[i - 1], 
+			line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
+					points[i - 2], points[i - 1],
 					points[i    ], points[i + 1]);
 		}
 	}
@@ -138,8 +138,8 @@ public class BlockHighlightHelper {
 		int i1 = 0, i2 = 0;
 		do {
 			if ((i2 += 2) >= points.length) i2 = 0;
-			line(vertexConsumer, poseMat, normMat, z, r, g, b, a, 
-					points[i1], points[i1 + 1], 
+			line(vertexConsumer, poseMat, normMat, z, r, g, b, a,
+					points[i1], points[i1 + 1],
 					points[i2], points[i2 + 1]);
 			i1 = i2;
 		} while (i2 > 0);

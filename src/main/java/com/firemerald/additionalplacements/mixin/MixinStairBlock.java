@@ -109,8 +109,8 @@ public abstract class MixinStairBlock implements IVanillaStairBlock
 	@Override
 	public CommonStairShapeState getShapeState(BlockState blockState) {
 		return VanillaStairShapeState.toCommon(
-				blockState.getValue(StairsBlock.FACING), 
-				blockState.getValue(StairsBlock.HALF), 
+				blockState.getValue(StairsBlock.FACING),
+				blockState.getValue(StairsBlock.HALF),
 				blockState.getValue(StairsBlock.SHAPE));
 	}
 

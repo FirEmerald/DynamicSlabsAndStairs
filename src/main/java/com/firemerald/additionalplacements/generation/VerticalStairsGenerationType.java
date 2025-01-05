@@ -24,7 +24,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class VerticalStairsGenerationType<T extends StairsBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock & IStairBlock<T>> extends SimpleRotatableGenerationType<T, U> {
 	protected abstract static class BuilderBase<T extends StairsBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock & IStairBlock<T>, V extends SimpleRotatableGenerationType<T, U>, W extends BuilderBase<T, U, V, W>> extends SimpleRotatableGenerationType.BuilderBase<T, U, V, W> {
-		protected GenerationBlacklist 
+		protected GenerationBlacklist
 		vertcialConnectionsBlacklist = new GenerationBlacklist.Builder().build(),
 		mixedConnectionsBlacklist = new GenerationBlacklist.Builder().build();
 
@@ -32,34 +32,35 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 		public W constructor(Function<? super T, ? extends U> constructor) {
 			throw new IllegalStateException("Function<? super T, ? extends U> constructor not supported");
 		}
-		
+
 		public W blacklistVerticalConnections(GenerationBlacklist blacklist) {
 			this.vertcialConnectionsBlacklist = blacklist;
 			return me();
 		}
-		
+
 		public W blacklistMixedConnections(GenerationBlacklist blacklist) {
 			this.mixedConnectionsBlacklist = blacklist;
 			return me();
 		}
 	}
-	
+
 	public static class Builder<T extends StairsBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock & IStairBlock<T>> extends BuilderBase<T, U, VerticalStairsGenerationType<T, U>, Builder<T, U>> {
 		@Override
 		public VerticalStairsGenerationType<T, U> construct(ResourceLocation name, String description) {
 			return new VerticalStairsGenerationType<>(name, description, this);
 		}
 	}
-	
+
 	private final GenerationBlacklist vertcialConnectionsBlacklist;
 	private final GenerationBlacklist mixedConnectionsBlacklist;
-	
+
 	protected VerticalStairsGenerationType(ResourceLocation name, String description, BuilderBase<T, U, ?, ?> builder) {
 		super(name, description, builder);
 		this.vertcialConnectionsBlacklist = builder.vertcialConnectionsBlacklist;
 		this.mixedConnectionsBlacklist = builder.mixedConnectionsBlacklist;
 	}
 
+	@Override
 	public void buildStartupConfig(ForgeConfigSpec.Builder builder) {
 		super.buildStartupConfig(builder);
 		builder
@@ -73,7 +74,7 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 		mixedConnectionsBlacklist.addToConfig(builder);
 		builder.pop();
 	}
-	
+
 	@Override
 	public CompoundNBT getClientCheckData() {
 		CompoundNBT tag = new CompoundNBT();
@@ -90,7 +91,7 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 		if (!noMixed.isEmpty()) tag.put("noMixed", noMixed);
 		return tag;
 	}
-	
+
 	public static void addBlockEntry(CompoundNBT tag, ResourceLocation id) {
 		ListNBT modList;
 		if (tag.contains(id.getNamespace(), TagIds.TAG_LIST)) modList = tag.getList(id.getNamespace(), TagIds.TAG_STRING);
@@ -103,7 +104,7 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 		if (tag != null) {
 			Set<ResourceLocation> noVertical = loadEntries(tag, "noVertical");
 			Set<ResourceLocation> noMixed = loadEntries(tag, "noMixed");
-			
+
 			Map<String, List<ResourceLocation>> mismatched = new HashMap<>();
 			this.forEachCreated(entry -> {
 				ResourceLocation id = entry.originalId;
@@ -131,7 +132,7 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 			}
 		}
 	}
-	
+
 	public static Set<ResourceLocation> loadEntries(CompoundNBT tag, String key) {
 		if (tag.contains(key, TagIds.TAG_COMPOUND)) {
 			CompoundNBT entries = tag.getCompound(key);
@@ -143,7 +144,7 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 			return set;
 		} else return Collections.emptySet();
 	}
-	
+
 	@Override
 	public void loadStartupConfig() {
 		super.loadStartupConfig();
@@ -154,9 +155,9 @@ public class VerticalStairsGenerationType<T extends StairsBlock, U extends Addit
 	@SuppressWarnings("unchecked")
 	@Override
 	public U construct(T block, ResourceLocation blockId) {
-		return (U) AdditionalStairBlock.of(block, 
+		return (U) AdditionalStairBlock.of(block,
 				!vertcialConnectionsBlacklist.test(blockId) ? StairConnectionsType.SIMPLE :
-					!mixedConnectionsBlacklist.test(blockId) ? StairConnectionsType.EXTENDED : 
+					!mixedConnectionsBlacklist.test(blockId) ? StairConnectionsType.EXTENDED :
 						StairConnectionsType.COMPLEX);
 	}
 }

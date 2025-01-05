@@ -1,7 +1,10 @@
 package com.firemerald.additionalplacements.mixin;
 
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -43,15 +46,15 @@ public class MixinModelBakery {
 	public IUnbakedModel getModel(ResourceLocation modelLocation) {
 		return null;
 	}
-	
+
 	@Inject(method = "processLoading", at = @At("RETURN"), remap = false)
 	public void processLoading(IProfiler profiler, int maxMipmapLevel, CallbackInfo cli) {
 		UnbakedPlacementModel.clearCache();
 	}
-	
+
 	@Redirect(
-			method = "loadModel", 
-			at = @At(value = "INVOKE", target = "org/apache/logging/log4j/Logger.warn(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V"), 
+			method = "loadModel",
+			at = @At(value = "INVOKE", target = "org/apache/logging/log4j/Logger.warn(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V"),
 			slice = @Slice(
 					from = @At(value = "CONSTANT", args = {"stringValue=Exception loading blockstate definition: {}: {}"}),
 					to = @At(value = "INVOKE", target = "org/apache/logging/log4j/Logger.warn(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V", shift = Shift.AFTER)
@@ -65,19 +68,19 @@ public class MixinModelBakery {
 		}
 		logger.warn(message, blockStateJsonObj, eObj);
 	}
-	
+
 	@ModifyVariable(
-			method = {"lambda$loadModel$25", "m_119331_"}, 
-			at = @At("STORE"), 
+			method = {"lambda$loadModel$25", "m_119331_"},
+			at = @At("STORE"),
 			index = 7
 			)
 	private Pair<IUnbakedModel, Supplier<ModelBakery.ModelListWrapper>> loadModelLambda(
-			Pair<IUnbakedModel, Supplier<ModelBakery.ModelListWrapper>> modelPair, 
-			Map<ModelResourceLocation, BlockState> modelToState, 
-			ResourceLocation blockId, 
-			Pair<IUnbakedModel, Supplier<ModelBakery.ModelListWrapper>> missingModelPair, 
-			HashMap<ModelBakery.ModelListWrapper, Set<BlockState>> modelGroups, 
-			ModelResourceLocation currentModelLocation, 
+			Pair<IUnbakedModel, Supplier<ModelBakery.ModelListWrapper>> modelPair,
+			Map<ModelResourceLocation, BlockState> modelToState,
+			ResourceLocation blockId,
+			Pair<IUnbakedModel, Supplier<ModelBakery.ModelListWrapper>> missingModelPair,
+			HashMap<ModelBakery.ModelListWrapper, Set<BlockState>> modelGroups,
+			ModelResourceLocation currentModelLocation,
 			BlockState ourState) {
 		if (modelPair == null) { //replace only states which do not already have a model
 			if (ourState != null && ourState.getBlock() instanceof AdditionalPlacementBlock) {
@@ -91,7 +94,7 @@ public class MixinModelBakery {
 				IUnbakedModel theirModel = getModel(theirModelLocation);
 				BlockRotation theirModelRotation = block.getRotation(ourState);
 				UnbakedPlacementModel unbakedModel = UnbakedPlacementModel.of(block, ourModel, ourModelRotation, theirModelLocation, theirModel, theirModelRotation);
-				
+
 				List<Property<?>> coloringProperties = this.blockColors.getColoringProperties(theirState.getBlock()).stream()
 						.filter(block::isValidProperty) //just in case
 						.collect(Collectors.toList());

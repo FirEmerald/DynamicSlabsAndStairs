@@ -20,7 +20,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class AdditionalCarpetBlock extends AdditionalFloorBlock<CarpetBlock> implements ICarpetBlock<CarpetBlock>
-{	
+{
 	public static final VoxelShape[] SHAPES = {
 			Block.box(0, 15, 0, 16, 16, 16),
 			Block.box(0, 0, 0, 16, 16, 1),

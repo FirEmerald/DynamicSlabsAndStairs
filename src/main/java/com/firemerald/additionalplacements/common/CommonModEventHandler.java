@@ -22,7 +22,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class CommonModEventHandler
 {
 	private static boolean init = false;
-	
+
 	@SubscribeEvent
 	public static void onNewRegistry(NewRegistry event) { //best hook I could find for loading a config after all mods have been processed but before registries are built
 		if (!init) {
@@ -31,7 +31,7 @@ public class CommonModEventHandler
 			init = true;
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onBlockRegistry(RegistryEvent.Register<Block> event)
 	{

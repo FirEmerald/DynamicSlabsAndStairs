@@ -13,7 +13,7 @@ public class BufferUtils {
 		for (int i = 0; i < size; ++i) list.add(itemReader.apply(buffer));
 		return list;
 	}
-	
+
 	public static <T> void writeCollection(PacketBuffer buffer, Collection<T> items, BiConsumer<PacketBuffer, T> itemWriter) {
 		buffer.writeVarInt(items.size());
 		items.forEach(item -> itemWriter.accept(buffer, item));
@@ -25,7 +25,7 @@ public class BufferUtils {
 		for (int i = 0; i < size; ++i) map.put(keyReader.apply(buffer), itemReader.apply(buffer));
 		return map;
 	}
-	
+
 	public static <T, U> void writeMap(PacketBuffer buffer, Map<T, U> map, BiConsumer<PacketBuffer, T> keyWriter, BiConsumer<PacketBuffer, U> itemWriter) {
 		buffer.writeVarInt(map.size());
 		map.forEach((key, item) -> {

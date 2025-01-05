@@ -17,7 +17,7 @@ public class APConfigs {
     private static ForgeConfigSpec serverSpec;
     private static ClientConfig client;
     private static ForgeConfigSpec clientSpec;
-    
+
     public static void init() {
         final Pair<StartupConfig, ForgeConfigSpec> startupSpecPair = new ForgeConfigSpec.Builder().configure(StartupConfig::new);
         startup = startupSpecPair.getLeft();
@@ -31,56 +31,56 @@ public class APConfigs {
         final Pair<ClientConfig, ForgeConfigSpec> clientSpecPair = new ForgeConfigSpec.Builder().configure(ClientConfig::new);
         client = clientSpecPair.getLeft();
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, clientSpec = clientSpecPair.getRight());
-        
+
 		startup.loadConfig(FMLPaths.CONFIGDIR.get().resolve("additionalplacements-startup.toml"), startupSpecPair.getRight());
     }
-    
+
     public static StartupConfig startup() {
     	return startup;
     }
-    
+
     public static boolean startupLoaded() {
     	return startupSpec.isLoaded();
     }
-    
+
     public static CommonConfig common() {
     	return common;
     }
-    
+
     public static boolean commonLoaded() {
     	return commonSpec.isLoaded();
     }
-    
+
     public static ServerConfig server() {
     	return server;
     }
-    
+
     public static boolean serverLoaded() {
     	return serverSpec.isLoaded();
     }
-    
+
     public static ClientConfig client() {
     	return client;
     }
-    
+
     public static boolean clientLoaded() {
     	return clientSpec.isLoaded();
     }
-    
+
     public static void onModConfigsLoaded(ModConfig.Loading event) {
     	onModConfigsLoaded(event.getConfig().getSpec());
     }
-    
+
     public static void onModConfigsReloaded(ModConfig.Reloading event) {
     	onModConfigsLoaded(event.getConfig().getSpec());
     }
-    
+
     private static void onModConfigsLoaded(ForgeConfigSpec configSpec) {
     	if (configSpec == commonSpec) common.onConfigLoaded();
     	else if (configSpec == serverSpec) server.onConfigLoaded();
     	else if (configSpec == clientSpec) client.onConfigLoaded();
     }
-	
+
 	public static boolean isColorString(Object o) {
 		if (o instanceof String) {
 			String s = (String) o;
@@ -94,7 +94,7 @@ public class APConfigs {
 		}
 		return false;
 	}
-	
+
 	public static float[] parseColorString(String s) {
 		return new float[] {
 				Integer.parseInt(s.substring(2, 4), 16) / 255f, //XXRRXXXX
@@ -103,7 +103,7 @@ public class APConfigs {
 				Integer.parseInt(s.substring(0, 2), 16) / 255f  //AAXXXXXX
 		};
 	}
-	
+
 	public static float[] parseColorString(ConfigValue<String> s) {
 		return parseColorString(s.get());
 	}
