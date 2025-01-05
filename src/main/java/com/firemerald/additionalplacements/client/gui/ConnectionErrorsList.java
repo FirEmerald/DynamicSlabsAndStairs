@@ -25,19 +25,19 @@ public class ConnectionErrorsList extends BetterObjectSelectionList<ConnectionEr
 		private final Component contents;
 		private List<FormattedCharSequence> split;
 		private final int tabulation;
-		
+
 		public Entry(ConnectionErrorsScreen screen, Component contents, int tabulation) {
 			this.screen = screen;
 			this.contents = contents;
 			this.tabulation = tabulation;
 			updateContents();
 		}
-		
+
 		@Override
 		public Component getNarration() {
 			return contents;
 		}
-		
+
 		public void updateContents() {
 			split = screen.getFont().split(contents, ConnectionErrorsList.this.getRowWidth() - (tabulation + 10));
 		}

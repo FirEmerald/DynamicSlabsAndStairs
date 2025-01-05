@@ -1,7 +1,7 @@
 package com.firemerald.additionalplacements.config;
 
-import com.firemerald.additionalplacements.generation.Registration;
 import com.firemerald.additionalplacements.generation.GenerationType;
+import com.firemerald.additionalplacements.generation.Registration;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
@@ -41,17 +41,17 @@ public class ClientConfig
         		.define("preview_color", "66FFFFFF", APConfigs::isColorString);
         Registration.buildConfig(builder, GenerationType::buildClientConfig);
 	}
-	
+
 	public void onConfigLoaded() {
 		gridColorVal = APConfigs.parseColorString(gridColor);
 		previewColorVal = APConfigs.parseColorString(previewColor);
 		Registration.forEach(GenerationType::onClientConfigLoaded);
 	}
-	
+
 	public float[] gridColor() {
 		return gridColorVal;
 	}
-	
+
 	public float[] previewColor() {
 		return previewColorVal;
 	}

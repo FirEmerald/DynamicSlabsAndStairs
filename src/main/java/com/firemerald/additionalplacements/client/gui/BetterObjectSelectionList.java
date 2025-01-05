@@ -16,6 +16,7 @@ public class BetterObjectSelectionList<E extends BetterObjectSelectionList.Entry
 		super(minecraft, x, y, width, height, normalItemHeight);
 	}
 
+	@Override
 	public boolean changeFocus(boolean focus) {
 		if (!this.inFocus && this.getItemCount() == 0) return false;
 		else {
@@ -25,7 +26,8 @@ public class BetterObjectSelectionList<E extends BetterObjectSelectionList.Entry
 			return this.inFocus;
 		}
 	}
-	
+
+	@Override
 	public void updateNarration(NarrationElementOutput narrationElementOutput) {
 		E hovered = this.getHovered();
 		if (hovered != null) {
@@ -40,14 +42,14 @@ public class BetterObjectSelectionList<E extends BetterObjectSelectionList.Entry
 		}
 		if (this.isFocused()) narrationElementOutput.add(NarratedElementType.USAGE, USAGE_NARRATION);
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public abstract static class Entry<E extends BetterObjectSelectionList.Entry<E>> extends AbstractBetterSelectionList.Entry<E> implements NarrationSupplier {
 		public abstract Component getNarration();
 
 		/**
 		 * Updates the narration output with the current narration information.
-		 * 
+		 *
 		 * @param pNarrationElementOutput the output to update with narration
 		 *                                information.
 		 */

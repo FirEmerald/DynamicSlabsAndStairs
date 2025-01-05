@@ -55,19 +55,19 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 		this.minecraft = minecraft;
 		this.normalItemHeight = normalItemHeight;
 	}
-	
-	public int getX() { 
+
+	public int getX() {
 		return x;
 	}
-	
-	public int getY() { 
+
+	public int getY() {
 		return y;
 	}
-	
+
 	public int getRight() {
 		return x + width;
 	}
-	
+
 	public int getBottom() {
 		return y + height;
 	}
@@ -301,7 +301,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 	/**
 	 * Called when a mouse button is clicked within the GUI element.
 	 * <p>
-	 * 
+	 *
 	 * @return {@code true} if the event is consumed, {@code false} otherwise.
 	 * @param mouseX the X coordinate of the mouse.
 	 * @param mouseY the Y coordinate of the mouse.
@@ -341,7 +341,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 	/**
 	 * Called when a mouse button is released within the GUI element.
 	 * <p>
-	 * 
+	 *
 	 * @return {@code true} if the event is consumed, {@code false} otherwise.
 	 * @param mouseX the X coordinate of the mouse.
 	 * @param mouseY the Y coordinate of the mouse.
@@ -359,7 +359,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 	/**
 	 * Called when the mouse is dragged within the GUI element.
 	 * <p>
-	 * 
+	 *
 	 * @return {@code true} if the event is consumed, {@code false} otherwise.
 	 * @param mouseX the X coordinate of the mouse.
 	 * @param mouseY the Y coordinate of the mouse.
@@ -396,6 +396,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 		return true;
 	}
 
+	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 		if (super.keyPressed(keyCode, scanCode, modifiers)) return true;
 		else if (keyCode == 264) {
@@ -414,16 +415,16 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 			return true;
 		});
 	}
-	
+
 	protected void refreshSelection() {
 		E selected = this.getSelected();
 		if (selected != null) {
 			this.setSelected(selected);
 			this.ensureVisible(selected);
 		}
-		
+
 	}
-	
+
 	protected boolean moveSelection(SelectionDirection direction, Predicate<E> validator) {
 		int dir = direction == SelectionDirection.UP ? -1 : 1;
 		if (!this.children().isEmpty()) {
@@ -442,11 +443,11 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Checks if the given mouse coordinates are over the GUI element.
 	 * <p>
-	 * 
+	 *
 	 * @return {@code true} if the mouse is over the GUI element, {@code false}
 	 *         otherwise.
 	 * @param mouseX the X coordinate of the mouse.
@@ -518,6 +519,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 	/**
 	 * {@return the narration priority}
 	 */
+	@Override
 	public NarratableEntry.NarrationPriority narrationPriority() {
 		if (this.isFocused()) {
 			return NarratableEntry.NarrationPriority.FOCUSED;
@@ -525,7 +527,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 			return this.hovered != null ? NarratableEntry.NarrationPriority.HOVERED : NarratableEntry.NarrationPriority.NONE;
 		}
 	}
-	
+
 	@Nullable
 	protected E remove(int index) {
 		E e = this.children.get(index);
@@ -576,7 +578,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 		/**
 		 * Checks if the given mouse coordinates are over the GUI element.
 		 * <p>
-		 * 
+		 *
 		 * @return {@code true} if the mouse is over the GUI element, {@code false}
 		 *         otherwise.
 		 * @param mouseX the X coordinate of the mouse.

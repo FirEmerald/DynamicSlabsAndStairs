@@ -13,7 +13,7 @@ import com.firemerald.additionalplacements.block.stairs.vanilla.VanillaStairShap
 import com.firemerald.additionalplacements.client.BlockHighlightHelper;
 import com.firemerald.additionalplacements.generation.APGenerationTypes;
 import com.firemerald.additionalplacements.generation.GenerationType;
-import com.firemerald.additionalplacements.util.*;
+import com.firemerald.additionalplacements.util.ComplexFacing;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
@@ -59,7 +59,7 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 		else
 			return getBlockStateInternal(shapeState, currentState);
 	}
-	
+
 	public BlockState getBlockStateInternal(CommonStairShapeState shapeState, BlockState currentState);
 
 	@Override
@@ -76,7 +76,7 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 	}
 
 	public abstract CommonStairShapeState getShapeState(BlockState blockState);
-	
+
 	public StairConnectionsType connectionsType();
 
 	@Override
@@ -203,14 +203,14 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 	public static final float ARROW_OFFSET = -0.4375f;
 	public static final float ARROW_OUTER = 0.375f;
 	public static final float ARROW_INNER = 0.125f;
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public default void renderPlacementPreview(PoseStack pose, VertexConsumer vertexConsumer, Player player, BlockHitResult result, float partial, float r, float g, float b, float a) {
 		if (!this.connectionsType().allowFlipped) return;
-		ComplexFacing facing = getFacing(result.getDirection(), 
-				(float) (result.getLocation().x - result.getBlockPos().getX() - .5), 
-				(float) (result.getLocation().y - result.getBlockPos().getY() - .5), 
+		ComplexFacing facing = getFacing(result.getDirection(),
+				(float) (result.getLocation().x - result.getBlockPos().getX() - .5),
+				(float) (result.getLocation().y - result.getBlockPos().getY() - .5),
 				(float) (result.getLocation().z - result.getBlockPos().getZ() - .5));
 		//z is up
 		//y is forward
@@ -220,11 +220,11 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 				facing.right.getStepX(), facing.forward.getStepX(), facing.up.getStepX(), 0,
 				facing.right.getStepY(), facing.forward.getStepY(), facing.up.getStepY(), 0,
 				facing.right.getStepZ(), facing.forward.getStepZ(), facing.up.getStepZ(), 0,
-				0, 0, 0, 1 
+				0, 0, 0, 1
 				}));
 		Matrix4f poseMat = pose.last().pose();
 		Matrix3f normMat = pose.last().normal();
-		BlockHighlightHelper.lineLoop(vertexConsumer, poseMat, normMat, ARROW_OFFSET, r, g, b, a, 
+		BlockHighlightHelper.lineLoop(vertexConsumer, poseMat, normMat, ARROW_OFFSET, r, g, b, a,
 				 0          ,  ARROW_OUTER,
 				 ARROW_OUTER,  0          ,
 				 ARROW_INNER,  0          ,
@@ -244,31 +244,31 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 	{
 		Matrix4f poseMat = pose.last().pose();
 		Matrix3f normMat = pose.last().normal();
-		
+
 		//outer box
-		BlockHighlightHelper.lineCenteredSquare(vertexConsumer, poseMat, normMat, -OUTER_EDGE, r, g, b, a, 
+		BlockHighlightHelper.lineCenteredSquare(vertexConsumer, poseMat, normMat, -OUTER_EDGE, r, g, b, a,
 				OUTER_EDGE);
 
 		if (this.connectionsType().allowFlipped) {
 			//inner edges
-			BlockHighlightHelper.lineCenteredGrid(vertexConsumer, poseMat, normMat, -OUTER_EDGE, r, g, b, a, 
+			BlockHighlightHelper.lineCenteredGrid(vertexConsumer, poseMat, normMat, -OUTER_EDGE, r, g, b, a,
 					INNER_EDGE, OUTER_EDGE);
-			
+
 			//middle cross
-			BlockHighlightHelper.lineCenteredCross(vertexConsumer, poseMat, normMat, -OUTER_EDGE, r, g, b, a, 
+			BlockHighlightHelper.lineCenteredCross(vertexConsumer, poseMat, normMat, -OUTER_EDGE, r, g, b, a,
 					OUTER_EDGE);
 		} else {
 			//corners
-			BlockHighlightHelper.lineOctal(vertexConsumer, poseMat, normMat, -OUTER_EDGE, r, g, b, a, 
+			BlockHighlightHelper.lineOctal(vertexConsumer, poseMat, normMat, -OUTER_EDGE, r, g, b, a,
 					INNER_EDGE, INNER_EDGE,
 					OUTER_EDGE, INNER_EDGE);
-			
+
 			//middle cross
-			BlockHighlightHelper.lineCenteredCross(vertexConsumer, poseMat, normMat, -OUTER_EDGE, r, g, b, a, 
+			BlockHighlightHelper.lineCenteredCross(vertexConsumer, poseMat, normMat, -OUTER_EDGE, r, g, b, a,
 					INNER_EDGE);
 		}
 	}
-    
+
 	@Override
 	public default GenerationType<?, ?> getGenerationType() {
 		return APGenerationTypes.stairs();
@@ -286,9 +286,9 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 
 	public default ComplexFacing getFacing(Direction out, Vec3 hitPos, Vec3i blockPos)
 	{
-		return getFacing(out, 
-				(float) (hitPos.x - blockPos.getX() - .5), 
-				(float) (hitPos.y - blockPos.getY() - .5), 
+		return getFacing(out,
+				(float) (hitPos.x - blockPos.getX() - .5),
+				(float) (hitPos.y - blockPos.getY() - .5),
 				(float) (hitPos.z - blockPos.getZ() - .5));
 	}
 
@@ -296,16 +296,16 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 	{
 		switch (out.getAxis()) {
 		case X:
-			return getFacingFromSide((float) hitZ, (float) hitY, Direction.SOUTH, Direction.UP, out);
+			return getFacingFromSide(hitZ, hitY, Direction.SOUTH, Direction.UP, out);
 		case Y:
-			return getFacingFromSide((float) hitX, (float) hitZ, Direction.EAST, Direction.SOUTH, out);
+			return getFacingFromSide(hitX, hitZ, Direction.EAST, Direction.SOUTH, out);
 		case Z:
-			return getFacingFromSide((float) hitX, (float) hitY, Direction.EAST, Direction.UP, out);
-		default: 
+			return getFacingFromSide(hitX, hitY, Direction.EAST, Direction.UP, out);
+		default:
 			return ComplexFacing.SOUTH_UP;
 		}
 	}
-	
+
 	public default ComplexFacing getFacingFromSide(float localX, float localY, Direction localRight, Direction localUp, Direction localOut) {
 		if (localY > localX) { //top-left half
 			if (localY > -localX) { //top quarter
@@ -321,7 +321,7 @@ public interface IStairBlock<T extends Block> extends IPlacementBlock<T>
 			}
 		}
 	}
-	
+
 	public default ComplexFacing getFacingFromQuarter(float localX, float localY, Direction localRight, Direction localUp, Direction localOut) {
 		Direction forward, up;
 		if (localY > INNER_EDGE) { //top half
