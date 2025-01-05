@@ -103,11 +103,12 @@ public abstract class MixinStairBlock implements IVanillaStairBlock
 	public BlockState getBlockStateInternal(CommonStairShapeState shapeState, BlockState currentState) {
 		return stairs.getBlockStateInternal(shapeState, currentState);
 	}
-	
+
+	@Override
 	public CommonStairShapeState getShapeState(BlockState blockState) {
 		return VanillaStairShapeState.toCommon(
-				blockState.getValue(StairBlock.FACING), 
-				blockState.getValue(StairBlock.HALF), 
+				blockState.getValue(StairBlock.FACING),
+				blockState.getValue(StairBlock.HALF),
 				blockState.getValue(StairBlock.SHAPE));
 	}
 

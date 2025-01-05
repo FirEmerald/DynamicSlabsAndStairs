@@ -19,7 +19,7 @@ import net.minecraftforge.network.NetworkEvent;
 public class CheckDataServerPacket extends ServerLoginPacket
 {
 	private final Map<ResourceLocation, Pair<CompoundTag, List<MessageTree>>> serverData;
-	
+
 	public CheckDataServerPacket(Map<ResourceLocation, CompoundTag> serverData) {
 		this.serverData = new HashMap<>();
 		Registration.forEach((id, type) -> {
