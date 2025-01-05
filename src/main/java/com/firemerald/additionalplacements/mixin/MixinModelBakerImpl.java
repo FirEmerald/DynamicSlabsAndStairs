@@ -5,7 +5,9 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import com.firemerald.additionalplacements.client.IModelBakerExtensions;
 
-import net.minecraft.client.resources.model.*;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.UnbakedModel;
 
 @Mixin(targets = "net.minecraft.client.resources.model.ModelBakery$ModelBakerImpl")
 public abstract class MixinModelBakerImpl implements IModelBakerExtensions {

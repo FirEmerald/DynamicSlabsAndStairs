@@ -14,17 +14,17 @@ import net.minecraft.resources.ResourceLocation;
 public class UnbakedPlacementModel implements UnbakedModel
 {
 	private static record ModelKey(AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, ModelState ourModelRotation, UnbakedModel theirModel, BlockRotation theirModelRotation) {}
-	
+
 	private static final Map<ModelKey, UnbakedPlacementModel> MODEL_CACHE = new HashMap<>();
-	
+
 	public static UnbakedPlacementModel of(AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, ModelState ourModelRotation, UnbakedModel theirModel, BlockRotation theirModelRotation) {
 		return MODEL_CACHE.computeIfAbsent(new ModelKey(block, ourModelLocation, ourModelRotation, theirModel, theirModelRotation), UnbakedPlacementModel::new);
 	}
-	
+
 	public static void clearCache() {
 		MODEL_CACHE.clear();
 	}
-	
+
 	public final AdditionalPlacementBlock<?> block;
 	public final ResourceLocation ourModelLocation;
 	public final ModelState ourModelRotation;

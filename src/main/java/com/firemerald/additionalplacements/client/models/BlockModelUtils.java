@@ -1,6 +1,9 @@
 package com.firemerald.additionalplacements.client.models;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -130,13 +133,13 @@ public class BlockModelUtils
 	{
 		return Float.floatToRawIntBits(newSprite.getV(oldSprite.getVOffset(Float.intBitsToFloat(vertex))));
 	}
-	
+
 	public static int[] copyVertices(int[] originalData) {
 		int[] newData = new int[originalData.length];
 		System.arraycopy(originalData, 0, newData, 0, originalData.length); //direct copy
 		return newData;
 	}
-	
+
 	public static int[] copyVertices(int[] originalData, int vertexSize, int shiftLeft) {
 		int[] newData = new int[originalData.length];
 		//shiftLeft %= originalData.length / vertexSize;
@@ -150,7 +153,7 @@ public class BlockModelUtils
 		}
 		return newData;
 	}
-	
+
 	public static Pair<TextureAtlasSprite, Integer> getSidedTexture(BlockState fromState, BakedModel fromModel, Direction fromSide, RandomSource rand, int vertexSize, int posOffset) {
 		Map<Pair<TextureAtlasSprite, Integer>, Double> weights = new HashMap<>();
 		List<BakedQuad> referenceQuads = fromModel.getQuads(fromState, fromSide, rand);
@@ -207,9 +210,9 @@ public class BlockModelUtils
 		{
     		bakedQuads.add(new BakedQuad(
     				rotation.applyVertices(originalQuad.getDirection(), originalQuad.getVertices(), vertexSize, posOffset, uvOffset, rotateTex, originalQuad.getSprite()),
-    				originalQuad.getTintIndex(), 
-    				rotation.apply(originalQuad.getDirection()), 
-    				originalQuad.getSprite(), 
+    				originalQuad.getTintIndex(),
+    				rotation.apply(originalQuad.getDirection()),
+    				originalQuad.getSprite(),
     				originalQuad.isShade(),
     				originalQuad.getLightEmission()
     				));
@@ -234,9 +237,9 @@ public class BlockModelUtils
 		{
     		bakedQuads.add(new BakedQuad(
     				rotation.applyVertices(originalQuad.getDirection(), originalQuad.getVertices(), vertexSize, posOffset, uvOffset, rotateTex, originalQuad.getSprite()),
-    				originalQuad.getTintIndex(), 
-    				rotation.apply(originalQuad.getDirection()), 
-    				originalQuad.getSprite(), 
+    				originalQuad.getTintIndex(),
+    				rotation.apply(originalQuad.getDirection()),
+    				originalQuad.getSprite(),
     				originalQuad.isShade(),
     				originalQuad.getLightEmission()
     				));
@@ -250,7 +253,7 @@ public class BlockModelUtils
 		emit.accept(context);
 		context.popTransform();
 	}
-	
+
 	public static void emitRetexturedQuads(BlockState texState, BakedModel texModel, FabricBakedModel renderModel, BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		@SuppressWarnings("unchecked")
 		final Pair<TextureAtlasSprite, Integer>[] textures = new Pair[6];
@@ -273,8 +276,8 @@ public class BlockModelUtils
 			if (oldTex != null) {
 				Pair<TextureAtlasSprite, Integer> newMat = sprites.apply(quad.nominalFace());
 				TextureAtlasSprite newTex = newMat.getLeft();
-				for (int i = 0; i < 4; ++i) quad.sprite(i, 0, 
-						newTex.getU(oldTex.getUOffset(quad.spriteU(i, 0))), 
+				for (int i = 0; i < 4; ++i) quad.sprite(i, 0,
+						newTex.getU(oldTex.getUOffset(quad.spriteU(i, 0))),
 						newTex.getV(oldTex.getVOffset(quad.spriteV(i, 0))));
 				if (quad instanceof IMutableQuadViewExtensions ext) ext.sprite(newTex);
 				quad.colorIndex(newMat.getRight());

@@ -23,9 +23,9 @@ import net.minecraft.resources.ResourceLocation;
 public class ConfigurationCheckFailedPacket extends ClientConfigurationPacket
 {
 	public static final Type<ConfigurationCheckFailedPacket> TYPE = new Type<>(ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "configuration_check_failed"));
-	
+
 	private final List<Triple<ResourceLocation, List<MessageTree>, List<MessageTree>>> compiledErrors;
-	
+
 	public ConfigurationCheckFailedPacket(List<Triple<ResourceLocation, List<MessageTree>, List<MessageTree>>> compiledErrors) {
 		this.compiledErrors = compiledErrors;
 	}
@@ -89,7 +89,7 @@ public class ConfigurationCheckFailedPacket extends ClientConfigurationPacket
 			this.client = client;
 			this.rootError = rootError;
 		}
-		
+
 		@Override
 		public void run() {
 			Screen desScreen = new TitleScreen();

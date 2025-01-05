@@ -7,7 +7,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 public abstract class APPacket<T extends FriendlyByteBuf> implements CustomPacketPayload
 {
 	public abstract void write(T buf);
-	
+
 	public void send(PacketSender sender) {
 		APNetwork.send(this, sender);
 	}
