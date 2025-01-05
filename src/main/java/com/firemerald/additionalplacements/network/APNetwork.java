@@ -14,10 +14,10 @@ import com.firemerald.additionalplacements.network.server.SetPlacementTogglePack
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.fabric.api.networking.v1.*;
 import net.fabricmc.fabric.impl.networking.server.ServerConfigurationNetworkAddon;
 import net.fabricmc.fabric.impl.networking.server.ServerNetworkingImpl;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type;
@@ -31,7 +31,7 @@ public class APNetwork
         registerClientConfigurationPacket(CheckDataClientPacket.TYPE, CheckDataClientPacket::new);
         registerServerConfigurationPacket(CheckDataServerPacket.TYPE, CheckDataServerPacket::new);
         registerClientConfigurationPacket(ConfigurationCheckFailedPacket.TYPE, ConfigurationCheckFailedPacket::new);
-        
+
 		ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) -> {
 			final ServerConfigurationNetworkAddon addon = ServerNetworkingImpl.getAddon(handler);
 			handler.addTask(new CheckDataConfigurationTask(addon));

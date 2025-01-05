@@ -81,8 +81,8 @@ public interface ISlabBlock<T extends Block> extends IPlacementBlock<T>
 
 	public default BlockState forPlacing(Direction dir, BlockState blockState)
 	{
-		return (dir.getAxis() == Axis.Y ? 
-				getDefaultVanillaState(blockState) : 
+		return (dir.getAxis() == Axis.Y ?
+				getDefaultVanillaState(blockState) :
 				(getDefaultAdditionalState(blockState).setValue(VerticalSlabBlock.AXIS, dir.getAxis())))
 				.setValue(SlabBlock.TYPE, dir.getAxisDirection() == AxisDirection.POSITIVE ? SlabType.TOP : SlabType.BOTTOM);
 	}
@@ -182,20 +182,20 @@ public interface ISlabBlock<T extends Block> extends IPlacementBlock<T>
 	public default void renderPlacementHighlight(PoseStack poseStack, VertexConsumer vertexConsumer, Player player, BlockHitResult result, DeltaTracker delta, float r, float g, float b, float a)
 	{
 		PoseStack.Pose pose = poseStack.last();
-		
+
 		//outer box
-		BlockHighlightHelper.lineCenteredSquare(vertexConsumer, pose, -OUTER_EDGE, r, g, b, a, 
+		BlockHighlightHelper.lineCenteredSquare(vertexConsumer, pose, -OUTER_EDGE, r, g, b, a,
 				OUTER_EDGE);
-		
+
 		//inner box
-		BlockHighlightHelper.lineCenteredSquare(vertexConsumer, pose, -OUTER_EDGE, r, g, b, a, 
+		BlockHighlightHelper.lineCenteredSquare(vertexConsumer, pose, -OUTER_EDGE, r, g, b, a,
 				INNER_EDGE);
-		
+
 		//diagonals
-		BlockHighlightHelper.lineAxisDiagonal(vertexConsumer, pose, -OUTER_EDGE, r, g, b, a, 
+		BlockHighlightHelper.lineAxisDiagonal(vertexConsumer, pose, -OUTER_EDGE, r, g, b, a,
 				INNER_EDGE, OUTER_EDGE);
 	}
-    
+
 	@Override
 	public default GenerationType<?, ?> getGenerationType() {
 		return APGenerationTypes.slab();

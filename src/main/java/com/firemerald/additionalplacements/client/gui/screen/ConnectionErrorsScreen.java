@@ -16,7 +16,7 @@ public class ConnectionErrorsScreen extends Screen {
 	private final Screen desScreen;
     private ConnectionErrorsList errorList;
     private Button okButton;
-    
+
 	public ConnectionErrorsScreen(MessageTree rootError, Screen desScreen) {
 		super(Component.translatable("msg.additionalplacements.configurationerrors"));
 		this.rootError = rootError;

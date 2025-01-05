@@ -13,7 +13,7 @@ public class CheckDataConfigurationTask implements ConfigurationTask {
 	public static final Type TYPE = new Type(AdditionalPlacementsMod.MOD_ID + ":configuration_checks");
 
 	private final PacketSender packetSender;
-	
+
 	protected CheckDataConfigurationTask(PacketSender packetSender) {
 		this.packetSender = packetSender;
 	}

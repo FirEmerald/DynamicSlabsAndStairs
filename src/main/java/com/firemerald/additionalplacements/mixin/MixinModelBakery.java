@@ -11,14 +11,17 @@ import com.firemerald.additionalplacements.client.IBlockStateModelLoaderExtensio
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
-import net.minecraft.client.resources.model.*;
+import net.minecraft.client.resources.model.BlockStateModelLoader;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.UnbakedModel;
 
 @Mixin(ModelBakery.class)
 public class MixinModelBakery {
 	@Shadow
 	@Final
 	public Map<ModelResourceLocation, UnbakedModel> topLevelModels;
-	
+
 
 	@WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "net/minecraft/client/resources/model/BlockStateModelLoader.loadAllBlockStates()V"))
 	public void loadAllBlockStates(BlockStateModelLoader blockstatemodelloader, Operation<Void> original)

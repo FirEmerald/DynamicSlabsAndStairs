@@ -12,8 +12,8 @@ import net.minecraft.world.level.block.Block;
  */
 public interface RegistrationInitializer {
 	public default void onInitializeRegistration(IRegistration register) {}
-	
+
 	public default void addGlobalBlacklisters(Consumer<IBlockBlacklister<Block>> register) {}
-	
+
 	public default <T extends Block, U extends AdditionalPlacementBlock<T>> void addBlacklisters(Class<T> type, GenerationType<T, U> generationType, Consumer<IBlockBlacklister<? super T>> register) {}
 }

@@ -1,12 +1,11 @@
 package com.firemerald.additionalplacements.config;
 
+import com.firemerald.additionalplacements.generation.GenerationType;
 import com.firemerald.additionalplacements.generation.Registration;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
 import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
-
-import com.firemerald.additionalplacements.generation.GenerationType;
 
 public class CommonConfig
 {
@@ -43,7 +42,7 @@ public class CommonConfig
         		.define("fix_old_states", true);
         Registration.buildConfig(builder, GenerationType::buildCommonConfig);
 	}
-	
+
 	public void onConfigLoaded() {
 		Registration.forEach(GenerationType::onCommonConfigLoaded);
 	}

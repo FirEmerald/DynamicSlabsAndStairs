@@ -18,24 +18,24 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BakedPlacementModel extends PlacementModelWrapper
 {
 	private static record ModelKey(AdditionalPlacementBlock<?> block, BakedModel ourModel, BakedModel theirModel, BlockRotation modelRotation) {}
-	
+
 	private static final Map<ModelKey, BakedPlacementModel> MODEL_CACHE = new HashMap<>();
-	
+
 	public static BakedPlacementModel of(ModelBaker bakery, ModelState modelTransform, AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, UnbakedModel theirModel, BlockRotation modelRotation) {
-		return of(block, 
-				Unwrapper.unwrap(bakery.bake(ourModelLocation, modelTransform)), 
+		return of(block,
+				Unwrapper.unwrap(bakery.bake(ourModelLocation, modelTransform)),
 				Unwrapper.unwrap(((IModelBakerExtensions) bakery).apBakeUncached(theirModel, BlockModelRotation.X0_Y0)),
 				modelRotation);
 	}
-	
+
 	public static BakedPlacementModel of(AdditionalPlacementBlock<?> block, BakedModel ourModel, BakedModel theirModel, BlockRotation modelRotation) {
 		return MODEL_CACHE.computeIfAbsent(new ModelKey(block, ourModel, theirModel, modelRotation), BakedPlacementModel::new);
 	}
-	
+
 	public static void clearCache() {
 		MODEL_CACHE.clear();
 	}
-	
+
 	private final AdditionalPlacementBlock<?> block;
 	private final BakedModel ourModel;
 	private final BlockRotation modelRotation;

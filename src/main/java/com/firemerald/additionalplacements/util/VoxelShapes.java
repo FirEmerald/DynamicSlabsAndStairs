@@ -171,7 +171,7 @@ public class VoxelShapes
 		setCorner(Direction.EAST, Direction.UP, Direction.SOUTH, CORNER_EAST_UP_SOUTH);
 		setStairs();
 	}
-	
+
 	public static void setStairs() {
 		setStraightStairs(Direction.UP, Direction.SOUTH, STAIRS_UP_SOUTH);
 		setStraightStairs(Direction.UP, Direction.NORTH, STAIRS_UP_NORTH);

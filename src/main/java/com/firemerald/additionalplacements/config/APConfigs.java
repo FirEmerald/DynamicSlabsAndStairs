@@ -20,7 +20,7 @@ public class APConfigs {
     private static ModConfigSpec serverSpec;
     private static ClientConfig client;
     private static ModConfigSpec clientSpec;
-    
+
     public static void init() {
     	NeoForgeModConfigEvents.loading(AdditionalPlacementsMod.MOD_ID).register(APConfigs::onModConfigLoaded);
     	NeoForgeModConfigEvents.reloading(AdditionalPlacementsMod.MOD_ID).register(APConfigs::onModConfigReloaded);
@@ -37,44 +37,44 @@ public class APConfigs {
         client = clientSpecPair.getLeft();
         NeoForgeConfigRegistry.INSTANCE.register(AdditionalPlacementsMod.MOD_ID, ModConfig.Type.CLIENT, clientSpec = clientSpecPair.getRight());
     }
-    
+
     public static StartupConfig startup() {
     	return startup;
     }
-    
+
     public static boolean startupLoaded() {
     	return startupSpec.isLoaded();
     }
-    
+
     public static CommonConfig common() {
     	return common;
     }
-    
+
     public static boolean commonLoaded() {
     	return commonSpec.isLoaded();
     }
-    
+
     public static ServerConfig server() {
     	return server;
     }
-    
+
     public static boolean serverLoaded() {
     	return serverSpec.isLoaded();
     }
-    
+
     public static ClientConfig client() {
     	return client;
     }
-    
+
     public static boolean clientLoaded() {
     	return clientSpec.isLoaded();
     }
-    
+
     private static void onModConfigLoaded(ModConfig config) {
     	if (config.getSpec() == startupSpec) startup.onConfigLoaded();
     	else onModConfigsLoaded(config.getSpec());
     }
-    
+
     private static void onModConfigReloaded(ModConfig config) {
     	onModConfigsLoaded(config.getSpec());
     }
@@ -84,7 +84,7 @@ public class APConfigs {
     	else if (configSpec == serverSpec) server.onConfigLoaded();
     	else if (configSpec == clientSpec) client.onConfigLoaded();
     }
-	
+
 	public static boolean isColorString(Object o) {
 		if (o instanceof String) {
 			String s = (String) o;
@@ -98,7 +98,7 @@ public class APConfigs {
 		}
 		return false;
 	}
-	
+
 	public static float[] parseColorString(String s) {
 		return new float[] {
 				Integer.parseInt(s.substring(2, 4), 16) / 255f, //XXRRXXXX
@@ -107,7 +107,7 @@ public class APConfigs {
 				Integer.parseInt(s.substring(0, 2), 16) / 255f  //AAXXXXXX
 		};
 	}
-	
+
 	public static float[] parseColorString(ConfigValue<String> s) {
 		return parseColorString(s.get());
 	}

@@ -4,7 +4,10 @@ import org.spongepowered.asm.mixin.Mixin;
 
 import com.firemerald.additionalplacements.client.IModelBakerExtensions;
 
-import net.minecraft.client.resources.model.*;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.UnbakedModel;
 
 @Mixin(ModelBaker.class)
 public interface MixinModelBaker extends IModelBakerExtensions {

@@ -30,7 +30,10 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -44,7 +47,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public abstract class AdditionalPlacementBlock<T extends Block> extends Block implements IPlacementBlock<T>
 {
-	private static List<Property<?>> copyPropsStatic = new ArrayList<>();;
+	private static List<Property<?>> copyPropsStatic = new ArrayList<>();
 	public final T parentBlock;
 	private final Property<?>[] copyProps;
 
@@ -84,7 +87,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 		for (Property prop : copyProps) to = to.setValue(prop, from.getValue(prop));
 		return to;
 	}
-	
+
 	public boolean isValidProperty(Property<?> prop) {
 		return true;
 	}
@@ -122,7 +125,7 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	{
 		return withUnrotatedPlacement(worldState, copyProperties(worldState, getOtherBlockState()));
 	}
-	
+
 	public abstract BlockState withUnrotatedPlacement(BlockState worldState, BlockState modelState);
 
 	@Override
@@ -391,16 +394,16 @@ public abstract class AdditionalPlacementBlock<T extends Block> extends Block im
 	{
 		return getModelState(state).isSignalSource();
 	}
-	
+
 	public abstract boolean rotatesLogic(BlockState state);
-	
+
 	public abstract boolean rotatesTexture(BlockState state);
-	
+
 	public abstract boolean rotatesModel(BlockState state);
-	
+
 	public abstract BlockRotation getRotation(BlockState state);
 
-	
+
 	@Override
 	@Deprecated
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
