@@ -17,7 +17,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -32,7 +32,7 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 public class CommonModEventHandler
 {
 	private static boolean init = false;
-	
+
 	@SubscribeEvent
 	public static void onNewRegistry(NewRegistryEvent event) { //best hook I could find for loading a config after all mods have been processed but before registries are built
 		if (!init) {
@@ -41,7 +41,7 @@ public class CommonModEventHandler
 			init = true;
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onBlockRegistry(RegisterEvent event)
 	{
@@ -74,13 +74,13 @@ public class CommonModEventHandler
 	{
 		doubleslabsLoaded = ModList.get().isLoaded("doubleslabs");
 	}
-	
+
 	@SubscribeEvent
     public static void register(RegisterPayloadHandlersEvent event)
     {
 		APNetwork.register(event);
     }
-	
+
 	@SubscribeEvent
 	public static void onRegisterConfigurationTasks(RegisterConfigurationTasksEvent event) {
 		event.register(new CheckDataConfigurationTask());

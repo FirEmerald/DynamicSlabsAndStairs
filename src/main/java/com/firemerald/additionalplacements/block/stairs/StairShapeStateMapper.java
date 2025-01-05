@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.state.properties.StairsShape;
 
 public class StairShapeStateMapper {
 	private static boolean lock = false;
-	
+
 	public static void run() {
 		if (!lock) {
 			lock = true;
@@ -36,12 +36,12 @@ public class StairShapeStateMapper {
 			}
 		}
 	}
-	
+
 	private static void setMapping(StairsShape vanillaBottomShape, StairsShape vanillaTopShape, CommonStairShape commonShape, CommonStairShape... extraShapes) {
 		setMapping(vanillaBottomShape, vanillaTopShape, commonShape, true);
 		for (CommonStairShape extraShape : extraShapes) setMapping(vanillaBottomShape, vanillaTopShape, extraShape, false);
 	}
-	
+
 	private static void setMapping(StairsShape vanillaBottomShape, StairsShape vanillaTopShape, CommonStairShape commonShape, boolean shapesEqual) {
 		for (Direction facing : Direction.values()) if (facing.getAxis() != Axis.Y) {
 			setMapping(Axis.X, BlockRotation.X_270_Y_270, facing, Half.BOTTOM, vanillaBottomShape, Direction.EAST , commonShape, shapesEqual);
@@ -52,7 +52,7 @@ public class StairShapeStateMapper {
 			setMapping(Axis.Z, BlockRotation.X_270      , facing, Half.TOP,    vanillaTopShape   , Direction.NORTH, commonShape, shapesEqual);
 		}
 	}
-	
+
 	private static void setMapping(Direction vanillaFacing, Half vanillaHalf, StairsShape vanillaShape, Direction commonUp, CommonStairShape commonShape, boolean shapesEqual) {
 		VanillaStairShapeState vanilla = VanillaStairShapeState.of(vanillaFacing, vanillaHalf, vanillaShape);
 		CommonStairShapeState common = CommonStairShapeState.of(ComplexFacing.forFacing(vanillaFacing.getOpposite(), commonUp), commonShape);
@@ -62,7 +62,7 @@ public class StairShapeStateMapper {
 			vanilla.setCommon(common);
 		}
 	}
-	
+
 	private static void setMapping(Axis axis, BlockRotation rotation, Direction vanillaFacing, Half vanillaHalf, StairsShape vanillaShape, Direction commonUp, CommonStairShape commonShape, boolean shapesEqual) {
 		VanillaStairShapeState vanilla = VanillaStairShapeState.of(vanillaFacing, vanillaHalf, vanillaShape);
 		CommonStairShapeState common = CommonStairShapeState.of(ComplexFacing.forFacing(rotation.apply(vanillaFacing.getOpposite()), commonUp), commonShape);

@@ -29,19 +29,19 @@ public class APNetwork
 		configurationToServer(registrar, CheckDataServerPacket.TYPE, CheckDataServerPacket::new);
 		configurationToClient(registrar, ConfigurationCheckFailedPacket.TYPE, ConfigurationCheckFailedPacket::new);
 	}
-	
+
 	public static <T extends ServerPacket<RegistryFriendlyByteBuf>> void playToServer(PayloadRegistrar registrar, Type<T> type, Function<RegistryFriendlyByteBuf, T> constructor) {
 		registrar.playToServer(type, new APStreamCodec<>(constructor), APPacket::handle);
 	}
-	
+
 	public static <T extends ClientPacket<RegistryFriendlyByteBuf>> void playToClient(PayloadRegistrar registrar, Type<T> type, Function<RegistryFriendlyByteBuf, T> constructor) {
 		registrar.playToClient(type, new APStreamCodec<>(constructor), APPacket::handle);
 	}
-	
+
 	public static <T extends ServerPacket<FriendlyByteBuf>> void configurationToServer(PayloadRegistrar registrar, Type<T> type, Function<FriendlyByteBuf, T> constructor) {
 		registrar.configurationToServer(type, new APStreamCodec<>(constructor), APPacket::handle);
 	}
-	
+
 	public static <T extends ClientPacket<FriendlyByteBuf>> void configurationToClient(PayloadRegistrar registrar, Type<T> type, Function<FriendlyByteBuf, T> constructor) {
 		registrar.configurationToClient(type, new APStreamCodec<>(constructor), APPacket::handle);
 	}

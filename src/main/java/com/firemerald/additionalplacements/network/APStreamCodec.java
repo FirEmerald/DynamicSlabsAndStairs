@@ -7,11 +7,11 @@ import net.minecraft.network.codec.StreamCodec;
 
 public class APStreamCodec<T extends FriendlyByteBuf, U extends APPacket<T>> implements StreamCodec<T, U> {
 	public final Function<T, U> constructor;
-	
+
 	public APStreamCodec(Function<T, U> constructor) {
 		this.constructor = constructor;
 	}
-	
+
 	@Override
 	public U decode(T buf) {
 		return constructor.apply(buf);

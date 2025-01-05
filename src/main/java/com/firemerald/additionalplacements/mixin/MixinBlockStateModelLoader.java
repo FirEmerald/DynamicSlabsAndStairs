@@ -33,31 +33,31 @@ import net.minecraft.world.level.block.state.properties.Property;
 @Mixin(BlockStateModelLoader.class)
 public class MixinBlockStateModelLoader implements IBlockStateModelLoaderExtension {
 	private Map<ModelResourceLocation, UnbakedModel> topLevelModels;
-	
+
 	@Override
 	public void setTopLevelModels(Map<ModelResourceLocation, UnbakedModel> topLevelModels) {
 		this.topLevelModels = topLevelModels;
 	}
-	
+
 	@Shadow
 	@Final
     private BlockColors blockColors;
 
 	@ModifyVariable(
-			method = "lambda$loadBlockStateDefinitions$10", 
-			at = @At("STORE"), 
+			method = "lambda$loadBlockStateDefinitions$10",
+			at = @At("STORE"),
 			index = 6
 			)
 	private BlockStateModelLoader.LoadedModel loadModelLambda(
-			BlockStateModelLoader.LoadedModel loadedModel, 
-			Map<BlockState, BlockStateModelLoader.LoadedModel> ourLoadedModels, 
-			ResourceLocation blockId, 
-			Map<BlockStateModelLoader.ModelGroupKey, Set<BlockState>> modelGroups, 
-			ModelResourceLocation currentModelLocation, 
+			BlockStateModelLoader.LoadedModel loadedModel,
+			Map<BlockState, BlockStateModelLoader.LoadedModel> ourLoadedModels,
+			ResourceLocation blockId,
+			Map<BlockStateModelLoader.ModelGroupKey, Set<BlockState>> modelGroups,
+			ModelResourceLocation currentModelLocation,
 			BlockState ourState) {
 		if (loadedModel == null) { //replace only states which do not already have a model
 			if (ourState != null && ourState.getBlock() instanceof AdditionalPlacementBlock<?> block) {
-				
+
 				BlockState theirState = block.getModelState(ourState);
 				StateModelDefinition modelDefinition = block.getModelDefinition(ourState);
 				ResourceLocation ourModel = modelDefinition.location(block.getBaseModelPrefix());
@@ -65,7 +65,7 @@ public class MixinBlockStateModelLoader implements IBlockStateModelLoaderExtensi
 				UnbakedModel theirModel = topLevelModels.get(BlockModelShaper.stateToModelLocation(theirState));
 				BlockRotation theirModelRotation = block.getRotation(ourState);
 				UnbakedPlacementModel unbakedModel = UnbakedPlacementModel.of(block, ourModel, ourModelRotation, theirModel, theirModelRotation);
-				
+
 				List<Property<?>> coloringProperties = this.blockColors.getColoringProperties(theirState.getBlock()).stream()
 						.filter(block::isValidProperty) //just in case
 						.collect(Collectors.toList());
@@ -74,7 +74,7 @@ public class MixinBlockStateModelLoader implements IBlockStateModelLoaderExtensi
 		}
 		return loadedModel;
 	}
-	
+
 	@Inject(method = "loadBlockStateDefinitions", at = @At("RETURN"))
 	private void loadBlockStateDefinitions(CallbackInfo cli) {
 		UnbakedPlacementModel.clearCache();

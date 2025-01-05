@@ -41,7 +41,7 @@ public enum V1StairShape implements StringRepresentable {
 
     OUTER_TWIST_DOWN_CW("outer_twist_down_clockwise", V1StairPlacingType.DOWN_CLOCKWISE, CommonStairShape.OUTER_BACK_RIGHT_BOTTOM_LEFT),
     OUTER_TWIST_DOWN_CCW("outer_twist_down_counter_clockwise", V1StairPlacingType.DOWN_COUNTER_CLOCKWISE, CommonStairShape.OUTER_BACK_LEFT_BOTTOM_RIGHT);
-	
+
 	public static V1StairShape get(String name) {
 		for (V1StairShape shape : values()) if (shape.name.equals(name)) return shape;
 		return null;
