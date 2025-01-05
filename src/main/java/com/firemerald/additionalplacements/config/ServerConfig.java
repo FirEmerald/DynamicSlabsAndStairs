@@ -1,7 +1,7 @@
 package com.firemerald.additionalplacements.config;
 
-import com.firemerald.additionalplacements.generation.Registration;
 import com.firemerald.additionalplacements.generation.GenerationType;
+import com.firemerald.additionalplacements.generation.Registration;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
@@ -24,7 +24,7 @@ public class ServerConfig
         		.define("fake_player_placement", true);
         Registration.buildConfig(builder, GenerationType::buildServerConfig);
 	}
-	
+
 	public void onConfigLoaded() {
 		Registration.forEach(GenerationType::onServerConfigLoaded);
 	}

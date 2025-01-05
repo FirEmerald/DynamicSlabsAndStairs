@@ -1,7 +1,7 @@
 package com.firemerald.additionalplacements.config;
 
-import com.firemerald.additionalplacements.generation.Registration;
 import com.firemerald.additionalplacements.generation.GenerationType;
+import com.firemerald.additionalplacements.generation.Registration;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
@@ -42,7 +42,7 @@ public class CommonConfig
         		.define("fix_old_states", true);
         Registration.buildConfig(builder, GenerationType::buildCommonConfig);
 	}
-	
+
 	public void onConfigLoaded() {
 		Registration.forEach(GenerationType::onCommonConfigLoaded);
 	}

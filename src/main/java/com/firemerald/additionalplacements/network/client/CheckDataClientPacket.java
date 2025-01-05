@@ -1,6 +1,7 @@
 package com.firemerald.additionalplacements.network.client;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -23,9 +24,9 @@ import net.minecraft.resources.ResourceLocation;
 public class CheckDataClientPacket extends ClientLoginPacket
 {
 	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "check_data");
-	
+
 	private final Map<ResourceLocation, CompoundTag> data;
-	
+
 	public CheckDataClientPacket() {
 		data = new HashMap<>();
 		Registration.forEach((id, type) -> {

@@ -33,6 +33,6 @@ public enum V1StairPlacingType {
 			return placing.ccwBottom;
 		}
 	};
-	
+
 	public abstract ComplexFacing fromV1Placing(V1StairPlacing placing);
 }

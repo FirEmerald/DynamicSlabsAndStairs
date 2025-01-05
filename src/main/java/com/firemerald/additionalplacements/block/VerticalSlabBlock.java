@@ -29,7 +29,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -50,7 +52,7 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 			super(slab);
 		}
 	}
-	
+
 	public boolean rotateLogic = true, rotateModel = true, rotateTex = true;
 
 	private VerticalSlabBlock(SlabBlock slab)
@@ -138,8 +140,8 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 
 	@Override
 	public BlockRotation getRotation(BlockState state) {
-		return state.getValue(AXIS) == Axis.X ? 
-				BlockRotation.X_270_Y_270 : 
+		return state.getValue(AXIS) == Axis.X ?
+				BlockRotation.X_270_Y_270 :
 					BlockRotation.X_270;
 	}
 
@@ -176,7 +178,7 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 		if (APConfigs.common().fixOldStates.get()) {
 			if (!IStateFixer.contains(properties, AXIS)) {
 				if (IStateFixer.contains(properties, BlockStateProperties.HORIZONTAL_FACING) && !(
-						IStateFixer.contains(properties, BlockStateProperties.HORIZONTAL_AXIS) && 
+						IStateFixer.contains(properties, BlockStateProperties.HORIZONTAL_AXIS) &&
 						IStateFixer.contains(properties, BlockStateProperties.SLAB_TYPE))) {
 					AdditionalPlacementsMod.LOGGER.debug(this + " Fixing V1 slab block state: " + properties);
 					Direction facing = IStateFixer.getProperty(properties, BlockStateProperties.HORIZONTAL_FACING);

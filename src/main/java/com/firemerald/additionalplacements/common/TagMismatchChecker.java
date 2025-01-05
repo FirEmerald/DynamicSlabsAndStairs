@@ -20,8 +20,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Registry;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.ClickEvent.Action;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.rcon.RconConsoleSource;
 import net.minecraft.tags.TagKey;
@@ -51,7 +53,7 @@ public class TagMismatchChecker extends Thread
 	{
 		setThread(null);
 	}
-	
+
 	private static synchronized void setThread(TagMismatchChecker newThread) {
 		if (thread != null) thread.halted = true;
 		thread = newThread;
