@@ -69,12 +69,12 @@ public class CommonEventHandler
 		}
 		else Registration.forEach(type -> type.onTagsUpdated(true));
 	}
-	
+
 	@SubscribeEvent
 	public static void onServerStarted(ServerStartedEvent event) {
 		possiblyCheckTags(event.getServer(), false);
 	}
-	
+
 	private static void possiblyCheckTags(MinecraftServer server, boolean fromAutoGenerate) {
 		misMatchedTags = false;
 		autoGenerateFailed = false;
@@ -121,7 +121,7 @@ public class CommonEventHandler
 		TagMismatchChecker.stopChecker();
 		reloadedFromChecker = false;
 	}
-	
+
 	@SubscribeEvent
 	public static void onGetherLoginConfigurationTasks(GatherLoginConfigurationTasksEvent event) {
 		event.addTask(new CheckDataConfigurationTask());

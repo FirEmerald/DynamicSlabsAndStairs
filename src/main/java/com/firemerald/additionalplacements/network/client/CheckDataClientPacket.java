@@ -16,7 +16,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 public class CheckDataClientPacket extends ClientPlayPacket
 {
 	private final Map<ResourceLocation, CompoundTag> data;
-	
+
 	public CheckDataClientPacket() {
 		data = new HashMap<>();
 		Registration.forEach((id, type) -> {

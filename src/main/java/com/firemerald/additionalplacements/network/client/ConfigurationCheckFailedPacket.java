@@ -23,7 +23,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 public class ConfigurationCheckFailedPacket extends ClientPlayPacket
 {
 	private final List<Triple<ResourceLocation, List<MessageTree>, List<MessageTree>>> compiledErrors;
-	
+
 	public ConfigurationCheckFailedPacket(List<Triple<ResourceLocation, List<MessageTree>, List<MessageTree>>> compiledErrors) {
 		this.compiledErrors = compiledErrors;
 	}

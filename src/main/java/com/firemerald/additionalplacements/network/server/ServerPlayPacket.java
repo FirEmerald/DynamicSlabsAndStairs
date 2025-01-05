@@ -11,14 +11,14 @@ public abstract class ServerPlayPacket extends APPacket {
 	public NetworkDirection getDirection() {
 		return NetworkDirection.PLAY_TO_SERVER;
 	}
-	
+
 	public abstract void handleServer(CustomPayloadEvent.Context context);
-	
+
 	@Override
 	public void handleInternal(CustomPayloadEvent.Context context)  {
 		handleServer(context);
 	}
-	
+
     public void sendToServer() {
     	APNetwork.sendToServer(this);
     }

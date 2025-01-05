@@ -37,7 +37,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBlock> implements IStairBlock<StairBlock>, ISimpleRotationBlock, IStateFixer
 {
 	private static StairConnectionsType connectionsTypeStatic;
-	
+
 	public static AdditionalStairBlock of(StairBlock stairs, StairConnectionsType connectionsType)
 	{
 		connectionsTypeStatic = connectionsType;
@@ -45,7 +45,7 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 		connectionsTypeStatic = null;
 		return ret;
 	}
-	
+
 	public final StairConnectionsType connectionsType;
 	public boolean rotateLogic = false, rotateModel = false, rotateTex = false;
 
@@ -68,7 +68,7 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 		builder.add(connectionsTypeStatic);
 		super.createBlockStateDefinition(builder);
 	}
-	
+
 	@Override
 	public BlockState getDefaultVanillaState(BlockState currentState)
 	{
@@ -162,7 +162,7 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 		if (commonShape != null) applyState(commonShape, properties, changeBlock);
 		return properties;
 	}
-	
+
 	public CommonStairShapeState getOldPropertyShapeState(CompoundTag properties) {
 		if (APConfigs.common().fixStates.get()) {
 			if (IStateFixer.contains(properties, connectionsType)) {
@@ -200,7 +200,7 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 		}
 		return null;
 	}
-	
+
 	public void applyState(CommonStairShapeState commonShapeState, CompoundTag properties, Consumer<Block> changeBlock) {
 		if (!connectionsType.allowFlipped && commonShapeState.isComplexFlipped) commonShapeState = commonShapeState.flipped();
 		VanillaStairShapeState vanillaShapeState = commonShapeState.vanilla();

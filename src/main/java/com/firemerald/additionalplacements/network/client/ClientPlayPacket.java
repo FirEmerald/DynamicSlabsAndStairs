@@ -14,15 +14,15 @@ public abstract class ClientPlayPacket extends APPacket {
 	public NetworkDirection getDirection() {
 		return NetworkDirection.PLAY_TO_CLIENT;
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public abstract void handleClient(CustomPayloadEvent.Context context);
-	
+
 	@Override
 	public void handleInternal(CustomPayloadEvent.Context context) {
 		handleClient(context);
 	}
-	
+
     public void sendToClient(ServerPlayer player) {
     	APNetwork.sendToClient(this, player);
     }
