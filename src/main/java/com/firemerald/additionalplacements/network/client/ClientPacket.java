@@ -16,16 +16,16 @@ public abstract class ClientPacket<T extends FriendlyByteBuf> extends APPacket<T
 	public PacketFlow getDirection() {
 		return PacketFlow.CLIENTBOUND;
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public abstract void handleClient(IPayloadContext context);
-	
+
 	@Override
 	public void handleInternal(IPayloadContext context)
 	{
 		handleClient(context);
 	}
-	
+
     public void sendToClient(ServerPlayer player)
     {
     	APNetwork.sendToClient(this, player);

@@ -1,7 +1,7 @@
 package com.firemerald.additionalplacements.client.models.definitions;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
-import com.firemerald.additionalplacements.block.AdditionalCarpetBlock;
+import com.firemerald.additionalplacements.block.AdditionalFloorBlock;
 
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +15,7 @@ public class CarpetModels {
 	public static final String[] MODELS = new String[] {
 			"/carpet"
 	};
-	
+
 	public static final StateModelDefinition[] MODEL_DEFINITIONS = new StateModelDefinition[5];
 
 	static
@@ -26,8 +26,8 @@ public class CarpetModels {
 		MODEL_DEFINITIONS[Direction.NORTH.ordinal() - 1] = new StateModelDefinition("/carpet", 270, 0);
 		MODEL_DEFINITIONS[Direction.EAST.ordinal() - 1] = new StateModelDefinition("/carpet", 270, 90);
 	}
-	
+
 	public static StateModelDefinition getModel(BlockState state) {
-		return MODEL_DEFINITIONS[state.getValue(AdditionalCarpetBlock.PLACING).ordinal() - 1];
+		return MODEL_DEFINITIONS[state.getValue(AdditionalFloorBlock.PLACING).ordinal() - 1];
 	}
 }

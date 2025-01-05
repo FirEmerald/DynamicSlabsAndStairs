@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 @Mixin(ModelManager.class)
 public class MixinModelManager {
 	@Inject(
-			method = "discoverModelDependencies", 
+			method = "discoverModelDependencies",
 			at = @At("HEAD"),
 			require = 1
 			)
@@ -41,7 +41,7 @@ public class MixinModelManager {
 					ModelResourceLocation theirModelLocation = BlockModelShaper.stateToModelLocation(theirState);
 					UnbakedModel theirModel = models.containsKey(theirModelLocation) ? models.get(theirModelLocation).model() : missingModel;
 					BlockRotation theirModelRotation = block.getRotation(ourState);
-					models.put(ourModelLocation, 
+					models.put(ourModelLocation,
 							new BlockStateModelLoader.LoadedModel(
 									ourState,
 									UnbakedPlacementModel.of(block, ourModel, ourModelRotation, theirModel, theirModelRotation)

@@ -15,7 +15,7 @@ public class ConnectionErrorsScreen extends Screen {
 	private final Screen desScreen;
     private ConnectionErrorsList errorList;
     private Button okButton;
-    
+
 	public ConnectionErrorsScreen(MessageTree rootError, Screen desScreen) {
 		super(Component.translatable("msg.additionalplacements.configurationerrors"));
 		this.rootError = rootError;
@@ -33,7 +33,8 @@ public class ConnectionErrorsScreen extends Screen {
         setFocused(errorList);
     }
 
-    public Font getFont() {
+    @Override
+	public Font getFont() {
         return font;
     }
 

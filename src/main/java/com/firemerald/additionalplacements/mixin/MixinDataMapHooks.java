@@ -12,7 +12,7 @@ import net.neoforged.neoforge.common.DataMapHooks;
 
 @Mixin(DataMapHooks.class)
 public class MixinDataMapHooks {
-	
+
 	@Inject(method = "getNextOxidizedStage", at = @At("HEAD"))
     private static void getNextOxidizedStage(Block block, CallbackInfoReturnable<Block> cli) {
 		if (block instanceof AdditionalPlacementBlock apBlock) cli.setReturnValue(DataMapHooks.getNextOxidizedStage(apBlock.getOtherBlock()));

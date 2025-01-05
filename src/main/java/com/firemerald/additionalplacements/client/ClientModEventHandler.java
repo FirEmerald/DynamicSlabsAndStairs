@@ -2,7 +2,8 @@ package com.firemerald.additionalplacements.client;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
-import com.firemerald.additionalplacements.client.models.*;
+import com.firemerald.additionalplacements.client.models.BakedPlacementModel;
+import com.firemerald.additionalplacements.client.models.Unwrapper;
 
 import me.pepperbell.continuity.client.model.CtmBakedModel;
 import me.pepperbell.continuity.client.model.EmissiveBakedModel;
@@ -36,7 +37,7 @@ public class ClientModEventHandler
     {
     	event.register(APClientData.AP_PLACEMENT_KEY);
     }
-    
+
     @SubscribeEvent
     public static void onRegisterClientReloadListeners(RegisterClientReloadListenersEvent event) {
     	event.registerReloadListener((ResourceManagerReloadListener) resourceManager -> {

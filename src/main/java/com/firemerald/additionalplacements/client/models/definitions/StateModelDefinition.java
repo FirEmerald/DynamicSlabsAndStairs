@@ -13,7 +13,7 @@ public record StateModelDefinition(String model, int xRotation, int yRotation)
 	{
 		this(model, 0, 0);
 	}
-	
+
 	public ResourceLocation location(ResourceLocation prefix) {
 		return prefix.withSuffix(model);
 	}
