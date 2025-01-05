@@ -22,13 +22,13 @@ public class APGenerationTypes implements RegistrationInitializer {
 
 	@Override
 	public void onInitializeRegistration(IRegistration register) {
-		slab                    = get(register, SlabBlock.class                 , "slab"                   , "Slabs"                   , 
+		slab                    = get(register, SlabBlock.class                 , "slab"                   , "Slabs"                   ,
 				new SimpleRotatableGenerationType.Builder<SlabBlock, VerticalSlabBlock>()
 				.blacklistModelRotation(new BlockBlacklist.Builder()
 						.blockBlacklist(
-								"minecraft:sandstone_slab", 
-								"minecraft:cut_sandstone_slab", 
-								"minecraft:red_sandstone_slab", 
+								"minecraft:sandstone_slab",
+								"minecraft:cut_sandstone_slab",
+								"minecraft:red_sandstone_slab",
 								"minecraft:cut_red_sandstone_slab")
 						.build())
 				.blacklistTextureRotation(new BlockBlacklist.Builder()
@@ -36,11 +36,11 @@ public class APGenerationTypes implements RegistrationInitializer {
 						.build())
 				.constructor(VerticalSlabBlock::of)
 				.addsProperties("axis"));
-		stairs                  = get(register, StairBlock.class                , "stairs"                 , "Stairs"                  , 
+		stairs                  = get(register, StairBlock.class                , "stairs"                 , "Stairs"                  ,
 				new VerticalStairsGenerationType.Builder<StairBlock, AdditionalStairBlock>()
 				.blacklistModelRotation(new BlockBlacklist.Builder()
 						.blockBlacklist(
-								"minecraft:sandstone_stairs", 
+								"minecraft:sandstone_stairs",
 								"minecraft:red_sandstone_stairs")
 						.build())
 				.addsProperties("front_top_shape"));
@@ -60,21 +60,21 @@ public class APGenerationTypes implements RegistrationInitializer {
 	public static SimpleRotatableGenerationType<SlabBlock, VerticalSlabBlock> slab() {
 		return slab;
 	}
-	
+
 	public static VerticalStairsGenerationType<StairBlock, AdditionalStairBlock> stairs() {
 		return stairs;
 	}
-	
+
 	public static SimpleRotatableGenerationType<CarpetBlock, AdditionalCarpetBlock> carpet() {
 		return carpet;
 	}
-	
+
 	public static SimpleRotatableGenerationType<PressurePlateBlock, AdditionalPressurePlateBlock> pressurePlate() {
 		return pressurePlate;
 	}
-	
+
 	public static SimpleRotatableGenerationType<WeightedPressurePlateBlock, AdditionalWeightedPressurePlateBlock> weightedPressurePlate() {
 		return weightedPressurePlate;
 	}
-	
+
 }

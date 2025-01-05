@@ -31,7 +31,7 @@ public class APNetwork
         registerClientConfigurationPacket(CheckDataClientPacket.TYPE, CheckDataClientPacket::new);
         registerServerConfigurationPacket(CheckDataServerPacket.TYPE, CheckDataServerPacket::new);
         registerClientConfigurationPacket(ConfigurationCheckFailedPacket.TYPE, ConfigurationCheckFailedPacket::new);
-        
+
 		ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) -> {
 			final ServerConfigurationNetworkAddon addon = ServerNetworkingImpl.getAddon(handler);
 			handler.addTask(new CheckDataConfigurationTask(addon));

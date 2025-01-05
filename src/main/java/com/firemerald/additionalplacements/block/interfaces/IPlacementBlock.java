@@ -25,7 +25,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -50,7 +53,7 @@ public interface IPlacementBlock<T extends Block> extends ItemLike, IGenerationC
 	public BlockState transform(BlockState blockState, Function<Direction, Direction> transform);
 
 	public BlockState getStateForPlacementImpl(BlockPlaceContext context, BlockState currentState);
-	
+
 	public BlockState updateShapeImpl(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos otherPos, BlockState otherState, RandomSource rand);
 
 	public default void appendHoverTextImpl(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag)
@@ -134,14 +137,14 @@ public interface IPlacementBlock<T extends Block> extends ItemLike, IGenerationC
 	public default boolean enablePlacement(BlockPos hit, Level level, Direction direction, Player player) {
 		return enablePlacement(player);
 	}
-	
+
 	public GenerationType<?, ?> getGenerationType();
-	
+
 	@Override
 	public default boolean generateAdditionalStates() {
 		return true;
 	}
-	
+
 	public default boolean canGenerateAdditionalStates() {
 		return generateAdditionalStates() && !hasAdditionalStates();
 	}

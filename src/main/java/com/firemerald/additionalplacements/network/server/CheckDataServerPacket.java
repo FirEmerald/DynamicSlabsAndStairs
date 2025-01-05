@@ -21,9 +21,9 @@ import net.minecraft.resources.ResourceLocation;
 public class CheckDataServerPacket extends ServerConfigurationPacket
 {
 	public static final Type<CheckDataServerPacket> TYPE = new Type<>(ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "check_data_server"));
-	
+
 	private final Map<ResourceLocation, Pair<CompoundTag, List<MessageTree>>> serverData;
-	
+
 	public CheckDataServerPacket(Map<ResourceLocation, CompoundTag> serverData) {
 		this.serverData = new HashMap<>();
 		Registration.forEach((id, type) -> {

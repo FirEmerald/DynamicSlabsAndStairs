@@ -3,6 +3,7 @@ package com.firemerald.additionalplacements.block.interfaces;
 import org.jetbrains.annotations.Nullable;
 
 import com.firemerald.additionalplacements.block.AdditionalBasePressurePlateBlock;
+import com.firemerald.additionalplacements.block.AdditionalFloorBlock;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
@@ -17,7 +18,7 @@ public interface IBasePressurePlateBlock<T extends Block> extends IFloorBlock<T>
 	public default BlockState forPlacing(Direction dir, BlockState blockState)
 	{
     	if (dir == Direction.DOWN) return getDefaultVanillaState(blockState);
-    	else return getDefaultAdditionalState(blockState).setValue(AdditionalBasePressurePlateBlock.PLACING, dir);
+    	else return getDefaultAdditionalState(blockState).setValue(AdditionalFloorBlock.PLACING, dir);
 	}
 
 	@Override
@@ -25,6 +26,6 @@ public interface IBasePressurePlateBlock<T extends Block> extends IFloorBlock<T>
 	public default Direction getPlacing(BlockState blockState)
 	{
 		if (blockState.getBlock() instanceof PressurePlateBlock) return Direction.DOWN;
-		else return blockState.getValue(AdditionalBasePressurePlateBlock.PLACING);
+		else return blockState.getValue(AdditionalFloorBlock.PLACING);
 	}
 }

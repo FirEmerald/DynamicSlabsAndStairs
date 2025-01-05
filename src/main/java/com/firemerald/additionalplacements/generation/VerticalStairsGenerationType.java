@@ -25,7 +25,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class VerticalStairsGenerationType<T extends StairBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock & IStairBlock<T>> extends SimpleRotatableGenerationType<T, U> {
 	protected abstract static class BuilderBase<T extends StairBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock & IStairBlock<T>, V extends SimpleRotatableGenerationType<T, U>, W extends BuilderBase<T, U, V, W>> extends SimpleRotatableGenerationType.BuilderBase<T, U, V, W> {
-		protected GenerationBlacklist 
+		protected GenerationBlacklist
 		vertcialConnectionsBlacklist = new GenerationBlacklist.Builder().build(),
 		mixedConnectionsBlacklist = new GenerationBlacklist.Builder().build();
 
@@ -33,25 +33,25 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 		public W constructor(BiFunction<? super T, ResourceKey<Block>, ? extends U> constructor) {
 			throw new IllegalStateException("BiFunction<? super T, ResourceKey<Block>, ? extends U> constructor not supported");
 		}
-		
+
 		public W blacklistVerticalConnections(GenerationBlacklist blacklist) {
 			this.vertcialConnectionsBlacklist = blacklist;
 			return me();
 		}
-		
+
 		public W blacklistMixedConnections(GenerationBlacklist blacklist) {
 			this.mixedConnectionsBlacklist = blacklist;
 			return me();
 		}
 	}
-	
+
 	public static class Builder<T extends StairBlock, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock & IStairBlock<T>> extends BuilderBase<T, U, VerticalStairsGenerationType<T, U>, Builder<T, U>> {
 		@Override
 		public VerticalStairsGenerationType<T, U> construct(ResourceLocation name, String description) {
 			return new VerticalStairsGenerationType<>(name, description, this);
 		}
 	}
-	
+
 	private final GenerationBlacklist vertcialConnectionsBlacklist;
 	private final GenerationBlacklist mixedConnectionsBlacklist;
 
@@ -61,6 +61,7 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 		this.mixedConnectionsBlacklist = builder.mixedConnectionsBlacklist;
 	}
 
+	@Override
 	public void buildStartupConfig(ModConfigSpec.Builder builder) {
 		super.buildStartupConfig(builder);
 		builder
@@ -74,7 +75,7 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 		mixedConnectionsBlacklist.addToConfig(builder);
 		builder.pop();
 	}
-	
+
 	@Override
 	public CompoundTag getClientCheckData() {
 		CompoundTag tag = new CompoundTag();
@@ -91,7 +92,7 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 		if (!noMixed.isEmpty()) tag.put("noMixed", noMixed);
 		return tag;
 	}
-	
+
 	public static void addBlockEntry(CompoundTag tag, ResourceLocation id) {
 		ListTag modList;
 		if (tag.contains(id.getNamespace(), Tag.TAG_LIST)) modList = tag.getList(id.getNamespace(), Tag.TAG_STRING);
@@ -104,7 +105,7 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 		if (tag != null) {
 			Set<ResourceLocation> noVertical = loadEntries(tag, "noVertical");
 			Set<ResourceLocation> noMixed = loadEntries(tag, "noMixed");
-			
+
 			Map<String, List<ResourceLocation>> mismatched = new HashMap<>();
 			this.forEachCreated(entry -> {
 				ResourceLocation id = entry.originalId();
@@ -132,7 +133,7 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 			}
 		}
 	}
-	
+
 	public static Set<ResourceLocation> loadEntries(CompoundTag tag, String key) {
 		if (tag.contains(key, Tag.TAG_COMPOUND)) {
 			CompoundTag entries = tag.getCompound(key);
@@ -155,9 +156,9 @@ public class VerticalStairsGenerationType<T extends StairBlock, U extends Additi
 	@SuppressWarnings("unchecked")
 	@Override
 	public U construct(T block, ResourceKey<Block> key, ResourceLocation blockId) {
-		return (U) AdditionalStairBlock.of(block, key, 
+		return (U) AdditionalStairBlock.of(block, key,
 				!vertcialConnectionsBlacklist.test(blockId) ? StairConnectionsType.SIMPLE :
-					!mixedConnectionsBlacklist.test(blockId) ? StairConnectionsType.EXTENDED : 
+					!mixedConnectionsBlacklist.test(blockId) ? StairConnectionsType.EXTENDED :
 						StairConnectionsType.COMPLEX);
 	}
 }

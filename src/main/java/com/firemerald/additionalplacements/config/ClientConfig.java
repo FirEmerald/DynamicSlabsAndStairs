@@ -1,13 +1,12 @@
 package com.firemerald.additionalplacements.config;
 
+import com.firemerald.additionalplacements.generation.GenerationType;
 import com.firemerald.additionalplacements.generation.Registration;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
 import net.neoforged.neoforge.common.ModConfigSpec.ConfigValue;
 import net.neoforged.neoforge.common.ModConfigSpec.LongValue;
-
-import com.firemerald.additionalplacements.generation.GenerationType;
 
 public class ClientConfig
 {
@@ -42,17 +41,17 @@ public class ClientConfig
         		.define("preview_color", "66FFFFFF", APConfigs::isColorString);
         Registration.buildConfig(builder, GenerationType::buildClientConfig);
 	}
-	
+
 	public void onConfigLoaded() {
 		gridColorVal = APConfigs.parseColorString(gridColor);
 		previewColorVal = APConfigs.parseColorString(previewColor);
 		Registration.forEach(GenerationType::onClientConfigLoaded);
 	}
-	
+
 	public float[] gridColor() {
 		return gridColorVal;
 	}
-	
+
 	public float[] previewColor() {
 		return previewColorVal;
 	}

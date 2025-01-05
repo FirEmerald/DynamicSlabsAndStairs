@@ -7,24 +7,26 @@ import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.util.BlockRotation;
 
 import net.minecraft.client.renderer.block.model.UnbakedBlockStateModel;
-import net.minecraft.client.resources.model.*;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class UnbakedPlacementModel implements UnbakedBlockStateModel
 {
 	private static record ModelKey(AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, ModelState ourModelRotation, UnbakedBlockStateModel theirModel, BlockRotation theirModelRotation) {}
-	
+
 	private static final Map<ModelKey, UnbakedPlacementModel> MODEL_CACHE = new HashMap<>();
-	
+
 	public static UnbakedPlacementModel of(AdditionalPlacementBlock<?> block, ResourceLocation ourModelLocation, ModelState ourModelRotation, UnbakedBlockStateModel theirModel, BlockRotation theirModelRotation) {
 		return MODEL_CACHE.computeIfAbsent(new ModelKey(block, ourModelLocation, ourModelRotation, theirModel, theirModelRotation), UnbakedPlacementModel::new);
 	}
-	
+
 	public static void clearCache() {
 		MODEL_CACHE.clear();
 	}
-	
+
 	public final AdditionalPlacementBlock<?> block;
 	public final ResourceLocation ourModelLocation;
 	public final ModelState ourModelRotation;
@@ -44,7 +46,7 @@ public class UnbakedPlacementModel implements UnbakedBlockStateModel
 	public void resolveDependencies(Resolver resolver) {
 		resolver.resolve(ourModelLocation);
 	}
-	
+
 	@Override
 	public BakedModel bake(ModelBaker baker) {
 		return BakedPlacementModel.of(baker, ourModelRotation, block, ourModelLocation, theirModel, theirModelRotation);

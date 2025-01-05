@@ -1,7 +1,7 @@
 package com.firemerald.additionalplacements.client.models.definitions;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
-import com.firemerald.additionalplacements.block.AdditionalPressurePlateBlock;
+import com.firemerald.additionalplacements.block.AdditionalFloorBlock;
 
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +18,7 @@ public class PressurePlateModels {
 			"/unpressed",
 			"/pressed",
 	};
-	
+
 	public static final StateModelDefinition[][] MODEL_DEFINITIONS = new StateModelDefinition[5][2];
 
 	static
@@ -38,10 +38,10 @@ public class PressurePlateModels {
 	}
 
 	public static StateModelDefinition getPressurePlateModel(BlockState state) {
-		return MODEL_DEFINITIONS[state.getValue(AdditionalPressurePlateBlock.PLACING).ordinal() - 1][state.getValue(PressurePlateBlock.POWERED) ? 1 : 0];
+		return MODEL_DEFINITIONS[state.getValue(AdditionalFloorBlock.PLACING).ordinal() - 1][state.getValue(PressurePlateBlock.POWERED) ? 1 : 0];
 	}
 
 	public static StateModelDefinition getWeightedPressurePlateModel(BlockState state) {
-		return MODEL_DEFINITIONS[state.getValue(AdditionalPressurePlateBlock.PLACING).ordinal() - 1][state.getValue(WeightedPressurePlateBlock.POWER) > 0 ? 1 : 0];
+		return MODEL_DEFINITIONS[state.getValue(AdditionalFloorBlock.PLACING).ordinal() - 1][state.getValue(WeightedPressurePlateBlock.POWER) > 0 ? 1 : 0];
 	}
 }

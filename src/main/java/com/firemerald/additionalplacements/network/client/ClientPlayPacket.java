@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 public abstract class ClientPlayPacket extends APPacket<RegistryFriendlyByteBuf> {
 	@Environment(EnvType.CLIENT)
 	public abstract void handleClient(Context context);
-	
+
     public void sendToClient(ServerPlayer player) {
     	APNetwork.sendToClient(this, player);
     }
