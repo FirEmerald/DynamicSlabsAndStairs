@@ -10,36 +10,36 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class SimpleRotatableGenerationType<T extends Block, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock> extends SimpleGenerationType<T, U> {
 	protected abstract static class BuilderBase<T extends Block, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock, V extends SimpleRotatableGenerationType<T, U>, W extends BuilderBase<T, U, V, W>> extends SimpleGenerationType.BuilderBase<T, U, V, W> {
-		protected BlockBlacklist 
+		protected BlockBlacklist
 		logicRotationBlacklist = new BlockBlacklist.Builder().build(),
 		textureRotationBlacklist = new BlockBlacklist.Builder().build(),
 		modelRotationBlacklist = new BlockBlacklist.Builder().build();
-		
+
 		public W blacklistLogicRotation(BlockBlacklist blacklist) {
 			this.logicRotationBlacklist = blacklist;
 			return me();
 		}
-		
+
 		public W blacklistTextureRotation(BlockBlacklist blacklist) {
 			this.textureRotationBlacklist = blacklist;
 			return me();
 		}
-		
+
 		public W blacklistModelRotation(BlockBlacklist blacklist) {
 			this.modelRotationBlacklist = blacklist;
 			return me();
 		}
 	}
-	
+
 	public static class Builder<T extends Block, U extends AdditionalPlacementBlock<T> & ISimpleRotationBlock> extends BuilderBase<T, U, SimpleRotatableGenerationType<T, U>, Builder<T, U>> {
 		@Override
 		public SimpleRotatableGenerationType<T, U> construct(ResourceLocation name, String description) {
 			return new SimpleRotatableGenerationType<>(name, description, this);
 		}
 	}
-	
+
 	private final BlockBlacklist logicRotationBlackist, textureRotationBlacklist, modelRotationBlacklist;
-	
+
 	protected SimpleRotatableGenerationType(ResourceLocation name, String description, BuilderBase<T, U, ?, ?> builder) {
 		super(name, description, builder);
 		this.logicRotationBlackist = builder.logicRotationBlacklist;
@@ -90,7 +90,7 @@ public class SimpleRotatableGenerationType<T extends Block, U extends Additional
 		super.loadServerConfig();
 		logicRotationBlackist.loadListsFromConfig();
 	}
-	
+
 	@Override
 	public void updateServerSettings() {
 		super.updateServerSettings();

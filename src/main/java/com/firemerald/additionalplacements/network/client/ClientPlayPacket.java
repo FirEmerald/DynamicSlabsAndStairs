@@ -13,7 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 public abstract class ClientPlayPacket extends APPacket {
 	@Environment(EnvType.CLIENT)
 	public abstract void handleClient(Minecraft client, ClientPacketListener handler, PacketSender responseSender);
-	
+
     public void sendToClient(ServerPlayer player) {
     	APNetwork.sendToClient(this, player);
     }

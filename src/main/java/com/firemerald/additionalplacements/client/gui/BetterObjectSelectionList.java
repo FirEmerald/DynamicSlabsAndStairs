@@ -22,7 +22,7 @@ public class BetterObjectSelectionList<E extends BetterObjectSelectionList.Entry
 	/**
 	 * Retrieves the next focus path based on the given focus navigation event.
 	 * <p>
-	 * 
+	 *
 	 * @return the next focus path as a ComponentPath, or {@code null} if there is
 	 *         no next focus path.
 	 * @param pEvent the focus navigation event.
@@ -74,7 +74,7 @@ public class BetterObjectSelectionList<E extends BetterObjectSelectionList.Entry
 
 		/**
 		 * Updates the narration output with the current narration information.
-		 * 
+		 *
 		 * @param pNarrationElementOutput the output to update with narration
 		 *                                information.
 		 */
