@@ -55,7 +55,7 @@ public class TagMismatchChecker extends Thread
 	{
 		setThread(null);
 	}
-	
+
 	private static synchronized void setThread(TagMismatchChecker newThread) {
 		if (thread != null) thread.halted = true;
 		thread = newThread;

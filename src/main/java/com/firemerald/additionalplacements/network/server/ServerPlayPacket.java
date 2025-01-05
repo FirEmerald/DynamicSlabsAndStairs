@@ -10,7 +10,7 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
 public abstract class ServerPlayPacket extends APPacket {
 	public abstract void handleServer(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, PacketSender responseSender);
-	
+
     public void sendToServer()
     {
     	APNetwork.sendToServer(this);

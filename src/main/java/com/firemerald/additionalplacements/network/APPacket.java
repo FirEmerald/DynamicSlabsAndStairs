@@ -17,7 +17,7 @@ public abstract class APPacket
 		write(buf);
 		return buf;
 	}
-	
+
 	public void send(PacketSender sender) {
 		APNetwork.send(this, sender);
 	}

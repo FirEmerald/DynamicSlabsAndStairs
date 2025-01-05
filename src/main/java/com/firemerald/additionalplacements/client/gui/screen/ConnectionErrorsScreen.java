@@ -17,7 +17,7 @@ public class ConnectionErrorsScreen extends Screen {
 	private final boolean wasSinglePlayer;
     private ConnectionErrorsList errorList;
     private Button okButton;
-    
+
 	public ConnectionErrorsScreen(MessageTree rootError, Screen nextScreen, boolean wasSinglePlayer) {
 		super(new TranslatableComponent("msg.additionalplacements.configurationerrors"));
 		this.rootError = rootError;

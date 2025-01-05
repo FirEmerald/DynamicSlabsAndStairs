@@ -36,7 +36,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.item.HoneycombItem;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.WeatheringCopper;
 
 public class CommonModEvents implements ModInitializer
 {
@@ -51,7 +52,7 @@ public class CommonModEvents implements ModInitializer
     	ServerLifecycleEvents.SERVER_STOPPING.register(CommonModEvents::onServerStopping);
     	ServerPlayConnectionEvents.JOIN.register(CommonModEvents::onPlayerLogin);
     }
-	
+
 	private static void loadRegistry() {
     	Registration.gatherTypes();
 		APConfigs.init();
@@ -158,7 +159,7 @@ public class CommonModEvents implements ModInitializer
 		}
 		else Registration.forEach(type -> type.onTagsUpdated(true));
 	}
-	
+
 	private static void possiblyCheckTags(boolean fromAutoGenerate) {
 		misMatchedTags = false;
 		autoGenerateFailed = false;
@@ -170,9 +171,9 @@ public class CommonModEvents implements ModInitializer
 	{
 		if (misMatchedTags && TagMismatchChecker.canGenerateTags(handler.getPlayer())) handler.getPlayer().sendMessage(autoGenerateFailed ? TagMismatchChecker.FAILED : TagMismatchChecker.MESSAGE, Util.NIL_UUID);
 	}
-	
+
 	private static MinecraftServer currentServer = null;
-	
+
 	public static void onServerStarted(MinecraftServer server) {
 		currentServer = server;
 		init();
