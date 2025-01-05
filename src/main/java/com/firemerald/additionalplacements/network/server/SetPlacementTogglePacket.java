@@ -14,7 +14,7 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 public class SetPlacementTogglePacket extends ServerPlayPacket
 {
 	public static final ResourceLocation ID = new ResourceLocation(AdditionalPlacementsMod.MOD_ID, "set_placement_toggle");
-	
+
 	private boolean state;
 
 	public SetPlacementTogglePacket(boolean state)

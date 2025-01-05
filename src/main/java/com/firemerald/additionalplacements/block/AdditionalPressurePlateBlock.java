@@ -52,7 +52,7 @@ public class AdditionalPressurePlateBlock extends AdditionalBasePressurePlateBlo
 		}
 
 		Class<? extends Entity> oclass = oclass1;
-		return BasePressurePlateBlock.getEntityCount(level, TOUCH_AABBS[level.getBlockState(pos).getValue(AdditionalBasePressurePlateBlock.PLACING).ordinal() - 1].move(pos), oclass) > 0 ? 15 : 0;
+		return BasePressurePlateBlock.getEntityCount(level, TOUCH_AABBS[level.getBlockState(pos).getValue(AdditionalFloorBlock.PLACING).ordinal() - 1].move(pos), oclass) > 0 ? 15 : 0;
 	}
 
 	@Override

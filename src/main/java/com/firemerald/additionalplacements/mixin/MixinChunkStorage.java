@@ -14,7 +14,9 @@ import com.firemerald.additionalplacements.util.NBTUtils;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -24,7 +26,7 @@ import net.minecraft.world.level.storage.DimensionDataStorage;
 
 @Mixin(ChunkStorage.class)
 public class MixinChunkStorage {
-	
+
 	@Inject(method = "upgradeChunkTag", at = @At("RETURN"), cancellable = true)
 	public void upgradeChunkTag(ResourceKey<Level> pLevelKey, Supplier<DimensionDataStorage> pStorage, CompoundTag pChunkData, Optional<ResourceKey<Codec<? extends ChunkGenerator>>> pChunkGeneratorKey, CallbackInfoReturnable<CompoundTag> cli) {
 		//AdditionalPlacementsMod.LOGGER.info(NBTUtils.toJson(pChunkData).toString());

@@ -14,7 +14,10 @@ import com.firemerald.additionalplacements.network.server.SetPlacementTogglePack
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.*;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.impl.networking.server.ServerConfigurationNetworkAddon;
 import net.fabricmc.fabric.impl.networking.server.ServerNetworkingImpl;
 import net.fabricmc.loader.api.FabricLoader;
@@ -36,7 +39,7 @@ public class APNetwork
         registerClientConfigurationPacket(CheckDataClientPacket.ID, CheckDataClientPacket::new);
         registerServerConfigurationPacket(CheckDataServerPacket.ID, CheckDataServerPacket::new);
         registerClientConfigurationPacket(ConfigurationCheckFailedPacket.ID, ConfigurationCheckFailedPacket::new);
-        
+
 		ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) -> {
 			final ServerConfigurationNetworkAddon addon = ServerNetworkingImpl.getAddon(handler);
 			handler.addTask(new CheckDataConfigurationTask(addon));

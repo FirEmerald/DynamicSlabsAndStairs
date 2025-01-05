@@ -16,7 +16,7 @@ public class MixinVertexFormat implements IVertexFormatExtensions {
 	private ImmutableList<VertexFormatElement> elements;
 	@Shadow
 	private IntList offsets;
-	
+
 	@Override
 	public int getIntOffset(VertexFormatElement element) {
 		return offsets.getInt(elements.indexOf(element)) / 4;
