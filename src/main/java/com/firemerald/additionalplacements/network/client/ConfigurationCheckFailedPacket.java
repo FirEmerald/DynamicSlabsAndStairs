@@ -24,7 +24,7 @@ import net.minecraftforge.network.NetworkEvent;
 public class ConfigurationCheckFailedPacket extends ClientLoginPacket
 {
 	private final List<Triple<ResourceLocation, List<MessageTree>, List<MessageTree>>> compiledErrors;
-	
+
 	public ConfigurationCheckFailedPacket(List<Triple<ResourceLocation, List<MessageTree>, List<MessageTree>>> compiledErrors) {
 		this.compiledErrors = compiledErrors;
 	}

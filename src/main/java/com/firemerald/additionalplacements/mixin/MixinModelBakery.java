@@ -24,7 +24,10 @@ import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.block.BlockModelShaper;
-import net.minecraft.client.resources.model.*;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.block.Block;
@@ -41,15 +44,15 @@ public class MixinModelBakery {
 	public UnbakedModel getModel(ResourceLocation modelLocation) {
 		return null;
 	}
-	
+
 	@Inject(method = "processLoading", at = @At("RETURN"), remap = false)
 	public void processLoading(ProfilerFiller profiler, int maxMipmapLevel, CallbackInfo cli) {
 		UnbakedPlacementModel.clearCache();
 	}
 
 	@Redirect(
-			method = "loadModel", 
-			at = @At(value = "INVOKE", target = "org/slf4j/Logger.warn(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V"), 
+			method = "loadModel",
+			at = @At(value = "INVOKE", target = "org/slf4j/Logger.warn(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V"),
 			slice = @Slice(
 					from = @At(value = "CONSTANT", args = {"stringValue=Exception loading blockstate definition: {}: {}"}),
 					to = @At(value = "INVOKE", target = "org/slf4j/Logger.warn(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V", shift = Shift.AFTER)
@@ -63,19 +66,19 @@ public class MixinModelBakery {
 		}
 		logger.warn(message, blockStateJsonObj, eObj);
 	}
-	
+
 	@ModifyVariable(
-			method = {"lambda$loadModel$25", "m_119331_"}, 
-			at = @At("STORE"), 
+			method = {"lambda$loadModel$25", "m_119331_"},
+			at = @At("STORE"),
 			index = 7
 			)
 	private Pair<UnbakedModel, Supplier<ModelBakery.ModelGroupKey>> loadModelLambda(
-			Pair<UnbakedModel, Supplier<ModelBakery.ModelGroupKey>> modelPair, 
-			Map<ModelResourceLocation, BlockState> modelToState, 
-			ResourceLocation blockId, 
-			Pair<UnbakedModel, Supplier<ModelBakery.ModelGroupKey>> missingModelPair, 
-			Map<ModelBakery.ModelGroupKey, Set<BlockState>> modelGroups, 
-			ModelResourceLocation currentModelLocation, 
+			Pair<UnbakedModel, Supplier<ModelBakery.ModelGroupKey>> modelPair,
+			Map<ModelResourceLocation, BlockState> modelToState,
+			ResourceLocation blockId,
+			Pair<UnbakedModel, Supplier<ModelBakery.ModelGroupKey>> missingModelPair,
+			Map<ModelBakery.ModelGroupKey, Set<BlockState>> modelGroups,
+			ModelResourceLocation currentModelLocation,
 			BlockState ourState) {
 		if (modelPair == null) { //replace only states which do not already have a model
 			if (ourState != null && ourState.getBlock() instanceof AdditionalPlacementBlock) {
@@ -89,7 +92,7 @@ public class MixinModelBakery {
 				UnbakedModel theirModel = getModel(theirModelLocation);
 				BlockRotation theirModelRotation = block.getRotation(ourState);
 				UnbakedPlacementModel unbakedModel = UnbakedPlacementModel.of(block, ourModel, ourModelRotation, theirModelLocation, theirModel, theirModelRotation);
-				
+
 				List<Property<?>> coloringProperties = this.blockColors.getColoringProperties(theirState.getBlock()).stream()
 						.filter(block::isValidProperty) //just in case
 						.collect(Collectors.toList());

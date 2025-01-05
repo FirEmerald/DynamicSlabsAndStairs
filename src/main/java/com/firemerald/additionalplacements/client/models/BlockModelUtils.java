@@ -139,13 +139,13 @@ public class BlockModelUtils
 	{
 		return Float.floatToRawIntBits(newSprite.getV(oldSprite.getVOffset(Float.intBitsToFloat(vertex))));
 	}
-	
+
 	public static int[] copyVertices(int[] originalData) {
 		int[] newData = new int[originalData.length];
 		System.arraycopy(originalData, 0, newData, 0, originalData.length); //direct copy
 		return newData;
 	}
-	
+
 	public static int[] copyVertices(int[] originalData, int vertexSize, int shiftLeft) {
 		int[] newData = new int[originalData.length];
 		//shiftLeft %= originalData.length / vertexSize;
@@ -159,7 +159,7 @@ public class BlockModelUtils
 		}
 		return newData;
 	}
-	
+
 	public static Pair<TextureAtlasSprite, Integer> getSidedTexture(BlockState fromState, BakedModel fromModel, Direction fromSide, Random rand, IModelData extraData, int vertexSize, int posOffset) {
 		Map<Pair<TextureAtlasSprite, Integer>, Double> weights = new HashMap<>();
 		List<BakedQuad> referenceQuads = fromModel.getQuads(fromState, fromSide, rand, extraData);
@@ -217,9 +217,9 @@ public class BlockModelUtils
 		{
     		bakedQuads.add(new BakedQuad(
     				rotation.applyVertices(originalQuad.getDirection(), originalQuad.getVertices(), vertexSize, posOffset, uvOffset, rotateTex, originalQuad.getSprite()),
-    				originalQuad.getTintIndex(), 
-    				rotation.apply(originalQuad.getDirection()), 
-    				originalQuad.getSprite(), 
+    				originalQuad.getTintIndex(),
+    				rotation.apply(originalQuad.getDirection()),
+    				originalQuad.getSprite(),
     				originalQuad.isShade()
     				));
 		}
