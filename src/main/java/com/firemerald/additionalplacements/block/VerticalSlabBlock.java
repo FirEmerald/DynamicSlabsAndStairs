@@ -39,7 +39,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock> implements ISlabBlock<SlabBlock>, ISimpleRotationBlock, IStateFixer
 {
-	public static final EnumProperty<Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
+	public static final EnumProperty<Axis> AXIS = AdditionalBlockStateProperties.HORIZONTAL_AXIS;
 
 	public static VerticalSlabBlock of(SlabBlock slab, ResourceKey<Block> id)
 	{
@@ -177,13 +177,21 @@ public class VerticalSlabBlock extends AdditionalPlacementLiquidBlock<SlabBlock>
 	@Override
 	public CompoundTag fix(CompoundTag properties, Consumer<Block> changeBlock) {
 		if (APConfigs.common().fixOldStates.get()) {
-			if (properties.contains("facing") && !(properties.contains("axis") && properties.contains("type"))) {
-				AdditionalPlacementsMod.LOGGER.debug(this + " Fixing V1 slab block state: " + properties);
-				BlockStateProperties.HORIZONTAL_FACING.getValue(properties.getString("facing")).ifPresent(facing -> {
-					properties.putString("axis", VerticalSlabBlock.AXIS.getName(facing.getAxis()));
-					properties.putString("type", SlabBlock.TYPE.getName(facing.getAxisDirection() == AxisDirection.POSITIVE ? SlabType.TOP : SlabType.BOTTOM));
-				});
-				properties.remove("facing");
+			if (!IStateFixer.contains(properties, AXIS)) {
+				if (IStateFixer.contains(properties, BlockStateProperties.HORIZONTAL_FACING) && !(
+						IStateFixer.contains(properties, BlockStateProperties.HORIZONTAL_AXIS) && 
+						IStateFixer.contains(properties, BlockStateProperties.SLAB_TYPE))) {
+					AdditionalPlacementsMod.LOGGER.debug(this + " Fixing V1 slab block state: " + properties);
+					Direction facing = IStateFixer.getProperty(properties, BlockStateProperties.HORIZONTAL_FACING);
+					if (facing != null) {
+						IStateFixer.setProperty(properties, AXIS, facing.getAxis());
+						IStateFixer.setProperty(properties, SlabBlock.TYPE, facing.getAxisDirection() == AxisDirection.POSITIVE ? SlabType.TOP : SlabType.BOTTOM);
+						IStateFixer.remove(properties, BlockStateProperties.HORIZONTAL_FACING);
+					}
+				} else if (IStateFixer.contains(properties, BlockStateProperties.HORIZONTAL_AXIS)) {
+					AdditionalPlacementsMod.LOGGER.debug(this + " Fixing V2 slab block state: " + properties);
+					IStateFixer.renameProperty(properties, BlockStateProperties.HORIZONTAL_AXIS, AXIS);
+				}
 			}
 		}
 		return properties;
