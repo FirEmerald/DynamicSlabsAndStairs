@@ -1,18 +1,15 @@
 package com.firemerald.additionalplacements.mixin;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
@@ -25,11 +22,9 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.*;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 
@@ -46,23 +41,6 @@ public class MixinModelBakery {
 	@Inject(method = "<init>", at = @At("RETURN"))
 	public void init(ResourceManager resourceManager, BlockColors blockColors, ProfilerFiller profiler, int maxMipmapLevel, CallbackInfo cli) {
 		UnbakedPlacementModel.clearCache();
-	}
-	
-	@Redirect(
-			method = "loadModel", 
-			at = @At(value = "INVOKE", target = "org/slf4j/Logger.warn(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V"), 
-			slice = @Slice(
-					from = @At(value = "CONSTANT", args = {"stringValue=Exception loading blockstate definition: {}: {}"}),
-					to = @At(value = "INVOKE", target = "org/slf4j/Logger.warn(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V", shift = Shift.AFTER)
-					)
-			)
-	private void loadModel(Logger logger, String message, Object blockStateJsonObj, Object eObj, ResourceLocation blockstateLocation) {
-		if (eObj instanceof FileNotFoundException) {
-			ResourceLocation blockId = new ResourceLocation(blockstateLocation.getNamespace(), blockstateLocation.getPath());
-			Block block = Registry.BLOCK.get(blockId);
-			if (block instanceof AdditionalPlacementBlock) return;
-		}
-		logger.warn(message, blockStateJsonObj, eObj);
 	}
 
 	@ModifyVariable(
