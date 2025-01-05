@@ -165,7 +165,14 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 	
 	public CommonStairShapeState getOldPropertyShapeState(CompoundTag properties) {
 		if (APConfigs.common().fixStates.get()) {
-			if (APConfigs.common().fixOldStates.get()) {
+			if (IStateFixer.contains(properties, connectionsType)) {
+				AdditionalPlacementsMod.LOGGER.debug(this + " Potentially fixing V3 stair block state: " + properties);
+				String shapeStateName = IStateFixer.getPropertyString(properties, connectionsType);
+				if (!connectionsType.isValid(shapeStateName)) {
+					AdditionalPlacementsMod.LOGGER.debug(this + " Fixing V3 stair block state");
+					return CommonStairShapeState.get(shapeStateName);
+				}
+			} else if (APConfigs.common().fixOldStates.get()) {
 				if (properties.contains("shape")) {
 					if (properties.contains("facing")) { //potentially V2
 						AdditionalPlacementsMod.LOGGER.debug(this + " Potentially fixing potential V2 block state: " + properties);
@@ -188,14 +195,6 @@ public class AdditionalStairBlock extends AdditionalPlacementLiquidBlock<StairBl
 							return V1StairShapeState.toCommon(placing, shape);
 						}
 					}
-				}
-			}
-			if (properties.contains(connectionsType.getName())) {
-				AdditionalPlacementsMod.LOGGER.debug(this + " Potentially fixing V3 stair block state: " + properties);
-				String shapeStateName = properties.getString(connectionsType.getName());
-				if (!connectionsType.isValid(shapeStateName)) {
-					AdditionalPlacementsMod.LOGGER.debug(this + " Fixing V3 stair block state");
-					return CommonStairShapeState.get(shapeStateName);
 				}
 			}
 		}
