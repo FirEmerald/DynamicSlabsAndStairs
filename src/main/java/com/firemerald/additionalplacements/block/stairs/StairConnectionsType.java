@@ -20,28 +20,28 @@ public class StairConnectionsType extends Property<CommonStairShapeState> {
 	private final List<CommonStairShapeState> values;
 	private final Map<String, CommonStairShapeState> valueMap;
 	private final int[] ordinalToIndex;
-	
+
 	public StairConnectionsType(String tooltip, boolean allowVertical, boolean allowMixed, boolean allowFlipped) {
 		this("tooltip.additionalplacements.stair_connections." + tooltip, allowVertical, allowMixed, allowFlipped, Stream.of(CommonStairShapeState.values())
-				.filter(state -> state.vanilla() == null && 
-				(!state.shape.isVertical || allowVertical) && 
-				(!state.shape.isMixed || allowMixed) && 
+				.filter(state -> state.vanilla() == null &&
+				(!state.shape.isVertical || allowVertical) &&
+				(!state.shape.isMixed || allowMixed) &&
 				(!state.isComplexFlipped || allowFlipped))
 		.collect(Collectors.toUnmodifiableList()), null);
 	}
-	
+
 	public StairConnectionsType(String tooltip, boolean allowVertical, boolean allowMixed, boolean allowFlipped, CommonStairShapeState... allowedShapeStates) {
 		this(tooltip, allowVertical, allowMixed, allowFlipped, Arrays.asList(allowedShapeStates));
 	}
-	
+
 	public StairConnectionsType(String tooltip, boolean allowVertical, boolean allowMixed, boolean allowFlipped, Collection<CommonStairShapeState> allowedShapeStates) {
 		this(tooltip, allowVertical, allowMixed, allowFlipped, new ArrayList<>(allowedShapeStates));
 	}
-	
+
 	public StairConnectionsType(String tooltip, boolean allowVertical, boolean allowMixed, boolean allowFlipped, List<CommonStairShapeState> allowedShapeStates) {
 		this(tooltip, allowVertical, allowMixed, allowFlipped, Collections.unmodifiableList(allowedShapeStates), null);
 	}
-	
+
 	private StairConnectionsType(String tooltip, boolean allowVertical, boolean allowMixed, boolean allowFlipped, List<CommonStairShapeState> values, Void nil) {
 		super("front_top_shape", CommonStairShapeState.class);
 		this.tooltip = tooltip;
@@ -54,7 +54,7 @@ public class StairConnectionsType extends Property<CommonStairShapeState> {
 		this.ordinalToIndex = new int[CommonStairShapeState.COUNT];
 		for (CommonStairShapeState shapeState : CommonStairShapeState.values()) ordinalToIndex[shapeState.ordinal] = values.indexOf(shapeState);
 	}
-	
+
 	@Override
 	public List<CommonStairShapeState> getPossibleValues() {
 		return values;
@@ -80,26 +80,26 @@ public class StairConnectionsType extends Property<CommonStairShapeState> {
 		if (this == pOther) return true;
 		else if (pOther instanceof StairConnectionsType) {
 			StairConnectionsType connectionsType = (StairConnectionsType) pOther;
-			return 
-					this.values.equals(connectionsType.values) && 
+			return
+					this.values.equals(connectionsType.values) &&
 					this.valueMap.equals(connectionsType.valueMap) &&
-					this.tooltip.equals(connectionsType.tooltip) && 
-					this.allowVertical == connectionsType.allowVertical && 
-					this.allowMixed == connectionsType.allowMixed && 
+					this.tooltip.equals(connectionsType.tooltip) &&
+					this.allowVertical == connectionsType.allowVertical &&
+					this.allowMixed == connectionsType.allowMixed &&
 					this.allowFlipped == connectionsType.allowFlipped;
 		}
 		else return false;
 	}
-	
+
 	@Override
 	public int generateHashCode() {
 		return 31 * (31 * super.generateHashCode() + this.values.hashCode()) + this.valueMap.hashCode();
 	}
-	
+
 	public boolean isValid(CommonStairShapeState value) {
 		return isValid(value.getSerializedName());
 	}
-	
+
 	public boolean isValid(String name) {
 		return valueMap.containsKey(name);
 	}

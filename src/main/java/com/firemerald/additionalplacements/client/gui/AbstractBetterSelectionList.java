@@ -217,7 +217,8 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
         this.renderDecorations(guiGraphics, mouseX, mouseY);
     }
 
-    protected boolean scrollbarVisible() {
+    @Override
+	protected boolean scrollbarVisible() {
         return this.getMaxScroll() > 0;
     }
 
@@ -235,8 +236,8 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
             resourcelocation,
             this.getX(),
             this.getY(),
-            (float)this.getRight(),
-            (float)(this.getBottom() + (int)this.getScrollAmount()),
+            this.getRight(),
+            this.getBottom() + (int)this.getScrollAmount(),
             this.getWidth(),
             this.getHeight(),
             32,
@@ -286,6 +287,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 		return this.scrollAmount;
 	}
 
+	@Override
 	public void setScrollAmount(double scroll) {
 		this.scrollAmount = Mth.clamp(scroll, 0.0D, this.getMaxScroll());
 	}
@@ -309,7 +311,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 	/**
 	 * Called when a mouse button is clicked within the GUI element.
 	 * <p>
-	 * 
+	 *
 	 * @return {@code true} if the event is consumed, {@code false} otherwise.
 	 * @param mouseX the X coordinate of the mouse.
 	 * @param mouseY the Y coordinate of the mouse.
@@ -349,7 +351,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 	/**
 	 * Called when a mouse button is released within the GUI element.
 	 * <p>
-	 * 
+	 *
 	 * @return {@code true} if the event is consumed, {@code false} otherwise.
 	 * @param mouseX the X coordinate of the mouse.
 	 * @param mouseY the Y coordinate of the mouse.
@@ -367,7 +369,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 	/**
 	 * Called when the mouse is dragged within the GUI element.
 	 * <p>
-	 * 
+	 *
 	 * @return {@code true} if the event is consumed, {@code false} otherwise.
 	 * @param mouseX the X coordinate of the mouse.
 	 * @param mouseY the Y coordinate of the mouse.
@@ -406,7 +408,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 
 	/**
 	 * Sets the focus state of the GUI element.
-	 * 
+	 *
 	 * @param pFocused the focused GUI element.
 	 */
 	@Override
@@ -476,7 +478,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 	/**
 	 * Checks if the given mouse coordinates are over the GUI element.
 	 * <p>
-	 * 
+	 *
 	 * @return {@code true} if the mouse is over the GUI element, {@code false}
 	 *         otherwise.
 	 * @param mouseX the X coordinate of the mouse.
@@ -595,7 +597,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 
 		/**
 		 * Sets the focus state of the GUI element.
-		 * 
+		 *
 		 * @param focused {@code true} to apply focus, {@code false} to remove focus
 		 */
 		@Override
@@ -620,7 +622,7 @@ public abstract class AbstractBetterSelectionList<E extends AbstractBetterSelect
 		/**
 		 * Checks if the given mouse coordinates are over the GUI element.
 		 * <p>
-		 * 
+		 *
 		 * @return {@code true} if the mouse is over the GUI element, {@code false}
 		 *         otherwise.
 		 * @param mouseX the X coordinate of the mouse.

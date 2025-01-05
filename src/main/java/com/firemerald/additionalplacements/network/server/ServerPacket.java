@@ -13,15 +13,15 @@ public abstract class ServerPacket<T extends FriendlyByteBuf> extends APPacket<T
 	public PacketFlow getDirection() {
 		return PacketFlow.SERVERBOUND;
 	}
-	
+
 	public abstract void handleServer(IPayloadContext context);
-	
+
 	@Override
 	public void handleInternal(IPayloadContext context)
 	{
 		handleServer(context);
 	}
-	
+
     public void sendToServer()
     {
     	APNetwork.sendToServer(this);

@@ -21,12 +21,12 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public class Registration {
 	private static final List<IBlockBlacklister<Block>> BLACKLISTERS = new LinkedList<>();
 	private static List<RegistrationInitializer> registrators = new ArrayList<>();
-	
+
 	public static void addRegistration(RegistrationInitializer listener) {
 		if (registrators == null) throw new IllegalStateException("A mod tried to register a registrator too late into the load sequence! Registrators should be registered in your mod constructor.");
 		registrators.add(listener);
 	}
-	
+
 	public static void registerTypes() {
 		registrators.forEach(registrator -> {
 			registrator.onInitializeRegistration(Registration::registerType);
@@ -34,10 +34,10 @@ public class Registration {
 		});
 		registrators = null;
 	}
-	
+
 	private static final Map<ResourceLocation, GenerationType<?, ?>> TYPES = new LinkedHashMap<>();
 	private static final Map<Class<?>, GenerationType<?, ?>> TYPES_BY_CLASS = new HashMap<>();
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T extends Block, U extends AdditionalPlacementBlock<T>> void tryApply(Block block, ResourceLocation blockId, BiConsumer<ResourceKey<Block>, AdditionalPlacementBlock<?>> action) {
 		if (block instanceof IPlacementBlock placement && placement.canGenerateAdditionalStates() && !BLACKLISTERS.stream().anyMatch(blacklister -> blacklister.blacklist(block, blockId)) && APConfigs.startup().blacklist.test(blockId)) {
@@ -61,7 +61,7 @@ public class Registration {
 			else return getType((Class<? extends T>) parent);
 		}
 	}
-	
+
 	private static <T extends Block, U extends AdditionalPlacementBlock<T>, V extends GenerationType<T, U>> V registerType(Class<T> clazz, ResourceLocation name, String description, BuilderBase<T, U, V, ?> builder) {
 		if (TYPES.containsKey(name)) throw new IllegalStateException("A generation type with name " + name + " is already registered!");
 		V type = builder.construct(name, description);
@@ -71,27 +71,27 @@ public class Registration {
 		else TYPES_BY_CLASS.put(clazz, type);
 		return type;
 	}
-	
+
 	public static void forEach(BiConsumer<? super ResourceLocation, ? super GenerationType<?, ?>> action) {
 		TYPES.forEach(action);
 	}
-	
+
 	public static void forEach(Consumer<? super GenerationType<?, ?>> action) {
 		TYPES.values().forEach(action);
 	}
-	
+
 	public static Stream<GenerationType<?, ?>> types() {
 		return TYPES.values().stream();
 	}
-	
+
 	public static void forEachCreated(Consumer<? super CreatedBlockEntry<?, ?>> action) {
 		TYPES.values().forEach(type -> type.forEachCreated(action));
 	}
-	
+
 	public static Stream<CreatedBlockEntry<?, ?>> created() {
 		return types().flatMap(GenerationType::created);
 	}
-	
+
 	public static void buildConfig(ModConfigSpec.Builder builder, BiConsumer<GenerationType<?, ?>, ModConfigSpec.Builder> build) {
         builder.comment("Options for registered block types for additional placement generation.").push("types");
         Registration.forEach((name, type) -> {
@@ -102,7 +102,7 @@ public class Registration {
         });
         builder.pop();
 	}
-	
+
 	//from ModConfigSpec, used to ensure we can pop everything pushed in buildConfig
     private static final Splitter DOT_SPLITTER = Splitter.on(".");
     private static List<String> split(String path)

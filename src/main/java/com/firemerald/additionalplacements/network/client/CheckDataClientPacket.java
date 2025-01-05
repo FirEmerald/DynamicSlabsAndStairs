@@ -17,9 +17,9 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public class CheckDataClientPacket extends ClientPacket<FriendlyByteBuf>
 {
 	public static final Type<CheckDataClientPacket> TYPE = new Type<>(ResourceLocation.tryBuild(AdditionalPlacementsMod.MOD_ID, "check_data_client"));
-	
+
 	private final Map<ResourceLocation, CompoundTag> data;
-	
+
 	public CheckDataClientPacket() {
 		data = new HashMap<>();
 		Registration.forEach((id, type) -> {

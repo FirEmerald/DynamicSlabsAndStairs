@@ -1,7 +1,7 @@
 package com.firemerald.additionalplacements.client;
 
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
-import com.firemerald.additionalplacements.client.models.*;
+import com.firemerald.additionalplacements.client.models.BakedPlacementModel;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
@@ -31,7 +31,7 @@ public class ClientModEventHandler
     {
     	event.register(APClientData.AP_PLACEMENT_KEY);
     }
-    
+
     @SubscribeEvent
     public static void onRegisterClientReloadListeners(RegisterClientReloadListenersEvent event) {
     	event.registerReloadListener((ResourceManagerReloadListener) resourceManager -> {
@@ -60,7 +60,7 @@ public class ClientModEventHandler
     			if (model instanceof AbstractCTMBakedModel ctm) return ctm.getParent();
     			else return null;
     		});
-    	} 
+    	}
     	*/
     }
 }
