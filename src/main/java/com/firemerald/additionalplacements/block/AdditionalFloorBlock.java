@@ -1,19 +1,25 @@
 package com.firemerald.additionalplacements.block;
 
+import java.util.function.Consumer;
+
+import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.interfaces.IFloorBlock;
 import com.firemerald.additionalplacements.block.interfaces.ISimpleRotationBlock;
+import com.firemerald.additionalplacements.block.interfaces.IStateFixer;
+import com.firemerald.additionalplacements.config.APConfigs;
 import com.firemerald.additionalplacements.util.BlockRotation;
 
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 
-public abstract class AdditionalFloorBlock<T extends Block> extends AdditionalPlacementBlock<T> implements IFloorBlock<T>, ISimpleRotationBlock
+public abstract class AdditionalFloorBlock<T extends Block> extends AdditionalPlacementBlock<T> implements IFloorBlock<T>, ISimpleRotationBlock, IStateFixer
 {
 	private boolean rotateLogic = true, rotateTex = true, rotateModel = true;
-	public static final DirectionProperty PLACING = AdditionalBlockStateProperties.HORIZONTAL_OR_UP_FACING;
+	public static final DirectionProperty PLACING = AdditionalBlockStateProperties.HORIZONTAL_OR_UP_PLACING;
 
 	public AdditionalFloorBlock(T block)
 	{
@@ -86,5 +92,18 @@ public abstract class AdditionalFloorBlock<T extends Block> extends AdditionalPl
 	public void setModelRotation(boolean useTexRotation, boolean useModelRotation) {
 		this.rotateTex = useTexRotation;
 		this.rotateModel = useModelRotation;
+	}
+
+	@Override
+	public CompoundTag fix(CompoundTag properties, Consumer<Block> changeBlock) {
+		if (APConfigs.common().fixOldStates.get()) {
+			if (!IStateFixer.contains(properties, PLACING)) {
+				if (properties.contains("facing")) {
+					AdditionalPlacementsMod.LOGGER.debug(this + " Fixing V1 floor block state: " + properties);
+					IStateFixer.renameProperty(properties, "facing", PLACING);
+				}
+			}
+		}
+		return properties;
 	}
 }
