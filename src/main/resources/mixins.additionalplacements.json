@@ -17,5 +17,8 @@
 		"MixinLocalPlayer",
 		"MixinModelManager"
 	],
-	"minVersion": "0.8"
+	"minVersion": "0.8",
+	"injectors": {
+		"defaultRequire": 1
+	}
 }
