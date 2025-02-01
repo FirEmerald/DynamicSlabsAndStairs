@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MixinBlock {
     @Inject(method = "getStateForPlacement", at = @At("RETURN"), cancellable = true)
     private void getStateForPlacement(BlockPlaceContext context, CallbackInfoReturnable<BlockState> ci) {
-        if ((Object) this instanceof IFloorBlock floorBlock) { // No CarpetBlock check needed
+        if ((Object) this instanceof IFloorBlock floorBlock) {
             if (floorBlock.enablePlacement(context.getClickedPos(), context.getLevel(), context.getClickedFace(), context.getPlayer())) {
                 ci.setReturnValue(floorBlock.getStateForPlacementImpl(context, ci.getReturnValue()));
             }
