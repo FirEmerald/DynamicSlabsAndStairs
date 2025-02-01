@@ -27,4 +27,3 @@ public abstract class MixinBlockBehaviour {
         }
     }
 }
-
