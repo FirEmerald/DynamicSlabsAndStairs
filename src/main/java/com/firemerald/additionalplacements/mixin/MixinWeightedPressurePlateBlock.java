@@ -77,7 +77,7 @@ public abstract class MixinWeightedPressurePlateBlock extends Block implements I
 		return currentState.is(plate) ? currentState : plate.copyProperties(currentState, plate.defaultBlockState());
 	}
 
-	@Inject(at = @At("RETURN"), remap = false, cancellable = true, target = {
+	@Inject(at = @At("RETURN"), remap = false, cancellable = true, require = 0, target = {
 			@Desc(value = "getStateForPlacement", ret = BlockState.class, args = {BlockItemUseContext.class}),
 			@Desc(value = "func_196258_a", ret = BlockState.class, args = {BlockItemUseContext.class})
 	})
@@ -95,7 +95,7 @@ public abstract class MixinWeightedPressurePlateBlock extends Block implements I
 		else return superRet;
 	}
 
-	@Inject(at = @At("HEAD"), remap = false, cancellable = true, target = {
+	@Inject(at = @At("HEAD"), remap = false, cancellable = true, require = 0, target = {
 			@Desc(value = "rotate", ret = BlockState.class, args = {BlockState.class, Rotation.class}),
 			@Desc(value = "func_185499_a", ret = BlockState.class, args = {BlockState.class, Rotation.class})
 	})
@@ -114,7 +114,7 @@ public abstract class MixinWeightedPressurePlateBlock extends Block implements I
 	}
 
 
-	@Inject(at = @At("HEAD"), remap = false, cancellable = true, target = {
+	@Inject(at = @At("HEAD"), remap = false, cancellable = true, require = 0, target = {
 			@Desc(value = "mirror", ret = BlockState.class, args = {BlockState.class, Mirror.class}),
 			@Desc(value = "func_185471_a", ret = BlockState.class, args = {BlockState.class, Mirror.class})
 	})
