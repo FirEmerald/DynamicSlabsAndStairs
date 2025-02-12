@@ -38,7 +38,7 @@ public class MixinModelManager {
 					BlockState theirState = block.getModelState(ourState);
 					StateModelDefinition modelDefinition = block.getModelDefinition(ourState);
 					ResourceLocation ourModel = modelDefinition.location(block.getBaseModelPrefix());
-					ModelState ourModelRotation = PlacementModelState.by(modelDefinition.xRotation(), modelDefinition.yRotation());
+					ModelState ourModelRotation = PlacementModelState.by(modelDefinition.xRotation().value, modelDefinition.yRotation().value);
 					ModelResourceLocation theirModelLocation = BlockModelShaper.stateToModelLocation(theirState);
 					if (models.containsKey(theirModelLocation)) {
 						UnbakedBlockStateModel theirModel = models.get(theirModelLocation).model();

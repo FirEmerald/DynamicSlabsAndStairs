@@ -1,17 +1,18 @@
 package com.firemerald.additionalplacements.client.models.definitions;
 
+import net.minecraft.client.data.models.blockstates.VariantProperties;
 import net.minecraft.resources.ResourceLocation;
 
-public record StateModelDefinition(String model, int xRotation, int yRotation)
+public record StateModelDefinition(String model, VariantProperties.Rotation xRotation, VariantProperties.Rotation yRotation)
 {
-	public StateModelDefinition(String model, int yRotation)
+	public StateModelDefinition(String model, VariantProperties.Rotation yRotation)
 	{
-		this(model, 0, yRotation);
+		this(model, VariantProperties.Rotation.R0, yRotation);
 	}
 
 	public StateModelDefinition(String model)
 	{
-		this(model, 0, 0);
+		this(model, VariantProperties.Rotation.R0, VariantProperties.Rotation.R0);
 	}
 
 	public ResourceLocation location(ResourceLocation prefix) {

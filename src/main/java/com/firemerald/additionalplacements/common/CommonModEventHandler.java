@@ -7,15 +7,12 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.config.APConfigs;
-import com.firemerald.additionalplacements.datagen.ModelGenerator;
 import com.firemerald.additionalplacements.generation.Registration;
 import com.firemerald.additionalplacements.network.APNetwork;
 import com.firemerald.additionalplacements.network.CheckDataConfigurationTask;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.DataProvider;
-import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -23,7 +20,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
@@ -57,12 +53,6 @@ public class CommonModEventHandler
 			created.forEach(pair -> Registry.register(BuiltInRegistries.BLOCK, pair.getLeft(), pair.getRight()));
 			AdditionalPlacementsMod.dynamicRegistration = true;
 		}
-	}
-
-	@SubscribeEvent
-	public static void onGatherClientData(GatherDataEvent.Client event)
-	{
-		event.getGenerator().addProvider(true, (DataProvider.Factory<ModelGenerator>) (PackOutput pack) -> new ModelGenerator(pack, AdditionalPlacementsMod.MOD_ID, event.getExistingFileHelper()));
 	}
 
 	public static boolean doubleslabsLoaded;

@@ -1,9 +1,13 @@
 package com.firemerald.additionalplacements.client;
 
+import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.AdditionalPlacementBlock;
 import com.firemerald.additionalplacements.client.models.BakedPlacementModel;
+import com.firemerald.additionalplacements.datagen.AdditionalPlacementsModelProvider;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.DataProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
@@ -12,9 +16,10 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 @EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 @OnlyIn(Dist.CLIENT)
@@ -33,8 +38,8 @@ public class ClientModEventHandler
     }
 
     @SubscribeEvent
-    public static void onRegisterClientReloadListeners(RegisterClientReloadListenersEvent event) {
-    	event.registerReloadListener((ResourceManagerReloadListener) resourceManager -> {
+    public static void onRegisterClientReloadListeners(AddClientReloadListenersEvent event) {
+    	event.addListener(ResourceLocation.fromNamespaceAndPath(AdditionalPlacementsMod.MOD_ID, "baked_placement_cache"), (ResourceManagerReloadListener) resourceManager -> {
     		BakedPlacementModel.clearCache();
     	});
     }
@@ -63,4 +68,9 @@ public class ClientModEventHandler
     	}
     	*/
     }
+
+	@SubscribeEvent
+	public static void onGatherClientData(GatherDataEvent.Client event) {
+		event.getGenerator().addProvider(true, (DataProvider.Factory<AdditionalPlacementsModelProvider>) AdditionalPlacementsModelProvider::new);
+	}
 }

@@ -3,6 +3,7 @@ package com.firemerald.additionalplacements.client.models.definitions;
 import com.firemerald.additionalplacements.AdditionalPlacementsMod;
 import com.firemerald.additionalplacements.block.VerticalSlabBlock;
 
+import net.minecraft.client.data.models.blockstates.VariantProperties;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.SlabBlock;
@@ -24,15 +25,19 @@ public class SlabModels {
 
 	static
 	{
-		MODEL_DEFINITIONS[0][SlabType.BOTTOM.ordinal()] = new StateModelDefinition("/negative", 270);
-		MODEL_DEFINITIONS[0][SlabType.TOP.ordinal()] = new StateModelDefinition("/positive", 270);
-		MODEL_DEFINITIONS[0][SlabType.DOUBLE.ordinal()] = new StateModelDefinition("/double", 270);
-		MODEL_DEFINITIONS[1][SlabType.BOTTOM.ordinal()] = new StateModelDefinition("/negative", 0);
-		MODEL_DEFINITIONS[1][SlabType.TOP.ordinal()] = new StateModelDefinition("/positive", 0);
-		MODEL_DEFINITIONS[1][SlabType.DOUBLE.ordinal()] = new StateModelDefinition("/double", 0);
+		MODEL_DEFINITIONS[0][SlabType.BOTTOM.ordinal()] = new StateModelDefinition("/negative", VariantProperties.Rotation.R270);
+		MODEL_DEFINITIONS[0][SlabType.TOP.ordinal()] = new StateModelDefinition("/positive", VariantProperties.Rotation.R270);
+		MODEL_DEFINITIONS[0][SlabType.DOUBLE.ordinal()] = new StateModelDefinition("/double", VariantProperties.Rotation.R270);
+		MODEL_DEFINITIONS[1][SlabType.BOTTOM.ordinal()] = new StateModelDefinition("/negative", VariantProperties.Rotation.R0);
+		MODEL_DEFINITIONS[1][SlabType.TOP.ordinal()] = new StateModelDefinition("/positive", VariantProperties.Rotation.R0);
+		MODEL_DEFINITIONS[1][SlabType.DOUBLE.ordinal()] = new StateModelDefinition("/double", VariantProperties.Rotation.R0);
+	}
+
+	public static StateModelDefinition getModel(Axis axis, SlabType type) {
+		return MODEL_DEFINITIONS[axis == Axis.X ? 0 : 1][type.ordinal()];
 	}
 
 	public static StateModelDefinition getModel(BlockState state) {
-		return MODEL_DEFINITIONS[state.getValue(VerticalSlabBlock.AXIS) == Axis.X ? 0 : 1][state.getValue(SlabBlock.TYPE).ordinal()];
+		return getModel(state.getValue(VerticalSlabBlock.AXIS), state.getValue(SlabBlock.TYPE));
 	}
 }
