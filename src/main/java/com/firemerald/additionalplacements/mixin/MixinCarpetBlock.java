@@ -77,7 +77,7 @@ public abstract class MixinCarpetBlock extends Block implements IVanillaCarpetBl
 		return currentState.is(carpet) ? currentState : carpet.copyProperties(currentState, carpet.defaultBlockState());
 	}
 
-	@Inject(at = @At("RETURN"), remap = false, cancellable = true, target = {
+	@Inject(at = @At("RETURN"), remap = false, cancellable = true, require = 0, target = {
 			@Desc(value = "getStateForPlacement", ret = BlockState.class, args = {BlockPlaceContext.class}),
 			@Desc(value = "m_5573_", ret = BlockState.class, args = {BlockPlaceContext.class})
 	})
@@ -95,7 +95,7 @@ public abstract class MixinCarpetBlock extends Block implements IVanillaCarpetBl
 		else return superRet;
 	}
 
-	@Inject(at = @At("HEAD"), remap = false, cancellable = true, target = {
+	@Inject(at = @At("HEAD"), remap = false, cancellable = true, require = 0, target = {
 			@Desc(value = "rotate", ret = BlockState.class, args = {BlockState.class, Rotation.class}),
 			@Desc(value = "m_6843_", ret = BlockState.class, args = {BlockState.class, Rotation.class})
 	})
@@ -112,7 +112,7 @@ public abstract class MixinCarpetBlock extends Block implements IVanillaCarpetBl
 		else return super.rotate(blockState, rotation);
 	}
 
-	@Inject(at = @At("HEAD"), remap = false, cancellable = true, target = {
+	@Inject(at = @At("HEAD"), remap = false, cancellable = true, require = 0, target = {
 			@Desc(value = "mirror", ret = BlockState.class, args = {BlockState.class, Mirror.class}),
 			@Desc(value = "m_6943_", ret = BlockState.class, args = {BlockState.class, Mirror.class})
 	})
