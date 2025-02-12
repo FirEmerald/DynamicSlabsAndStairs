@@ -90,7 +90,7 @@ public abstract class MixinSlabBlock extends Block implements IVanillaSlabBlock
 		if (this.hasAdditionalStates() && enablePlacement(context.getClickedPos(), context.getLevel(), context.getClickedFace(), context.getPlayer())) ci.setReturnValue(getStateForPlacementImpl(context, ci.getReturnValue()));
 	}
 
-	@Inject(at = @At("HEAD"), remap = false, cancellable = true, target = {
+	@Inject(at = @At("HEAD"), remap = false, cancellable = true, require = 0, target = {
 			@Desc(value = "rotate", ret = BlockState.class, args = {BlockState.class, Rotation.class}),
 			@Desc(value = "m_6843_", ret = BlockState.class, args = {BlockState.class, Rotation.class})
 			})
@@ -108,7 +108,7 @@ public abstract class MixinSlabBlock extends Block implements IVanillaSlabBlock
 	}
 
 
-	@Inject(at = @At("HEAD"), remap = false, cancellable = true, target = {
+	@Inject(at = @At("HEAD"), remap = false, cancellable = true, require = 0, target = {
 			@Desc(value = "mirror", ret = BlockState.class, args = {BlockState.class, Mirror.class}),
 			@Desc(value = "m_6943_", ret = BlockState.class, args = {BlockState.class, Mirror.class})
 	})
