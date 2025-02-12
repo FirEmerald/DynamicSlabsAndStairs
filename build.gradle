@@ -169,9 +169,9 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
     
 	//implementation fg.deobf("curse.maven:double-slabs-350179:3873442")
-	implementation fg.deobf("curse.maven:create-328085:4762216")
 	compileOnly "local:continuity:3.0.0-beta.5" //Fabric mods don't properly deobfuscate, so we use a deobfuscated jar from a fabric MDK
 	compileOnly fg.deobf("local:fabric-renderer-api-v1:3.2.1") // Jar extracted from forgified-fabric, META-INF/mods.toml removed to prevent it from being loaded as a mod
+	implementation fg.deobf("curse.maven:create-328085:5838779")
 }
 
 eclipse.classpath.file {
